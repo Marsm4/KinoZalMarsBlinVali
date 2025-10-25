@@ -1,8 +1,79 @@
-<UserControl xmlns="https://github.com/avaloniaui"
+﻿<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="KinoZalMarsBlinVali.CashierReservationsPage">
-  Welcome to Avalonia!
+             mc:Ignorable="d" d:DesignWidth="1920" d:DesignHeight="1080"
+             x:Class="KinoZalMarsBlinVali.Views.CashierReservationsPage">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Text="🎫 Управление бронированиями" 
+                   FontSize="24" FontWeight="Bold" Foreground="#0066CC"
+                   Margin="0,0,0,20"/>
+
+        <!-- Фильтры -->
+        <Border Grid.Row="1" Background="#F5F5F5" CornerRadius="8" Padding="15" Margin="0,0,0,20">
+            <StackPanel Orientation="Horizontal" Spacing="15">
+                <ComboBox x:Name="StatusFilterComboBox" Width="150" SelectedIndex="0">
+                    <ComboBoxItem Content="Все статусы"/>
+                    <ComboBoxItem Content="Забронировано"/>
+                    <ComboBoxItem Content="Оплачено"/>
+                    <ComboBoxItem Content="Отменено"/>
+                </ComboBox>
+                
+                <DatePicker x:Name="DateFilterPicker" Width="150"/>
+                           
+                <TextBox x:Name="SearchTextBox" Width="300" 
+                         Watermark="Поиск по фильму или клиенту"
+                         VerticalContentAlignment="Center"/>
+                         
+                <Button Content="🔍 Поиск" Click="SearchReservations_Click"
+                        Background="#0066CC" Foreground="White" 
+                        Padding="20,10" FontWeight="Bold"/>
+                        
+                <Button Content="🔄 Обновить" Click="Refresh_Click"
+                        Background="#00A651" Foreground="White" 
+                        Padding="20,10" FontWeight="Bold"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Список бронирований -->
+        <DataGrid Grid.Row="2" x:Name="ReservationsDataGrid" 
+                 AutoGenerateColumns="False" IsReadOnly="True"
+                 SelectionMode="Single">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="ID" Binding="{Binding TicketId}" Width="60"/>
+                <DataGridTextColumn Header="Фильм" Binding="{Binding Session.Movie.Title}" Width="200"/>
+                <DataGridTextColumn Header="Время" Binding="{Binding Session.StartTime, StringFormat='{}{0:dd.MM.yyyy HH:mm}'}" Width="150"/>
+                <DataGridTextColumn Header="Клиент" Binding="{Binding Customer.Email}" Width="200"/>
+                <DataGridTextColumn Header="Место" Binding="{Binding SeatInfo}" Width="120"/>
+                <DataGridTextColumn Header="Цена" Binding="{Binding FinalPrice, StringFormat='{}{0}₽'}" Width="100"/>
+                <DataGridTextColumn Header="Статус" Binding="{Binding Status}" Width="120"/>
+                <DataGridTextColumn Header="Бронь до" Binding="{Binding ReservationExpires, StringFormat='{}{0:HH:mm}'}" Width="100"/>
+                <DataGridTemplateColumn Header="Действия" Width="200">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal" Spacing="5">
+                                <Button Content="💳 Оплата" Click="ProcessPayment_Click"
+                                        Background="#00A651" Foreground="White"
+                                        Padding="8,4" FontSize="10"
+                                        Tag="{Binding TicketId}"
+                                        IsEnabled="{Binding CanProcessPayment}"/>
+                                        
+                                <Button Content="❌ Отмена" Click="CancelReservation_Click"
+                                        Background="#FF6B35" Foreground="White"
+                                        Padding="8,4" FontSize="10"
+                                        Tag="{Binding TicketId}"
+                                        IsEnabled="{Binding CanCancel}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
 </UserControl>

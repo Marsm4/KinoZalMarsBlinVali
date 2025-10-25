@@ -38,7 +38,7 @@ namespace KinoZalMarsBlinVali.Views
                     .OrderBy(t => t.ReservationExpires)
                     .ToList();
 
-                ReservationsItemsControl.ItemsSource = _reservations.Select(t => new ReservationViewModel(t)).ToList();
+                ReservationsItemsControl.ItemsSource = _reservations.Select(t => new PaymentReservationViewModel(t)).ToList();
             }
             catch (Exception ex)
             {
@@ -59,9 +59,9 @@ namespace KinoZalMarsBlinVali.Views
             try
             {
                 var filtered = _reservations
-                    .Where(t => t.Customer.Email.ToLower().Contains(searchText) ||
+                    .Where(t => (t.Customer.Email != null && t.Customer.Email.ToLower().Contains(searchText)) ||
                                t.TicketId.ToString().Contains(searchText))
-                    .Select(t => new ReservationViewModel(t))
+                    .Select(t => new PaymentReservationViewModel(t))
                     .ToList();
 
                 ReservationsItemsControl.ItemsSource = filtered;
@@ -86,8 +86,7 @@ namespace KinoZalMarsBlinVali.Views
                     {
                         // Обновляем список после успешной оплаты
                         LoadActiveReservations();
-                        //await 
-                            ShowSuccess("Оплата прошла успешно!");
+                         ShowSuccess("Оплата прошла успешно!");
                     }
                 }
             }
@@ -106,12 +105,13 @@ namespace KinoZalMarsBlinVali.Views
         }
     }
 
-    public class ReservationViewModel
+    // Переименуем класс для страницы оплаты
+    public class PaymentReservationViewModel
     {
         public Ticket Ticket { get; set; }
         public string SeatInfo => $"Ряд {Ticket.Seat.RowNumber}, Место {Ticket.Seat.SeatNumber}, Зал: {Ticket.Session.Hall.HallName}";
 
-        public ReservationViewModel(Ticket ticket)
+        public PaymentReservationViewModel(Ticket ticket)
         {
             Ticket = ticket;
         }

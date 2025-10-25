@@ -1,8 +1,87 @@
-<UserControl xmlns="https://github.com/avaloniaui"
+﻿<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="KinoZalMarsBlinVali.CashierReportsPage">
-  Welcome to Avalonia!
+             mc:Ignorable="d" d:DesignWidth="1920" d:DesignHeight="1080"
+             x:Class="KinoZalMarsBlinVali.Views.CashierReportsPage">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Text="📊 Отчеты кассира" 
+                   FontSize="24" FontWeight="Bold" Foreground="#0066CC"
+                   Margin="0,0,0,20"/>
+
+        <!-- Период отчета -->
+        <Border Grid.Row="1" Background="#F5F5F5" CornerRadius="8" Padding="15" Margin="0,0,0,20">
+            <StackPanel Orientation="Horizontal" Spacing="15">
+                <TextBlock Text="Период:" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                <DatePicker x:Name="StartDatePicker" Width="150"/>
+                <TextBlock Text="-" VerticalAlignment="Center"/>
+                <DatePicker x:Name="EndDatePicker" Width="150"/>
+                
+                <Button Content="📈 Сформировать отчет" Click="GenerateReport_Click"
+                        Background="#0066CC" Foreground="White" 
+                        Padding="20,10" FontWeight="Bold"/>
+                        
+                <Button Content="🖨️ Печать" Click="PrintReport_Click"
+                        Background="#00A651" Foreground="White" 
+                        Padding="20,10" FontWeight="Bold"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Статистика -->
+        <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
+            <StackPanel Spacing="15">
+                <!-- Общая статистика -->
+                <Border Background="White" CornerRadius="8" Padding="20" BorderBrush="#e0e0e0" BorderThickness="1">
+                    <StackPanel>
+                        <TextBlock Text="Общая статистика" FontWeight="Bold" FontSize="16" Margin="0,0,0,10"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="Всего продаж" FontSize="12" Foreground="#666"/>
+                                <TextBlock x:Name="TotalSalesText" FontSize="18" FontWeight="Bold"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="1">
+                                <TextBlock Text="Общая выручка" FontSize="12" Foreground="#666"/>
+                                <TextBlock x:Name="TotalRevenueText" FontSize="18" FontWeight="Bold" Foreground="#00A651"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="2">
+                                <TextBlock Text="Активные брони" FontSize="12" Foreground="#666"/>
+                                <TextBlock x:Name="ActiveReservationsText" FontSize="18" FontWeight="Bold"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="3">
+                                <TextBlock Text="Начислено бонусов" FontSize="12" Foreground="#666"/>
+                                <TextBlock x:Name="BonusAddedText" FontSize="18" FontWeight="Bold" Foreground="#FF6B35"/>
+                            </StackPanel>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- Последние транзакции -->
+                <Border Background="White" CornerRadius="8" Padding="20" BorderBrush="#e0e0e0" BorderThickness="1">
+                    <StackPanel>
+                        <TextBlock Text="Последние транзакции" FontWeight="Bold" FontSize="16" Margin="0,0,0,10"/>
+                        <DataGrid x:Name="TransactionsDataGrid" AutoGenerateColumns="False" IsReadOnly="True">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Время" Binding="{Binding TransactionTime, StringFormat='{}{0:dd.MM.yyyy HH:mm}'}" Width="150"/>
+                                <DataGridTextColumn Header="Тип" Binding="{Binding TransactionType}" Width="120"/>
+                                <DataGridTextColumn Header="Сумма" Binding="{Binding Amount, StringFormat='{}{0}₽'}" Width="100"/>
+                                <DataGridTextColumn Header="Описание" Binding="{Binding Description}" Width="300"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
 </UserControl>

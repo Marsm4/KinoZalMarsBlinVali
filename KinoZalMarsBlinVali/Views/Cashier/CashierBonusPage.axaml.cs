@@ -2,7 +2,9 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using KinoZalMarsBlinVali.Data;
 using KinoZalMarsBlinVali.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -10,105 +12,222 @@ namespace KinoZalMarsBlinVali.Views
 {
     public partial class CashierBonusPage : UserControl
     {
-        private Customer _currentCustomer;
+        private Customer _selectedCustomer;
+        private List<Customer> _allCustomers = new List<Customer>();
 
         public CashierBonusPage()
         {
             InitializeComponent();
+            LoadAllCustomers();
         }
 
-        private async void SearchCustomer_Click(object? sender, RoutedEventArgs e)
+        private void LoadAllCustomers()
+        {
+            try
+            {
+                _allCustomers = AppDataContext.DbContext.Customers
+                    .OrderBy(c => c.LastName)
+                    .ThenBy(c => c.FirstName)
+                    .ToList();
+
+                CustomersDataGrid.ItemsSource = _allCustomers;
+            }
+            catch (Exception ex)
+            {
+                ShowError($"Ошибка загрузки клиентов: {ex.Message}");
+            }
+        }
+
+        private void SearchCustomer_Click(object? sender, RoutedEventArgs e)
         {
             var searchText = SearchCustomerTextBox.Text?.ToLower() ?? "";
 
             if (string.IsNullOrWhiteSpace(searchText))
             {
-                await ShowError("Введите email или телефон клиента");
+                LoadAllCustomers();
                 return;
             }
 
             try
             {
-                _currentCustomer = AppDataContext.DbContext.Customers
-                    .FirstOrDefault(c => c.Email.ToLower().Contains(searchText) ||
-                                       c.Phone.Contains(searchText));
+                var filteredCustomers = _allCustomers
+                    .Where(c => (c.Email != null && c.Email.ToLower().Contains(searchText)) ||
+                               (c.Phone != null && c.Phone.Contains(searchText)) ||
+                               (c.FirstName != null && c.FirstName.ToLower().Contains(searchText)) ||
+                               (c.LastName != null && c.LastName.ToLower().Contains(searchText)))
+                    .ToList();
 
-                if (_currentCustomer != null)
-                {
-                    UpdateCustomerInfo();
-                }
-                else
-                {
-                    await ShowError("Клиент не найден");
-                    ClearCustomerInfo();
-                }
+                CustomersDataGrid.ItemsSource = filteredCustomers;
             }
             catch (Exception ex)
             {
-                await ShowError($"Ошибка поиска: {ex.Message}");
+                ShowError($"Ошибка поиска: {ex.Message}");
             }
         }
 
-        private void UpdateCustomerInfo()
+        private void ResetSearch_Click(object? sender, RoutedEventArgs e)
         {
-            CustomerInfoText.Text = $"{_currentCustomer.FirstName} {_currentCustomer.LastName} ({_currentCustomer.Email})";
-            BonusInfoText.Text = $"Текущие бонусные баллы: {_currentCustomer.BonusPoints ?? 0}";
+            SearchCustomerTextBox.Text = "";
+            LoadAllCustomers();
         }
 
-        private void ClearCustomerInfo()
+        private void CustomerSelectionChanged(object? sender, SelectionChangedEventArgs e)
         {
-            CustomerInfoText.Text = "";
-            BonusInfoText.Text = "";
-            _currentCustomer = null;
+            _selectedCustomer = CustomersDataGrid.SelectedItem as Customer;
+            UpdateSelectedCustomerInfo();
+        }
+
+        private void UpdateSelectedCustomerInfo()
+        {
+            if (_selectedCustomer != null)
+            {
+                SelectedCustomerText.Text = $"{_selectedCustomer.FirstName} {_selectedCustomer.LastName} " +
+                                          $"(Email: {_selectedCustomer.Email}, " +
+                                          $"Телефон: {_selectedCustomer.Phone}) " +
+                                          $"- Бонусы: {_selectedCustomer.BonusPoints ?? 0}";
+            }
+            else
+            {
+                SelectedCustomerText.Text = "Выберите клиента из списка";
+            }
         }
 
         private async void AddBonus_Click(object? sender, RoutedEventArgs e)
         {
-            if (_currentCustomer == null)
+            if (_selectedCustomer == null)
             {
-                await ShowError("Сначала найдите клиента");
+                await ShowError("Сначала выберите клиента из списка");
                 return;
             }
 
             if (int.TryParse(BonusPointsTextBox.Text, out int points) && points > 0)
             {
-                _currentCustomer.BonusPoints = (_currentCustomer.BonusPoints ?? 0) + points;
-                await AppDataContext.DbContext.SaveChangesAsync();
-                UpdateCustomerInfo();
-                await ShowSuccess($"Начислено {points} бонусных баллов");
+                try
+                {
+                    _selectedCustomer.BonusPoints = (_selectedCustomer.BonusPoints ?? 0) + points;
+                    await AppDataContext.DbContext.SaveChangesAsync();
+
+                    // Создаем запись о начислении бонусов
+                    var transaction = new FinancialTransaction
+                    {
+                        TransactionType = "bonus_add",
+                        Amount = 0,
+                        PaymentMethod = "bonus",
+                        Description = $"Начисление бонусных баллов: {points}",
+                        EmployeeId = AppDataContext.CurrentUser?.EmployeeId,
+                        TransactionTime = DateTime.Now
+                    };
+                    AppDataContext.DbContext.FinancialTransactions.Add(transaction);
+                    await AppDataContext.DbContext.SaveChangesAsync();
+
+                    UpdateSelectedCustomerInfo();
+                    await ShowSuccess($"Начислено {points} бонусных баллов клиенту {_selectedCustomer.FirstName} {_selectedCustomer.LastName}");
+
+                    // Обновляем список
+                    LoadAllCustomers();
+                }
+                catch (Exception ex)
+                {
+                    await ShowError($"Ошибка начисления бонусов: {ex.Message}");
+                }
             }
             else
             {
-                await ShowError("Введите корректное количество баллов");
+                await ShowError("Введите корректное положительное количество баллов");
             }
         }
 
         private async void RemoveBonus_Click(object? sender, RoutedEventArgs e)
         {
-            if (_currentCustomer == null)
+            if (_selectedCustomer == null)
             {
-                await ShowError("Сначала найдите клиента");
+                await ShowError("Сначала выберите клиента из списка");
                 return;
             }
 
             if (int.TryParse(BonusPointsTextBox.Text, out int points) && points > 0)
             {
-                var currentBonus = _currentCustomer.BonusPoints ?? 0;
-                if (points <= currentBonus)
+                try
                 {
-                    _currentCustomer.BonusPoints = currentBonus - points;
-                    await AppDataContext.DbContext.SaveChangesAsync();
-                    UpdateCustomerInfo();
-                    await ShowSuccess($"Списано {points} бонусных баллов");
+                    var currentBonus = _selectedCustomer.BonusPoints ?? 0;
+                    if (points <= currentBonus)
+                    {
+                        _selectedCustomer.BonusPoints = currentBonus - points;
+
+                        // Создаем запись о списании бонусов
+                        var transaction = new FinancialTransaction
+                        {
+                            TransactionType = "bonus_remove",
+                            Amount = 0,
+                            PaymentMethod = "bonus",
+                            Description = $"Списание бонусных баллов: {points}",
+                            EmployeeId = AppDataContext.CurrentUser?.EmployeeId,
+                            TransactionTime = DateTime.Now
+                        };
+                        AppDataContext.DbContext.FinancialTransactions.Add(transaction);
+
+                        await AppDataContext.DbContext.SaveChangesAsync();
+                        UpdateSelectedCustomerInfo();
+                        await ShowSuccess($"Списано {points} бонусных баллов у клиента {_selectedCustomer.FirstName} {_selectedCustomer.LastName}");
+
+                        // Обновляем список
+                        LoadAllCustomers();
+                    }
+                    else
+                    {
+                        await ShowError($"Недостаточно бонусных баллов для списания. Доступно: {currentBonus}");
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    await ShowError("Недостаточно бонусных баллов для списания");
+                    await ShowError($"Ошибка списания бонусов: {ex.Message}");
                 }
             }
             else
             {
-                await ShowError("Введите корректное количество баллов");
+                await ShowError("Введите корректное положительное количество баллов");
+            }
+        }
+
+        private async void ShowBonusHistory_Click(object? sender, RoutedEventArgs e)
+        {
+            if (_selectedCustomer == null)
+            {
+                await ShowError("Сначала выберите клиента из списка");
+                return;
+            }
+
+            try
+            {
+                // ИСПРАВЛЕНИЕ: Убираем оператор распространения NULL из LINQ запроса
+                var currentUserId = AppDataContext.CurrentUser?.EmployeeId;
+
+                if (currentUserId.HasValue)
+                {
+                    var history = AppDataContext.DbContext.FinancialTransactions
+                        .Where(t => t.Description.Contains("бонус") &&
+                                   t.EmployeeId == currentUserId.Value)
+                        .OrderByDescending(t => t.TransactionTime)
+                        .Take(10)
+                        .ToList();
+
+                    var historyText = "Последние операции с бонусами:\n";
+                    foreach (var transaction in history)
+                    {
+                        historyText += $"{transaction.TransactionTime:dd.MM.yyyy HH:mm} - {transaction.Description}\n";
+                    }
+
+                    var dialog = new MessageWindow("История операций", historyText);
+                    await dialog.ShowDialog((Window)this.VisualRoot);
+                }
+                else
+                {
+                    await ShowError("Не удалось определить пользователя");
+                }
+            }
+            catch (Exception ex)
+            {
+                await ShowError($"Ошибка загрузки истории: {ex.Message}");
             }
         }
 

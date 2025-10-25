@@ -9,6 +9,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0" Text="⭐ Управление бонусами" 
@@ -19,30 +20,64 @@
         <Border Grid.Row="1" Background="#F5F5F5" CornerRadius="8" Padding="15" Margin="0,0,0,20">
             <StackPanel Orientation="Horizontal" Spacing="15">
                 <TextBox x:Name="SearchCustomerTextBox" Width="300" 
-                         Watermark="Email или телефон клиента"
+                         Watermark="Email, телефон или имя клиента"
                          VerticalContentAlignment="Center"/>
                          
-                <Button Content="🔍 Найти" Click="SearchCustomer_Click"
+                <Button Content="🔍 Поиск" Click="SearchCustomer_Click"
                         Background="#0066CC" Foreground="White" 
+                        Padding="20,10" FontWeight="Bold"/>
+                        
+                <Button Content="🔄 Сбросить" Click="ResetSearch_Click"
+                        Background="#6c757d" Foreground="White" 
                         Padding="20,10" FontWeight="Bold"/>
             </StackPanel>
         </Border>
 
-        <!-- Информация о клиенте и управление бонусами -->
+        <!-- Список клиентов -->
         <Border Grid.Row="2" Background="White" CornerRadius="8" 
+                BorderBrush="#e0e0e0" BorderThickness="1" Padding="15" Margin="0,0,0,20">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                
+                <TextBlock Grid.Row="0" Text="Список клиентов:" 
+                           FontWeight="Bold" FontSize="16" Margin="0,0,0,10"/>
+                
+                <DataGrid Grid.Row="1" x:Name="CustomersDataGrid" 
+                         AutoGenerateColumns="False" IsReadOnly="True"
+                         SelectionMode="Single" SelectionChanged="CustomerSelectionChanged">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="ID" Binding="{Binding CustomerId}" Width="60"/>
+                        <DataGridTextColumn Header="Имя" Binding="{Binding FirstName}" Width="150"/>
+                        <DataGridTextColumn Header="Фамилия" Binding="{Binding LastName}" Width="150"/>
+                        <DataGridTextColumn Header="Email" Binding="{Binding Email}" Width="200"/>
+                        <DataGridTextColumn Header="Телефон" Binding="{Binding Phone}" Width="150"/>
+                        <DataGridTextColumn Header="Бонусы" Binding="{Binding BonusPoints}" Width="100"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </Border>
+
+        <!-- Управление бонусами выбранного клиента -->
+        <Border Grid.Row="3" Background="#E8F5E8" CornerRadius="8" 
                 BorderBrush="#e0e0e0" BorderThickness="1" Padding="20">
             <StackPanel Spacing="15">
-                <TextBlock x:Name="CustomerInfoText" FontSize="16" FontWeight="Bold"/>
-                <TextBlock x:Name="BonusInfoText" FontSize="14" Foreground="#666"/>
+                <TextBlock x:Name="SelectedCustomerText" Text="Выберите клиента из списка" 
+                           FontSize="16" FontWeight="Bold"/>
                 
                 <StackPanel Orientation="Horizontal" Spacing="15">
                     <TextBox x:Name="BonusPointsTextBox" Width="150" 
                              Text="0" Watermark="Количество баллов"/>
-                    <Button Content="➕ Начислить" Click="AddBonus_Click"
+                    <Button Content="➕ Начислить бонусы" Click="AddBonus_Click"
                             Background="#00A651" Foreground="White" 
                             Padding="15,8" FontWeight="Bold"/>
-                    <Button Content="➖ Списать" Click="RemoveBonus_Click"
+                    <Button Content="➖ Списать бонусы" Click="RemoveBonus_Click"
                             Background="#FF6B35" Foreground="White" 
+                            Padding="15,8" FontWeight="Bold"/>
+                    <Button Content="📊 История операций" Click="ShowBonusHistory_Click"
+                            Background="#0066CC" Foreground="White" 
                             Padding="15,8" FontWeight="Bold"/>
                 </StackPanel>
             </StackPanel>
