@@ -18,10 +18,10 @@
         
         <StackPanel Grid.Row="1" Orientation="Horizontal" 
                     HorizontalAlignment="Center" Spacing="20">
-            <Button Content="Да" Click="Yes_Click"
+            <Button Content="Yes" Click="Yes_Click"
                     Background="#00A651" Foreground="White" 
                     Padding="20,10" FontWeight="Bold"/>
-            <Button Content="Нет" Click="No_Click"
+            <Button Content="Nou" Click="No_Click"
                     Background="#FF6B35" Foreground="White" 
                     Padding="20,10" FontWeight="Bold"/>
         </StackPanel>
