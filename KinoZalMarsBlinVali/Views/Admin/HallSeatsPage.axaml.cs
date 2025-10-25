@@ -63,6 +63,11 @@ namespace KinoZalMarsBlinVali.Views
 
                 foreach (var seat in rowGroup.OrderBy(s => s.SeatNumber))
                 {
+                    // Убедимся, что у места есть правильный тип
+                    if (string.IsNullOrEmpty(seat.SeatType))
+                    {
+                        seat.SeatType = "standard";
+                    }
                     seatRow.Seats.Add(seat);
                 }
 

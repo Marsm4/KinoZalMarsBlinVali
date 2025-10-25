@@ -2,7 +2,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:views="clr-namespace:KinoZalMarsBlinVali.Views"
              mc:Ignorable="d" d:DesignWidth="1920" d:DesignHeight="1080"
              x:Class="KinoZalMarsBlinVali.Views.HallSeatsPage">
     <Grid Margin="20">
@@ -99,8 +98,8 @@
                                             <Button Content="{Binding SeatNumber}"
                                                     Width="35" Height="35" FontSize="10"
                                                     Click="SeatButton_Click"
-                                                    Tag="{Binding}"
-                                                    views:SeatProperties.SeatType="{Binding SeatType}">
+                                                    Tag="{Binding}">
+                                          
                                             </Button>
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
