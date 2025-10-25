@@ -34,9 +34,13 @@ namespace KinoZalMarsBlinVali.Views
 
         private void AddMovie_Click(object? sender, RoutedEventArgs e)
         {
-            var editWindow = new MovieEditWindow();
-            editWindow.Closed += (s, args) => LoadMovies();
-            editWindow.ShowDialog((Window)this.VisualRoot);
+            // Переходим на страницу добавления фильма через родительский AdminPanelPage
+            if (this.Parent is ContentControl contentControl &&
+                contentControl.Parent is Grid grid &&
+                grid.Parent is AdminPanelPage adminPanel)
+            {
+                adminPanel.MainContentControl.Content = new MovieEditPage();
+            }
         }
 
         private void EditMovie_Click(object? sender, RoutedEventArgs e)
@@ -46,9 +50,13 @@ namespace KinoZalMarsBlinVali.Views
                 var movie = _movies.FirstOrDefault(m => m.MovieId == movieId);
                 if (movie != null)
                 {
-                    var editWindow = new MovieEditWindow(movie);
-                    editWindow.Closed += (s, args) => LoadMovies();
-                    editWindow.ShowDialog((Window)this.VisualRoot);
+                    // Переходим на страницу редактирования фильма через родительский AdminPanelPage
+                    if (this.Parent is ContentControl contentControl &&
+                        contentControl.Parent is Grid grid &&
+                        grid.Parent is AdminPanelPage adminPanel)
+                    {
+                        adminPanel.MainContentControl.Content = new MovieEditPage(movie);
+                    }
                 }
             }
         }
@@ -60,8 +68,14 @@ namespace KinoZalMarsBlinVali.Views
                 var movie = _movies.FirstOrDefault(m => m.MovieId == movieId);
                 if (movie != null)
                 {
-                    // Просто показываем информацию в сообщении
-                    var info = $"Название: {movie.Title}\nЖанр: {movie.Genre}\nПродолжительность: {movie.DurationMinutes} мин\nРежиссер: {movie.Director}";
+                    var info = $"Название: {movie.Title}\n" +
+                              $"Жанр: {movie.Genre}\n" +
+                              $"Продолжительность: {movie.DurationMinutes} мин\n" +
+                              $"Возрастное ограничение: {movie.AgeRating}\n" +
+                              $"Режиссер: {movie.Director}\n" +
+                              $"Актерский состав: {movie.CastText}\n" +
+                              $"Описание: {movie.Description}";
+
                     var dialog = new MessageWindow("Информация о фильме", info);
                     await dialog.ShowDialog((Window)this.VisualRoot);
                 }

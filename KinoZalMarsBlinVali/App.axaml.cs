@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using KinoZalMarsBlinVali.Views;
 
 namespace KinoZalMarsBlinVali
 {
@@ -16,6 +17,7 @@ namespace KinoZalMarsBlinVali
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
                 desktop.MainWindow = new MainWindow();
+                //desktop.MainWindow = new AuthWindow(); 
             }
 
             base.OnFrameworkInitializationCompleted();

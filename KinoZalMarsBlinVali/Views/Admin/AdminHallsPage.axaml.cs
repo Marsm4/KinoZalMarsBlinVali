@@ -1,13 +1,12 @@
-using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
 
-namespace KinoZalMarsBlinVali;
-
-public partial class AdminHallsPage : UserControl
+namespace KinoZalMarsBlinVali.Views
 {
-    public AdminHallsPage()
+    public partial class AdminHallsPage : UserControl
     {
-        InitializeComponent();
+        public AdminHallsPage()
+        {
+            InitializeComponent();
+        }
     }
 }

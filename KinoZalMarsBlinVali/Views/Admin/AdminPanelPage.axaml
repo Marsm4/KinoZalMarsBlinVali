@@ -1,0 +1,70 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="1920" d:DesignHeight="1080"
+             x:Class="KinoZalMarsBlinVali.Views.AdminPanelPage">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Border Grid.Row="0" Background="#0066CC" Padding="20">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0" Text="🎬 Панель администратора" 
+                          FontSize="24" FontWeight="Bold" Foreground="White"
+                          VerticalAlignment="Center"/>
+
+                <!-- Навигация -->
+                <StackPanel Grid.Column="1" Orientation="Horizontal" 
+                           HorizontalAlignment="Center" Spacing="15">
+                    <Button Content="🎬 Фильмы" Click="Movies_Click"
+                            Background="Transparent" Foreground="White"
+                            BorderThickness="0" FontWeight="SemiBold" FontSize="14"
+                            Padding="15,8"/>
+                    
+                    <Button Content="📅 Сеансы" Click="Sessions_Click"
+                            Background="Transparent" Foreground="White"
+                            BorderThickness="0" FontWeight="SemiBold" FontSize="14"
+                            Padding="15,8"/>
+                    
+                    <Button Content="🏢 Залы" Click="Halls_Click"
+                            Background="Transparent" Foreground="White"
+                            BorderThickness="0" FontWeight="SemiBold" FontSize="14"
+                            Padding="15,8"/>
+                    
+                    <Button Content="👥 Сотрудники" Click="Employees_Click"
+                            Background="Transparent" Foreground="White"
+                            BorderThickness="0" FontWeight="SemiBold" FontSize="14"
+                            Padding="15,8"/>
+                    
+                    <Button Content="📊 Отчеты" Click="Reports_Click"
+                            Background="Transparent" Foreground="White"
+                            BorderThickness="0" FontWeight="SemiBold" FontSize="14"
+                            Padding="15,8"/>
+                </StackPanel>
+
+                <!-- Информация о пользователе -->
+                <StackPanel Grid.Column="2" Orientation="Horizontal" 
+                           Spacing="15" VerticalAlignment="Center">
+                    <TextBlock x:Name="UserInfoText" Foreground="White"
+                              FontWeight="SemiBold" VerticalAlignment="Center" FontSize="14"/>
+                    <Button Content="Выйти" Click="Logout_Click" 
+                            Background="#FF6B35" Foreground="White"
+                            Padding="20,10" FontWeight="Bold" FontSize="14"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Основной контент -->
+        <ContentControl Grid.Row="1" x:Name="MainContentControl"/>
+    </Grid>
+</UserControl>

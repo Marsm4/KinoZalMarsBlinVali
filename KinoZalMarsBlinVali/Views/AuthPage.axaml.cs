@@ -73,10 +73,22 @@ namespace KinoZalMarsBlinVali.Views
                     {
                         AppDataContext.CurrentUser = employee;
 
-                        // Переходим на главную страницу
-                        if (this.VisualRoot is MainWindow mainWindow)
+                        // Проверяем роль пользователя
+                        if (employee.Role == "admin" || employee.Role == "manager")
                         {
-                            mainWindow.NavigateTo(new MainPage());
+                            // Администратор или менеджер - переходим на админ-панель
+                            if (this.VisualRoot is MainWindow mainWindow)
+                            {
+                                mainWindow.NavigateTo(new AdminPanelPage());
+                            }
+                        }
+                        else
+                        {
+                            // Обычный сотрудник (кассир) - переходим на главную страницу
+                            if (this.VisualRoot is MainWindow mainWindow)
+                            {
+                                mainWindow.NavigateTo(new MainPage());
+                            }
                         }
                     }
                     else

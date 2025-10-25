@@ -11,24 +11,27 @@ namespace KinoZalMarsBlinVali.Views
         {
             InitializeComponent();
 
-            // Показываем информацию о текущем пользователе
             var currentUser = AppDataContext.CurrentUser;
             if (currentUser != null)
             {
                 UserInfoText.Text = $"{currentUser.FirstName} {currentUser.LastName} ({currentUser.Position})";
 
-                // Показываем/скрываем админские кнопки в зависимости от роли
+                // Показываем/скрываем кнопки в зависимости от роли
                 bool isAdmin = currentUser.Role == "admin";
                 bool isManager = currentUser.Role == "manager";
                 bool isCashier = currentUser.Role == "cashier";
+                bool isCustomer = currentUser.Role == "customer";
 
-                AdminMoviesBtn.IsVisible = isAdmin || isManager;
-                AdminHallsBtn.IsVisible = isAdmin || isManager;
-                AdminEmployeesBtn.IsVisible = isAdmin;
-                AdminReportsBtn.IsVisible = isAdmin || isManager;
+                // Админские кнопки показываем только кассирам (для продажи билетов)
+                AdminMoviesBtn.IsVisible = isCashier;
+                AdminHallsBtn.IsVisible = isCashier;
+                AdminEmployeesBtn.IsVisible = false; // Только в админ-панели
+                AdminReportsBtn.IsVisible = isCashier;
+
+                // Для зрителей показываем кнопку профиля
+                //CustomerProfileBtn.IsVisible = isCustomer;
             }
 
-            // По умолчанию показываем страницу сеансов
             Sessions_Click(null, null);
         }
 
@@ -44,22 +47,30 @@ namespace KinoZalMarsBlinVali.Views
 
         private void Movies_Click(object? sender, RoutedEventArgs e)
         {
+            // Для кассиров - упрощенное управление фильмами
             MainContentControl.Content = new MoviesPage();
         }
 
         private void Halls_Click(object? sender, RoutedEventArgs e)
         {
+            // Для кассиров - просмотр залов
             MainContentControl.Content = new HallsPage();
         }
 
         private void Employees_Click(object? sender, RoutedEventArgs e)
         {
-            MainContentControl.Content = new EmployeesPage();
+            // Эта кнопка не должна быть видна на MainPage
         }
 
         private void Reports_Click(object? sender, RoutedEventArgs e)
         {
+            // Для кассиров - упрощенные отчеты
             MainContentControl.Content = new ReportsPage();
+        }
+
+        private void CustomerProfile_Click(object? sender, RoutedEventArgs e)
+        {
+            MainContentControl.Content = new CustomerProfilePage();
         }
 
         private void Logout_Click(object? sender, RoutedEventArgs e)

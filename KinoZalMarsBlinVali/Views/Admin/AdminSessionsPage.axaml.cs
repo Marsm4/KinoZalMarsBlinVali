@@ -1,13 +1,12 @@
-using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
 
-namespace KinoZalMarsBlinVali;
-
-public partial class AdminSessionsPage : UserControl
+namespace KinoZalMarsBlinVali.Views
 {
-    public AdminSessionsPage()
+    public partial class AdminSessionsPage : UserControl
     {
-        InitializeComponent();
+        public AdminSessionsPage()
+        {
+            InitializeComponent();
+        }
     }
 }
