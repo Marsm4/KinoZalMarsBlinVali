@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+п»їusing Avalonia.Controls;
 using Avalonia.Interactivity;
 using KinoZalMarsBlinVali.Data;
 using KinoZalMarsBlinVali.Models;
@@ -12,10 +12,11 @@ namespace KinoZalMarsBlinVali.Views
     {
         private Ticket _ticket;
         private Customer _customer;
+        private bool _paymentSuccess = false;
 
         public string MovieTitle => _ticket.Session.Movie.Title;
         public string SessionTime => _ticket.Session.StartTime.ToString("dd.MM.yyyy HH:mm");
-        public string SeatInfo => $"Ряд {_ticket.Seat.RowNumber}, Место {_ticket.Seat.SeatNumber}";
+        public string SeatInfo => $"Р СЏРґ {_ticket.Seat.RowNumber}, РњРµСЃС‚Рѕ {_ticket.Seat.SeatNumber}";
         public string CustomerInfo => $"{_ticket.Customer.FirstName} {_ticket.Customer.LastName} ({_ticket.Customer.Email})";
         public decimal TotalPrice => _ticket.FinalPrice;
 
@@ -30,31 +31,53 @@ namespace KinoZalMarsBlinVali.Views
 
         private void LoadCustomerBonusInfo()
         {
-            CurrentBonusText.Text = $"Текущие бонусы клиента: {_customer.BonusPoints ?? 0}";
+            CurrentBonusText.Text = $"РўРµРєСѓС‰РёРµ Р±РѕРЅСѓСЃС‹ РєР»РёРµРЅС‚Р°: {_customer.BonusPoints ?? 0}";
+        }
+
+        private string GetPaymentMethod()
+        {
+            var selectedItem = PaymentMethodComboBox.SelectedItem as ComboBoxItem;
+            return selectedItem?.Content?.ToString() switch
+            {
+                "рџ’і Р‘Р°РЅРєРѕРІСЃРєР°СЏ РєР°СЂС‚Р°" => "card",
+                "рџ’µ РќР°Р»РёС‡РЅС‹Рµ" => "cash",
+                "рџ“± РћРЅР»Р°Р№РЅ-РѕРїР»Р°С‚Р°" => "online",
+                _ => "card"
+            };
         }
 
         private async void ConfirmPayment_Click(object? sender, RoutedEventArgs e)
         {
             try
             {
-                // Обновляем статус билета
+                // РџСЂРѕРІРµСЂСЏРµРј РІРІРѕРґ Р±РѕРЅСѓСЃРЅС‹С… Р±Р°Р»Р»РѕРІ
+                if (!int.TryParse(BonusPointsTextBox.Text, out int bonusPoints) || bonusPoints < 0)
+                {
+                    await ShowError("Р’РІРµРґРёС‚Рµ РєРѕСЂСЂРµРєС‚РЅРѕРµ РєРѕР»РёС‡РµСЃС‚РІРѕ Р±РѕРЅСѓСЃРЅС‹С… Р±Р°Р»Р»РѕРІ");
+                    return;
+                }
+
+                // РћР±РЅРѕРІР»СЏРµРј СЃС‚Р°С‚СѓСЃ Р±РёР»РµС‚Р°
                 _ticket.Status = "sold";
                 _ticket.PurchaseTime = DateTime.Now;
                 _ticket.ReservationExpires = null;
 
-                // Начисляем бонусные баллы
-                if (int.TryParse(BonusPointsTextBox.Text, out int bonusPoints) && bonusPoints > 0)
+                // РќР°С‡РёСЃР»СЏРµРј Р±РѕРЅСѓСЃРЅС‹Рµ Р±Р°Р»Р»С‹
+                if (bonusPoints > 0)
                 {
                     _customer.BonusPoints = (_customer.BonusPoints ?? 0) + bonusPoints;
                 }
 
-                // Создаем финансовую транзакцию
+                // РџРѕР»СѓС‡Р°РµРј СЃРїРѕСЃРѕР± РѕРїР»Р°С‚С‹
+                var paymentMethod = GetPaymentMethod();
+
+                // РЎРѕР·РґР°РµРј С„РёРЅР°РЅСЃРѕРІСѓСЋ С‚СЂР°РЅР·Р°РєС†РёСЋ
                 var transaction = new FinancialTransaction
                 {
                     TransactionType = "ticket_sale",
                     Amount = _ticket.FinalPrice,
-                    PaymentMethod = "card", // или cash, в зависимости от выбора
-                    Description = $"Оплата билета на {_ticket.Session.Movie.Title}",
+                    PaymentMethod = paymentMethod,
+                    Description = $"РћРїР»Р°С‚Р° Р±РёР»РµС‚Р° РЅР° {_ticket.Session.Movie.Title} ({SeatInfo})",
                     EmployeeId = AppDataContext.CurrentUser?.EmployeeId,
                     TicketId = _ticket.TicketId,
                     TransactionTime = DateTime.Now
@@ -63,18 +86,28 @@ namespace KinoZalMarsBlinVali.Views
                 AppDataContext.DbContext.FinancialTransactions.Add(transaction);
                 await AppDataContext.DbContext.SaveChangesAsync();
 
-                Close(true);
+                _paymentSuccess = true;
+                Close();
             }
             catch (Exception ex)
             {
-                var dialog = new MessageWindow("Ошибка", $"Ошибка обработки оплаты: {ex.Message}");
-                await dialog.ShowDialog(this);
+                await ShowError($"РћС€РёР±РєР° РѕР±СЂР°Р±РѕС‚РєРё РѕРїР»Р°С‚С‹: {ex.Message}");
             }
         }
 
         private void Cancel_Click(object? sender, RoutedEventArgs e)
         {
-            Close(false);
+            _paymentSuccess = false;
+            Close();
+        }
+
+        // Р”РѕР±Р°РІР»СЏРµРј СЃРІРѕР№СЃС‚РІРѕ РґР»СЏ РїРѕР»СѓС‡РµРЅРёСЏ СЂРµР·СѓР»СЊС‚Р°С‚Р°
+        public bool PaymentSuccess => _paymentSuccess;
+
+        private async Task ShowError(string message)
+        {
+            var dialog = new MessageWindow("РћС€РёР±РєР°", message);
+            await dialog.ShowDialog(this);
         }
     }
 }

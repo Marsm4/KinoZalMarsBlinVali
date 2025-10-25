@@ -1,12 +1,13 @@
 ﻿<Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Обработка оплаты"
-        Width="400" Height="500"
+        Width="500" Height="450"
         x:Class="KinoZalMarsBlinVali.Views.PaymentProcessingWindow">
     <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
@@ -27,16 +28,26 @@
             </StackPanel>
         </Border>
 
-        <!-- Начисление бонусов -->
+        <!-- Способ оплаты -->
         <StackPanel Grid.Row="2" Spacing="10" Margin="0,15,0,10">
+            <TextBlock Text="Способ оплаты:" FontWeight="SemiBold"/>
+            <ComboBox x:Name="PaymentMethodComboBox" SelectedIndex="0">
+                <ComboBoxItem Content="💳 Банковская карта"/>
+                <ComboBoxItem Content="💵 Наличные"/>
+                <ComboBoxItem Content="📱 Онлайн-оплата"/>
+            </ComboBox>
+        </StackPanel>
+
+        <!-- Начисление бонусов -->
+        <StackPanel Grid.Row="3" Spacing="10" Margin="0,0,0,10">
             <TextBlock Text="Начисление бонусов:" FontWeight="SemiBold"/>
-            <TextBox x:Name="BonusPointsTextBox" Text="0"
+            <TextBox x:Name="BonusPointsTextBox" Text="10"
                      Watermark="Количество бонусных баллов"/>
             <TextBlock x:Name="CurrentBonusText" FontSize="12" Foreground="#666"/>
         </StackPanel>
 
         <!-- Кнопки -->
-        <StackPanel Grid.Row="3" Orientation="Horizontal" 
+        <StackPanel Grid.Row="4" Orientation="Horizontal" 
                     HorizontalAlignment="Right" Spacing="10">
             <Button Content="✅ Подтвердить оплату" Click="ConfirmPayment_Click"
                     Background="#00A651" Foreground="White" 

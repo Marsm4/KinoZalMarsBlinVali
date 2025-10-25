@@ -1,5 +1,8 @@
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Avalonia.Layout;
+using Avalonia.Media;
 using KinoZalMarsBlinVali.Data;
 using KinoZalMarsBlinVali.Models;
 using Microsoft.EntityFrameworkCore;
@@ -91,17 +94,19 @@ namespace KinoZalMarsBlinVali.Views
                 if (reservation != null && reservation.Status == "reserved")
                 {
                     var paymentWindow = new PaymentProcessingWindow(reservation);
-                    var result = await paymentWindow.ShowDialog<bool>((Window)this.VisualRoot);
 
-                    if (result)
+                    // Простой вызов ShowDialog
+                    await paymentWindow.ShowDialog((Window)this.VisualRoot);
+
+                    // Проверяем результат через свойство
+                    if (paymentWindow.PaymentSuccess)
                     {
                         LoadReservations();
-                         ShowSuccess("Оплата прошла успешно!");
+                        ShowSuccess("Оплата прошла успешно!");
                     }
                 }
             }
         }
-
         private async void CancelReservation_Click(object? sender, RoutedEventArgs e)
         {
             if (sender is Button button && button.Tag is int ticketId)
@@ -109,10 +114,66 @@ namespace KinoZalMarsBlinVali.Views
                 var reservation = _allReservations.FirstOrDefault(t => t.TicketId == ticketId);
                 if (reservation != null && reservation.Status == "reserved")
                 {
-                    var confirm = new ConfirmWindow("Отмена бронирования",
-                        "Вы уверены, что хотите отменить это бронирование?");
+                    // Используем MessageBox (если доступен в Avalonia)
+                    var message = $"Вы уверены, что хотите отменить бронирование?\n\n" +
+                                 $"Фильм: {reservation.Session.Movie.Title}\n" +
+                                 $"Время: {reservation.Session.StartTime:dd.MM.yyyy HH:mm}\n" +
+                                 $"Место: Ряд {reservation.Seat.RowNumber}, Место {reservation.Seat.SeatNumber}";
 
-                    var result = await confirm.ShowDialog<bool>((Window)this.VisualRoot);
+                    // Если MessageBox недоступен, создаем простой диалог
+                    var dialog = new Window
+                    {
+                        Title = "Отмена бронирования",
+                        Width = 400,
+                        Height = 300,
+                        WindowStartupLocation = WindowStartupLocation.CenterOwner
+                    };
+
+                    var stackPanel = new StackPanel { Margin = new Thickness(20) };
+
+                    var textBlock = new TextBlock
+                    {
+                        Text = message,
+                        TextWrapping = TextWrapping.Wrap,
+                        Margin = new Thickness(0, 0, 0, 20)
+                    };
+
+                    var buttonPanel = new StackPanel
+                    {
+                        Orientation = Orientation.Horizontal,
+                        HorizontalAlignment = HorizontalAlignment.Right,
+                        Spacing = 10
+                    };
+
+                    var yesButton = new Button
+                    {
+                        Content = "Да, отменить",
+                        Background = Brushes.Red,
+                        Foreground = Brushes.White,
+                        Padding = new Thickness(15, 8)
+                    };
+
+                    var noButton = new Button
+                    {
+                        Content = "Нет",
+                        Background = Brushes.Gray,
+                        Foreground = Brushes.White,
+                        Padding = new Thickness(15, 8)
+                    };
+
+                    bool result = false;
+                    yesButton.Click += (s, e) => { result = true; dialog.Close(); };
+                    noButton.Click += (s, e) => { result = false; dialog.Close(); };
+
+                    buttonPanel.Children.Add(noButton);
+                    buttonPanel.Children.Add(yesButton);
+
+                    stackPanel.Children.Add(textBlock);
+                    stackPanel.Children.Add(buttonPanel);
+
+                    dialog.Content = stackPanel;
+
+                    await dialog.ShowDialog((Window)this.VisualRoot);
 
                     if (result)
                     {
@@ -131,7 +192,6 @@ namespace KinoZalMarsBlinVali.Views
                 }
             }
         }
-
         private void SearchReservations_Click(object? sender, RoutedEventArgs e)
         {
             ApplyFilters();
@@ -155,7 +215,6 @@ namespace KinoZalMarsBlinVali.Views
         }
     }
 
-    // Переименуем класс, чтобы избежать конфликта
     public class CashierReservationViewModel
     {
         public Ticket Ticket { get; set; }

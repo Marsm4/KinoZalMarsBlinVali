@@ -79,15 +79,30 @@ namespace KinoZalMarsBlinVali.Views
                 var reservation = _reservations.FirstOrDefault(t => t.TicketId == ticketId);
                 if (reservation != null)
                 {
-                    var paymentWindow = new PaymentProcessingWindow(reservation);
-                    var result = await paymentWindow.ShowDialog<bool>((Window)this.VisualRoot);
-
-                    if (result)
+                    try
                     {
-                        // Обновляем список после успешной оплаты
-                        LoadActiveReservations();
-                         ShowSuccess("Оплата прошла успешно!");
+                        // Создаем и показываем окно оплаты
+                        var paymentWindow = new PaymentProcessingWindow(reservation);
+
+                        // Простой вызов ShowDialog без возвращаемого значения
+                        await paymentWindow.ShowDialog((Window)this.VisualRoot);
+
+                        // Проверяем результат через свойство
+                        if (paymentWindow.PaymentSuccess)
+                        {
+                            // Обновляем список после успешной оплаты
+                            LoadActiveReservations();
+                             ShowSuccess($"Оплата прошла успешно! Билет #{reservation.TicketId} подтвержден.");
+                        }
                     }
+                    catch (Exception ex)
+                    {
+                         ShowError($"Ошибка при обработке оплаты: {ex.Message}");
+                    }
+                }
+                else
+                {
+                     ShowError("Бронирование не найдено");
                 }
             }
         }
@@ -105,7 +120,6 @@ namespace KinoZalMarsBlinVali.Views
         }
     }
 
-    // Переименуем класс для страницы оплаты
     public class PaymentReservationViewModel
     {
         public Ticket Ticket { get; set; }
