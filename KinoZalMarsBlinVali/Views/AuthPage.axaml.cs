@@ -31,7 +31,7 @@ namespace KinoZalMarsBlinVali.Views
 
                 if (isCustomerLogin)
                 {
-                    // Авторизация зрителя
+                    // Авторизация зрителя (существующий код)
                     var customer = AppDataContext.DbContext.Customers
                         .FirstOrDefault(c => c.Email == username && c.Password == password);
 
@@ -46,14 +46,13 @@ namespace KinoZalMarsBlinVali.Views
                             Username = customer.Email,
                             Role = "customer",
                             Position = "Зритель",
-                            Password = "", // Пустой пароль для зрителя
+                            Password = "",
                             IsActive = true
                         };
 
-                        // ИСПРАВЛЕНО: Переходим на главную страницу для зрителя
                         if (this.VisualRoot is MainWindow mainWindow)
                         {
-                            mainWindow.NavigateTo(new CustomerMainPage()); // Вместо MainPage()
+                            mainWindow.NavigateTo(new CustomerMainPage());
                         }
                     }
                     else
@@ -76,15 +75,23 @@ namespace KinoZalMarsBlinVali.Views
                         // Проверяем роль пользователя
                         if (employee.Role == "admin" || employee.Role == "manager")
                         {
-                            // Администратор или менеджер - переходим на админ-панель
+                            // Администратор или менеджер
                             if (this.VisualRoot is MainWindow mainWindow)
                             {
                                 mainWindow.NavigateTo(new AdminPanelPage());
                             }
                         }
+                        else if (employee.Role == "cashier")
+                        {
+                            // КАССИР - переходим на главную страницу кассира
+                            if (this.VisualRoot is MainWindow mainWindow)
+                            {
+                                mainWindow.NavigateTo(new CashierMainPage());
+                            }
+                        }
                         else
                         {
-                            // Обычный сотрудник (кассир) - переходим на главную страницу
+                            // Обычный сотрудник
                             if (this.VisualRoot is MainWindow mainWindow)
                             {
                                 mainWindow.NavigateTo(new MainPage());

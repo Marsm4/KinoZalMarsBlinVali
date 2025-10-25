@@ -1,0 +1,49 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="1920" d:DesignHeight="1080"
+             x:Class="KinoZalMarsBlinVali.Views.CashierMainPage">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Навигационная панель -->
+        <Border Grid.Row="0" Background="#0066CC" Padding="15">
+            <StackPanel Orientation="Horizontal" Spacing="20">
+                <TextBlock Text="💼 Кассир" FontSize="20" FontWeight="Bold" 
+                          Foreground="White" VerticalAlignment="Center"/>
+                
+                <Button Content="💰 Оплата билетов" Click="NavigateToPayment_Click"
+                        Background="Transparent" Foreground="White" 
+                        Padding="15,8" FontWeight="Bold"
+                        Classes="nav-button"/>
+                        
+                <Button Content="🎫 Бронирования" Click="NavigateToReservations_Click"
+                        Background="Transparent" Foreground="White" 
+                        Padding="15,8" FontWeight="Bold"
+                        Classes="nav-button"/>
+                        
+                <Button Content="⭐ Бонусы" Click="NavigateToBonus_Click"
+                        Background="Transparent" Foreground="White" 
+                        Padding="15,8" FontWeight="Bold"
+                        Classes="nav-button"/>
+                        
+                <Button Content="📊 Отчеты" Click="NavigateToReports_Click"
+                        Background="Transparent" Foreground="White" 
+                        Padding="15,8" FontWeight="Bold"
+                        Classes="nav-button"/>
+                        
+                <Button Content="🚪 Выйти" Click="Logout_Click"
+                        Background="#FF6B35" Foreground="White" 
+                        Padding="15,8" FontWeight="Bold"
+                        Margin="20,0,0,0"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Контент -->
+        <ContentControl Grid.Row="1" x:Name="MainContentControl"/>
+    </Grid>
+</UserControl>

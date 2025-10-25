@@ -1,0 +1,51 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="1920" d:DesignHeight="1080"
+             x:Class="KinoZalMarsBlinVali.Views.CashierBonusPage">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Text="⭐ Управление бонусами" 
+                   FontSize="24" FontWeight="Bold" Foreground="#0066CC"
+                   Margin="0,0,0,20"/>
+
+        <!-- Поиск клиента -->
+        <Border Grid.Row="1" Background="#F5F5F5" CornerRadius="8" Padding="15" Margin="0,0,0,20">
+            <StackPanel Orientation="Horizontal" Spacing="15">
+                <TextBox x:Name="SearchCustomerTextBox" Width="300" 
+                         Watermark="Email или телефон клиента"
+                         VerticalContentAlignment="Center"/>
+                         
+                <Button Content="🔍 Найти" Click="SearchCustomer_Click"
+                        Background="#0066CC" Foreground="White" 
+                        Padding="20,10" FontWeight="Bold"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Информация о клиенте и управление бонусами -->
+        <Border Grid.Row="2" Background="White" CornerRadius="8" 
+                BorderBrush="#e0e0e0" BorderThickness="1" Padding="20">
+            <StackPanel Spacing="15">
+                <TextBlock x:Name="CustomerInfoText" FontSize="16" FontWeight="Bold"/>
+                <TextBlock x:Name="BonusInfoText" FontSize="14" Foreground="#666"/>
+                
+                <StackPanel Orientation="Horizontal" Spacing="15">
+                    <TextBox x:Name="BonusPointsTextBox" Width="150" 
+                             Text="0" Watermark="Количество баллов"/>
+                    <Button Content="➕ Начислить" Click="AddBonus_Click"
+                            Background="#00A651" Foreground="White" 
+                            Padding="15,8" FontWeight="Bold"/>
+                    <Button Content="➖ Списать" Click="RemoveBonus_Click"
+                            Background="#FF6B35" Foreground="White" 
+                            Padding="15,8" FontWeight="Bold"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>

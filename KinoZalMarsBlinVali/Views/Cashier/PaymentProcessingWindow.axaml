@@ -1,0 +1,49 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Обработка оплаты"
+        Width="400" Height="500"
+        x:Class="KinoZalMarsBlinVali.Views.PaymentProcessingWindow">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Text="💳 Обработка оплаты" 
+                   FontSize="18" FontWeight="Bold" Foreground="#0066CC"
+                   Margin="0,0,0,15"/>
+
+        <!-- Информация о билете -->
+        <Border Grid.Row="1" Background="#F5F5F5" CornerRadius="8" Padding="15">
+            <StackPanel Spacing="10">
+                <TextBlock Text="{Binding MovieTitle}" FontWeight="Bold" FontSize="16"/>
+                <TextBlock Text="{Binding SessionTime}" FontSize="14"/>
+                <TextBlock Text="{Binding SeatInfo}" FontSize="14"/>
+                <TextBlock Text="{Binding CustomerInfo}" FontSize="12" Foreground="#666"/>
+                <TextBlock Text="{Binding TotalPrice, StringFormat='Сумма к оплате: {0}₽'}" 
+                           FontSize="16" FontWeight="Bold" Foreground="#00A651"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Начисление бонусов -->
+        <StackPanel Grid.Row="2" Spacing="10" Margin="0,15,0,10">
+            <TextBlock Text="Начисление бонусов:" FontWeight="SemiBold"/>
+            <TextBox x:Name="BonusPointsTextBox" Text="0"
+                     Watermark="Количество бонусных баллов"/>
+            <TextBlock x:Name="CurrentBonusText" FontSize="12" Foreground="#666"/>
+        </StackPanel>
+
+        <!-- Кнопки -->
+        <StackPanel Grid.Row="3" Orientation="Horizontal" 
+                    HorizontalAlignment="Right" Spacing="10">
+            <Button Content="✅ Подтвердить оплату" Click="ConfirmPayment_Click"
+                    Background="#00A651" Foreground="White" 
+                    Padding="15,8" FontWeight="Bold"/>
+            <Button Content="❌ Отмена" Click="Cancel_Click"
+                    Background="#6c757d" Foreground="White" 
+                    Padding="15,8" FontWeight="Bold"/>
+        </StackPanel>
+    </Grid>
+</Window>
