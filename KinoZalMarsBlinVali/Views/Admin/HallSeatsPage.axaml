@@ -1,0 +1,115 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:views="clr-namespace:KinoZalMarsBlinVali.Views"
+             mc:Ignorable="d" d:DesignWidth="1920" d:DesignHeight="1080"
+             x:Class="KinoZalMarsBlinVali.Views.HallSeatsPage">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Заголовок и кнопка назад -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="15" Margin="0,0,0,20">
+            <Button Content="← Назад" Click="Back_Click"
+                    Background="#6c757d" Foreground="White" 
+                    Padding="15,8" FontWeight="Bold"/>
+            <TextBlock x:Name="TitleText" Text="Карта зала" 
+                       FontSize="24" FontWeight="Bold" Foreground="#0066CC"
+                       VerticalAlignment="Center"/>
+        </StackPanel>
+
+        <!-- Панель управления -->
+        <Border Grid.Row="1" Background="#F5F5F5" CornerRadius="8" Padding="15" Margin="0,0,0,20">
+            <StackPanel Orientation="Horizontal" Spacing="15">
+                <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+                    <TextBlock Text="Тип места:" FontWeight="SemiBold"/>
+                    <ComboBox x:Name="SeatTypeComboBox" Width="120" SelectedIndex="0">
+                        <ComboBoxItem Content="standard"/>
+                        <ComboBoxItem Content="vip"/>
+                        <ComboBoxItem Content="disabled"/>
+                    </ComboBox>
+                </StackPanel>
+                <Button Content="🔄 Обновить карту" Click="RefreshSeats_Click"
+                        Background="#0066CC" Foreground="White" 
+                        Padding="15,8" FontWeight="Bold"/>
+                <Button Content="💾 Сохранить изменения" Click="SaveSeats_Click"
+                        Background="#00A651" Foreground="White" 
+                        Padding="15,8" FontWeight="Bold"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Легенда -->
+        <Border Grid.Row="2" Background="#E8F5E8" CornerRadius="8" Padding="10" Margin="0,0,0,10">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="20">
+                <StackPanel Orientation="Horizontal" Spacing="5">
+                    <Border Width="20" Height="20" Background="#4CAF50" CornerRadius="3"/>
+                    <TextBlock Text="Стандарт" FontWeight="SemiBold"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Spacing="5">
+                    <Border Width="20" Height="20" Background="#FF9800" CornerRadius="3"/>
+                    <TextBlock Text="VIP" FontWeight="SemiBold"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Spacing="5">
+                    <Border Width="20" Height="20" Background="#F44336" CornerRadius="3"/>
+                    <TextBlock Text="Отключено" FontWeight="SemiBold"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Spacing="5">
+                    <Border Width="20" Height="20" Background="#9E9E9E" CornerRadius="3"/>
+                    <TextBlock Text="Экран" FontWeight="SemiBold"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <!-- Карта зала -->
+        <ScrollViewer Grid.Row="3" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+            <StackPanel Orientation="Vertical" Spacing="10">
+                <!-- Экран -->
+                <Border Background="#9E9E9E" Height="30" CornerRadius="5" Margin="50,0,50,20">
+                    <TextBlock Text="ЭКРАН" FontWeight="Bold" Foreground="White" 
+                               HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </Border>
+                
+                <!-- Места -->
+                <ItemsControl x:Name="SeatsItemsControl">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Vertical" Spacing="5"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal" Spacing="3">
+                                <TextBlock Text="{Binding RowNumber}" 
+                                           FontWeight="Bold" Width="30"
+                                           VerticalAlignment="Center"
+                                           HorizontalAlignment="Center"/>
+                                <ItemsControl ItemsSource="{Binding Seats}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Orientation="Horizontal" Spacing="3"/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Button Content="{Binding SeatNumber}"
+                                                    Width="35" Height="35" FontSize="10"
+                                                    Click="SeatButton_Click"
+                                                    Tag="{Binding}"
+                                                    views:SeatProperties.SeatType="{Binding SeatType}">
+                                            </Button>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

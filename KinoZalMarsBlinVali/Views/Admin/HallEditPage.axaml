@@ -1,0 +1,87 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="1920" d:DesignHeight="1080"
+             x:Class="KinoZalMarsBlinVali.Views.HallEditPage">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Заголовок и кнопка назад -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="15" Margin="0,0,0,20">
+            <Button Content="← Назад" Click="Back_Click"
+                    Background="#6c757d" Foreground="White" 
+                    Padding="15,8" FontWeight="Bold"/>
+            <TextBlock Text="{Binding WindowTitle}" 
+                       FontSize="24" FontWeight="Bold" Foreground="#0066CC"
+                       VerticalAlignment="Center"/>
+        </StackPanel>
+
+        <!-- Форма редактирования -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <Grid Width="500" HorizontalAlignment="Left">
+                <StackPanel Spacing="15">
+                    <!-- Название зала -->
+                    <StackPanel>
+                        <TextBlock Text="Название зала *" FontWeight="SemiBold" FontSize="14"/>
+                        <TextBox x:Name="HallNameTextBox" Height="35" FontSize="14"/>
+                    </StackPanel>
+
+                    <!-- Тип зала -->
+                    <StackPanel>
+                        <TextBlock Text="Тип зала *" FontWeight="SemiBold" FontSize="14"/>
+                        <ComboBox x:Name="HallTypeComboBox" Height="35" FontSize="14">
+                            <ComboBoxItem Content="standard" IsSelected="True"/>
+                            <ComboBoxItem Content="vip"/>
+                            <ComboBoxItem Content="imax"/>
+                            <ComboBoxItem Content="4dx"/>
+                        </ComboBox>
+                    </StackPanel>
+
+                    <!-- Количество рядов -->
+       <StackPanel>
+    <TextBlock Text="Количество рядов *" FontWeight="SemiBold" FontSize="14"/>
+    <TextBox x:Name="SeatRowsTextBox" Height="35" FontSize="14"
+             Text="10" TextChanged="SeatRowsTextBox_TextChanged"/>
+</StackPanel>
+
+
+                   <!-- Мест в ряду -->
+<StackPanel>
+    <TextBlock Text="Мест в ряду *" FontWeight="SemiBold" FontSize="14"/>
+    <TextBox x:Name="SeatColumnsTextBox" Height="35" FontSize="14"
+             Text="10" TextChanged="SeatColumnsTextBox_TextChanged"/>
+</StackPanel>
+
+                    <!-- Всего мест (вычисляемое поле) -->
+                    <StackPanel>
+                        <TextBlock Text="Всего мест" FontWeight="SemiBold" FontSize="14"/>
+                        <TextBlock x:Name="TotalSeatsText" FontSize="14" FontWeight="Bold"
+                                   Foreground="#0066CC" Text="100"/>
+                    </StackPanel>
+
+                    <!-- Путь к схеме -->
+                    <StackPanel>
+                        <TextBlock Text="Путь к схеме зала" FontWeight="SemiBold" FontSize="14"/>
+                        <TextBox x:Name="LayoutSchemaPathTextBox" Height="35" FontSize="14"/>
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
+        </ScrollViewer>
+
+        <!-- Кнопки -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" 
+                    HorizontalAlignment="Left" Spacing="20" Margin="0,20,0,0">
+            <Button Content="Сохранить" Click="Save_Click"
+                    Background="#00A651" Foreground="White" 
+                    Padding="30,10" FontWeight="Bold" FontSize="14"/>
+            <Button Content="Отмена" Click="Back_Click"
+                    Background="#6c757d" Foreground="White" 
+                    Padding="30,10" FontWeight="Bold" FontSize="14"/>
+        </StackPanel>
+    </Grid>
+</UserControl>
