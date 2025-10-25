@@ -93,34 +93,16 @@
                                                     <StackPanel Orientation="Horizontal" Spacing="3"/>
                                                 </ItemsPanelTemplate>
                                             </ItemsControl.ItemsPanel>
-                                         <ItemsControl.ItemTemplate>
-    <DataTemplate>
-        <Button Content="{Binding SeatNumber}"
-                Width="35" Height="35" FontSize="10"
-                Click="SeatButton_Click"
-                Tag="{Binding}"
-                IsEnabled="{Binding IsAvailable}"
-                Name="SeatButton">
-            <Button.Styles>
-                <Style Selector="Button">
-                    <Setter Property="Background" Value="#4CAF50"/>
-                </Style>
-                <Style Selector="Button:disabled">
-                    <Setter Property="Background" Value="#F44336"/>
-                </Style>
-                <Style Selector="Button.selected">
-                    <Setter Property="Background" Value="#2196F3"/>
-                </Style>
-                <Style Selector="Button.vip">
-                    <Setter Property="Background" Value="#FF9800"/>
-                </Style>
-                <Style Selector="Button.disabled">
-                    <Setter Property="Background" Value="#9E9E9E"/>
-                </Style>
-            </Button.Styles>
-        </Button>
-    </DataTemplate>
-</ItemsControl.ItemTemplate>
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Button Content="{Binding SeatNumber}"
+                                                            Width="35" Height="35" FontSize="10"
+                                                            Click="SeatButton_Click"
+                                                            Tag="{Binding}"
+                                                            IsEnabled="{Binding IsAvailable}"
+                                                            Background="{Binding SeatBackground}"/>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
                                         </ItemsControl>
                                     </StackPanel>
                                 </DataTemplate>
@@ -134,19 +116,23 @@
             <Border Grid.Column="1" Background="#F5F5F5" CornerRadius="8" Padding="20">
                 <StackPanel Spacing="15">
                     <TextBlock Text="Выбранные места:" FontWeight="Bold" FontSize="16"/>
-                    <ItemsControl x:Name="SelectedSeatsItemsControl">
+                    
+                    <!-- ИСПРАВЛЕНИЕ: Правильный ItemsControl для выбранных мест -->
+                    <ItemsControl x:Name="SelectedSeatsItemsControl" MaxHeight="200">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Border Background="White" CornerRadius="5" Padding="10" Margin="0,0,0,5">
+                                <Border Background="White" CornerRadius="5" Padding="10" Margin="0,0,0,5"
+                                        BorderBrush="#e0e0e0" BorderThickness="1">
                                     <StackPanel>
-                                        <TextBlock Text="{Binding SeatInfoText}" FontWeight="SemiBold"/>
-                                        <TextBlock Text="{Binding Price, StringFormat='Цена: {0}₽'}" FontSize="12"/>
+                                        <TextBlock Text="{Binding SeatInfoText}" FontWeight="SemiBold" FontSize="12"/>
+                                        <TextBlock Text="{Binding Price, StringFormat='Цена: {0}₽'}" FontSize="10" Foreground="#666"/>
                                     </StackPanel>
                                 </Border>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
 
+                    <TextBlock Text="Тип билета:" FontWeight="SemiBold" FontSize="14"/>
                     <ComboBox x:Name="TicketTypeComboBox" 
                               SelectedIndex="0"
                               SelectionChanged="TicketType_SelectionChanged">

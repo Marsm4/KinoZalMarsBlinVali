@@ -1,13 +1,16 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Threading;
+using Avalonia.Media;
+using Avalonia.VisualTree;
 using KinoZalMarsBlinVali.Data;
 using KinoZalMarsBlinVali.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 namespace KinoZalMarsBlinVali.Views
@@ -15,28 +18,64 @@ namespace KinoZalMarsBlinVali.Views
     public partial class BookingPage : UserControl
     {
         private Session _session;
-        private List<HallSeat> _availableSeats = new List<HallSeat>();
         private ObservableCollection<SeatSelection> _selectedSeats = new ObservableCollection<SeatSelection>();
         private List<TicketType> _ticketTypes = new List<TicketType>();
 
-        public class SeatRow
+        public class SeatRow : INotifyPropertyChanged
         {
             public int RowNumber { get; set; }
             public ObservableCollection<SeatInfo> Seats { get; set; } = new ObservableCollection<SeatInfo>();
+
+            public event PropertyChangedEventHandler? PropertyChanged;
         }
 
-        public class SeatInfo
+        public class SeatInfo : INotifyPropertyChanged
         {
+            private bool _isSelected;
+
             public HallSeat Seat { get; set; }
-            public string SeatInfoText => $"Ряд {Seat.RowNumber}, Место {Seat.SeatNumber}"; // Переименовано
+            public string SeatInfoText => $"Ряд {Seat.RowNumber}, Место {Seat.SeatNumber}";
             public bool IsAvailable { get; set; }
-            public bool IsSelected { get; set; }
+
+            public bool IsSelected
+            {
+                get => _isSelected;
+                set
+                {
+                    _isSelected = value;
+                    OnPropertyChanged();
+                    OnPropertyChanged(nameof(SeatBackground));
+                }
+            }
+
+            public IBrush SeatBackground
+            {
+                get
+                {
+                    if (!IsAvailable)
+                        return new SolidColorBrush(Colors.Red);
+                    if (IsSelected)
+                        return new SolidColorBrush(Colors.Blue);
+                    if (Seat.SeatType == "vip")
+                        return new SolidColorBrush(Colors.Orange);
+                    if (Seat.SeatType == "disabled")
+                        return new SolidColorBrush(Colors.Gray);
+                    return new SolidColorBrush(Colors.Green);
+                }
+            }
+
+            public event PropertyChangedEventHandler? PropertyChanged;
+
+            protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+            {
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            }
         }
 
         public class SeatSelection
         {
             public HallSeat Seat { get; set; }
-            public string SeatInfoText => $"Ряд {Seat.RowNumber}, Место {Seat.SeatNumber}"; // Переименовано
+            public string SeatInfoText => $"Ряд {Seat.RowNumber}, Место {Seat.SeatNumber}";
             public decimal Price { get; set; }
         }
 
@@ -55,12 +94,6 @@ namespace KinoZalMarsBlinVali.Views
             MovieTitle.Text = _session.Movie.Title;
             SessionInfo.Text = $"{_session.StartTime:dd.MM.yyyy HH:mm} - {_session.EndTime:HH:mm}";
             HallInfo.Text = $"Зал: {_session.Hall.HallName}";
-
-            // Используем PosterPath вместо PosterUrl
-            if (!string.IsNullOrEmpty(_session.Movie.PosterPath))
-            {
-                // Здесь должна быть логика загрузки изображения
-            }
         }
 
         private void LoadSeats()
@@ -103,37 +136,11 @@ namespace KinoZalMarsBlinVali.Views
                 }
 
                 SeatsItemsControl.ItemsSource = seatRows;
-
-                // Обновляем классы кнопок после загрузки данных
-                UpdateSeatButtonsClasses();
             }
             catch (Exception ex)
             {
                 ShowError($"Ошибка загрузки мест: {ex.Message}");
             }
-        }
-        private void UpdateSeatButtonsClasses()
-        {
-            // Ждем немного чтобы ItemsControl успел создать визуальные элементы
-            Dispatcher.UIThread.Post(() =>
-            {
-                foreach (var seatRow in SeatsItemsControl.Items)
-                {
-                    if (seatRow is SeatRow row)
-                    {
-                        foreach (var seatInfo in row.Seats)
-                        {
-                            // Находим кнопку для этого места
-                            var container = SeatsItemsControl.ContainerFromItem(seatRow);
-                            if (container != null)
-                            {
-                                // Здесь нужно найти конкретную кнопку по данным
-                                // Это сложно сделать напрямую, поэтому проще обновлять классы в SeatButton_Click
-                            }
-                        }
-                    }
-                }
-            }, Avalonia.Threading.DispatcherPriority.Background);
         }
 
         private void LoadTicketTypes()
@@ -155,26 +162,21 @@ namespace KinoZalMarsBlinVali.Views
         {
             if (sender is Button button && button.Tag is SeatInfo seatInfo && seatInfo.IsAvailable)
             {
-                // Сначала обновляем классы типа места
-                UpdateSeatTypeClass(button, seatInfo.Seat.SeatType);
-
                 if (seatInfo.IsSelected)
                 {
                     // Убираем из выбранных
                     seatInfo.IsSelected = false;
-                    button.Classes.Remove("selected");
                     var selected = _selectedSeats.FirstOrDefault(s => s.Seat.SeatId == seatInfo.Seat.SeatId);
                     if (selected != null)
                         _selectedSeats.Remove(selected);
                 }
                 else
                 {
-                    // Добавляем в выбранные
+                    // Добавляем в выбранных
                     seatInfo.IsSelected = true;
-                    button.Classes.Add("selected");
                     var basePrice = _session.BasePrice;
                     var seatMultiplier = seatInfo.Seat.PriceMultiplier ?? 1.0m;
-                    var ticketType = TicketTypeComboBox.SelectedItem as TicketType;
+                    var ticketType = TicketTypeComboBox?.SelectedItem as TicketType;
                     var discount = ticketType?.DiscountPercent ?? 0;
 
                     var finalPrice = basePrice * seatMultiplier * (1 - discount / 100);
@@ -187,39 +189,33 @@ namespace KinoZalMarsBlinVali.Views
                 }
 
                 UpdateTotalPrice();
-                SelectedSeatsItemsControl.ItemsSource = _selectedSeats;
-            }
-        }
-        private void UpdateSeatTypeClass(Button button, string seatType)
-        {
-            // Очищаем классы типа места
-            button.Classes.Remove("vip");
-            button.Classes.Remove("disabled");
-            button.Classes.Remove("standard");
-
-            // Добавляем нужный класс
-            if (!string.IsNullOrEmpty(seatType))
-            {
-                button.Classes.Add(seatType);
+                UpdateSelectedSeatsDisplay();
             }
         }
 
         private void TicketType_SelectionChanged(object? sender, SelectionChangedEventArgs e)
         {
-            // Пересчитываем цены при смене типа билета
+            // ИСПРАВЛЕНИЕ: Проверка на null
+            if (TicketTypeComboBox == null) return;
+
             var ticketType = TicketTypeComboBox.SelectedItem as TicketType;
-            if (ticketType != null)
+            if (ticketType != null && _selectedSeats.Any())
             {
                 foreach (var selectedSeat in _selectedSeats)
                 {
                     var basePrice = _session.BasePrice;
-                    var seatMultiplier = selectedSeat.Seat.PriceMultiplier ?? 1.0m; // Исправлено: добавлено ?? 1.0m
-                    var discount = ticketType.DiscountPercent ?? 0; // Исправлено: добавлено ?? 0
+                    var seatMultiplier = selectedSeat.Seat.PriceMultiplier ?? 1.0m;
+                    var discount = ticketType.DiscountPercent ?? 0;
                     selectedSeat.Price = basePrice * seatMultiplier * (1 - discount / 100);
                 }
                 UpdateTotalPrice();
-                SelectedSeatsItemsControl.ItemsSource = _selectedSeats;
+                UpdateSelectedSeatsDisplay();
             }
+        }
+
+        private void UpdateSelectedSeatsDisplay()
+        {
+            SelectedSeatsItemsControl.ItemsSource = new ObservableCollection<SeatSelection>(_selectedSeats);
         }
 
         private void UpdateTotalPrice()
@@ -238,8 +234,8 @@ namespace KinoZalMarsBlinVali.Views
 
             try
             {
-                var customerId = AppDataContext.CurrentUser?.EmployeeId; // CustomerId хранится в EmployeeId для зрителя
-                var ticketType = TicketTypeComboBox.SelectedItem as TicketType;
+                var customerId = AppDataContext.CurrentUser?.EmployeeId;
+                var ticketType = TicketTypeComboBox?.SelectedItem as TicketType;
 
                 foreach (var selectedSeat in _selectedSeats)
                 {
@@ -252,14 +248,14 @@ namespace KinoZalMarsBlinVali.Views
                         FinalPrice = selectedSeat.Price,
                         Status = "reserved",
                         ReservationTime = DateTime.Now,
-                        ReservationExpires = DateTime.Now.AddMinutes(30), // Бронь на 30 минут
+                        ReservationExpires = DateTime.Now.AddMinutes(30),
                         PurchaseTime = DateTime.Now
                     };
 
                     AppDataContext.DbContext.Tickets.Add(ticket);
                 }
 
-                AppDataContext.DbContext.SaveChanges();
+                await AppDataContext.DbContext.SaveChangesAsync();
 
                 var successDialog = new MessageWindow("Успех",
                     $"Билеты успешно забронированы! У вас есть 30 минут для оплаты.");
@@ -276,10 +272,10 @@ namespace KinoZalMarsBlinVali.Views
 
         private void Back_Click(object? sender, RoutedEventArgs e)
         {
-            if (this.Parent is ContentControl contentControl &&
-                contentControl.Parent is CustomerMainPage mainPage)
+            var customerMainPage = this.FindAncestorOfType<CustomerMainPage>();
+            if (customerMainPage != null)
             {
-                mainPage.MainContentControl.Content = new CustomerSessionsPage();
+                customerMainPage.MainContentControl.Content = new CustomerSessionsPage();
             }
         }
 

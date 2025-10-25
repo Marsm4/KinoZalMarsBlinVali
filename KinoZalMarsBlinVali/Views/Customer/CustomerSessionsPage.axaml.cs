@@ -1,5 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Avalonia.VisualTree;
 using KinoZalMarsBlinVali.Data;
 using KinoZalMarsBlinVali.Models;
 using Microsoft.EntityFrameworkCore;
@@ -116,11 +117,20 @@ namespace KinoZalMarsBlinVali.Views
                 var session = _sessions.FirstOrDefault(s => s.SessionId == sessionId);
                 if (session != null)
                 {
-                    // Переходим на страницу бронирования
-                    if (this.Parent is ContentControl contentControl &&
-                        contentControl.Parent is CustomerMainPage mainPage)
+                    // ИСПРАВЛЕНИЕ: Правильная навигация к странице бронирования
+                    var customerMainPage = this.FindAncestorOfType<CustomerMainPage>();
+                    if (customerMainPage != null)
                     {
-                        mainPage.MainContentControl.Content = new BookingPage(session);
+                        customerMainPage.MainContentControl.Content = new BookingPage(session);
+                    }
+                    else
+                    {
+                        // Альтернативный способ навигации
+                        if (this.Parent is ContentControl contentControl &&
+                            contentControl.Parent is CustomerMainPage mainPage)
+                        {
+                            mainPage.MainContentControl.Content = new BookingPage(session);
+                        }
                     }
                 }
             }
