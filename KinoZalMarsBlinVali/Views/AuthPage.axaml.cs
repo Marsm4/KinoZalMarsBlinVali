@@ -50,10 +50,10 @@ namespace KinoZalMarsBlinVali.Views
                             IsActive = true
                         };
 
-                        // Переходим на главную страницу для зрителя
+                        // ИСПРАВЛЕНО: Переходим на главную страницу для зрителя
                         if (this.VisualRoot is MainWindow mainWindow)
                         {
-                            mainWindow.NavigateTo(new MainPage());
+                            mainWindow.NavigateTo(new CustomerMainPage()); // Вместо MainPage()
                         }
                     }
                     else

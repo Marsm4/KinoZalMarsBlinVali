@@ -1,0 +1,67 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="1920" d:DesignHeight="1080"
+             x:Class="KinoZalMarsBlinVali.Views.CustomerProfilePage">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Заголовок -->
+        <TextBlock Grid.Row="0" Text="👤 Мой профиль" 
+                   FontSize="24" FontWeight="Bold" Foreground="#0066CC"
+                   Margin="0,0,0,20"/>
+
+        <!-- Информация о профиле -->
+        <Border Grid.Row="1" Background="White" CornerRadius="10" 
+                BorderBrush="#e0e0e0" BorderThickness="1" Padding="30"
+                Width="500" HorizontalAlignment="Left">
+            <StackPanel Spacing="20">
+                <!-- Бонусные баллы -->
+                <Border Background="#E8F5E8" CornerRadius="8" Padding="15">
+                    <StackPanel HorizontalAlignment="Center">
+                        <TextBlock Text="Бонусные баллы" FontSize="14" Foreground="#666"/>
+                        <TextBlock x:Name="BonusPointsText" FontSize="24" FontWeight="Bold" 
+                                   Foreground="#00A651" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Информация -->
+                <StackPanel Spacing="15">
+                    <StackPanel>
+                        <TextBlock Text="Имя" FontWeight="SemiBold" FontSize="14"/>
+                        <TextBox x:Name="FirstNameTextBox" FontSize="14" Height="35"/>
+                    </StackPanel>
+
+                    <StackPanel>
+                        <TextBlock Text="Фамилия" FontWeight="SemiBold" FontSize="14"/>
+                        <TextBox x:Name="LastNameTextBox" FontSize="14" Height="35"/>
+                    </StackPanel>
+
+                    <StackPanel>
+                        <TextBlock Text="Email" FontWeight="SemiBold" FontSize="14"/>
+                        <TextBox x:Name="EmailTextBox" FontSize="14" Height="35"/>
+                    </StackPanel>
+
+                    <StackPanel>
+                        <TextBlock Text="Телефон" FontWeight="SemiBold" FontSize="14"/>
+                        <TextBox x:Name="PhoneTextBox" FontSize="14" Height="35"/>
+                    </StackPanel>
+                </StackPanel>
+
+                <!-- Кнопки -->
+                <StackPanel Orientation="Horizontal" Spacing="15">
+                    <Button Content="💾 Сохранить" Click="SaveProfile_Click"
+                            Background="#00A651" Foreground="White" 
+                            Padding="20,10" FontWeight="Bold"/>
+                    <Button Content="🔄 Сбросить" Click="ResetProfile_Click"
+                            Background="#6c757d" Foreground="White" 
+                            Padding="20,10" FontWeight="Bold"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>

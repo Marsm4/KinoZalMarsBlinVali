@@ -1,0 +1,173 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="1920" d:DesignHeight="1080"
+             x:Class="KinoZalMarsBlinVali.Views.BookingPage">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Заголовок и кнопка назад -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="15" Margin="0,0,0,20">
+            <Button Content="← Назад" Click="Back_Click"
+                    Background="#6c757d" Foreground="White" 
+                    Padding="15,8" FontWeight="Bold"/>
+            <TextBlock x:Name="TitleText" Text="Бронирование билета" 
+                       FontSize="24" FontWeight="Bold" Foreground="#0066CC"
+                       VerticalAlignment="Center"/>
+        </StackPanel>
+
+        <!-- Информация о сеансе -->
+        <Border Grid.Row="1" Background="#E8F5E8" CornerRadius="8" Padding="15" Margin="0,0,0,20">
+            <StackPanel Orientation="Horizontal" Spacing="30">
+                <Border Width="80" Height="120" Background="#CCCCCC" CornerRadius="5">
+                    <TextBlock Text="🎬" FontSize="40" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </Border>
+                <StackPanel>
+                    <TextBlock x:Name="MovieTitle" FontSize="18" FontWeight="Bold"/>
+                    <TextBlock x:Name="SessionInfo" FontSize="14" Foreground="#666"/>
+                    <TextBlock x:Name="HallInfo" FontSize="14" Foreground="#666"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="300"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Карта зала -->
+            <Border Grid.Column="0" Background="White" CornerRadius="8" 
+                    BorderBrush="#e0e0e0" BorderThickness="1" Padding="20" Margin="0,0,20,0">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                    <StackPanel Orientation="Vertical" Spacing="10">
+                        <!-- Экран -->
+                        <Border Background="#9E9E9E" Height="30" CornerRadius="5" Margin="50,0,50,20">
+                            <TextBlock Text="ЭКРАН" FontWeight="Bold" Foreground="White" 
+                                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        
+                        <!-- Легенда -->
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="15" Margin="0,0,0,10">
+                            <StackPanel Orientation="Horizontal" Spacing="5">
+                                <Border Width="20" Height="20" Background="#4CAF50" CornerRadius="3"/>
+                                <TextBlock Text="Свободно" FontSize="10"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Spacing="5">
+                                <Border Width="20" Height="20" Background="#FF9800" CornerRadius="3"/>
+                                <TextBlock Text="VIP" FontSize="10"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Spacing="5">
+                                <Border Width="20" Height="20" Background="#F44336" CornerRadius="3"/>
+                                <TextBlock Text="Занято" FontSize="10"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Spacing="5">
+                                <Border Width="20" Height="20" Background="#9E9E9E" CornerRadius="3"/>
+                                <TextBlock Text="Недоступно" FontSize="10"/>
+                            </StackPanel>
+                        </StackPanel>
+                        
+                        <!-- Места -->
+                        <ItemsControl x:Name="SeatsItemsControl">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Vertical" Spacing="3"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal" Spacing="3">
+                                        <TextBlock Text="{Binding RowNumber}" 
+                                                   FontWeight="Bold" Width="30"
+                                                   VerticalAlignment="Center"
+                                                   HorizontalAlignment="Center"/>
+                                        <ItemsControl ItemsSource="{Binding Seats}">
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <StackPanel Orientation="Horizontal" Spacing="3"/>
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                         <ItemsControl.ItemTemplate>
+    <DataTemplate>
+        <Button Content="{Binding SeatNumber}"
+                Width="35" Height="35" FontSize="10"
+                Click="SeatButton_Click"
+                Tag="{Binding}"
+                IsEnabled="{Binding IsAvailable}"
+                Name="SeatButton">
+            <Button.Styles>
+                <Style Selector="Button">
+                    <Setter Property="Background" Value="#4CAF50"/>
+                </Style>
+                <Style Selector="Button:disabled">
+                    <Setter Property="Background" Value="#F44336"/>
+                </Style>
+                <Style Selector="Button.selected">
+                    <Setter Property="Background" Value="#2196F3"/>
+                </Style>
+                <Style Selector="Button.vip">
+                    <Setter Property="Background" Value="#FF9800"/>
+                </Style>
+                <Style Selector="Button.disabled">
+                    <Setter Property="Background" Value="#9E9E9E"/>
+                </Style>
+            </Button.Styles>
+        </Button>
+    </DataTemplate>
+</ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
+
+            <!-- Панель бронирования -->
+            <Border Grid.Column="1" Background="#F5F5F5" CornerRadius="8" Padding="20">
+                <StackPanel Spacing="15">
+                    <TextBlock Text="Выбранные места:" FontWeight="Bold" FontSize="16"/>
+                    <ItemsControl x:Name="SelectedSeatsItemsControl">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="White" CornerRadius="5" Padding="10" Margin="0,0,0,5">
+                                    <StackPanel>
+                                        <TextBlock Text="{Binding SeatInfoText}" FontWeight="SemiBold"/>
+                                        <TextBlock Text="{Binding Price, StringFormat='Цена: {0}₽'}" FontSize="12"/>
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                    <ComboBox x:Name="TicketTypeComboBox" 
+                              SelectedIndex="0"
+                              SelectionChanged="TicketType_SelectionChanged">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding TypeName}"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+
+                    <StackPanel>
+                        <TextBlock Text="Итого:" FontWeight="Bold" FontSize="16"/>
+                        <TextBlock x:Name="TotalPriceText" FontSize="20" FontWeight="Bold" 
+                                   Foreground="#00A651" Text="0₽"/>
+                    </StackPanel>
+
+                    <Button Content="🎫 Забронировать" Click="ConfirmBooking_Click"
+                            Background="#00A651" Foreground="White" 
+                            Padding="20,10" FontWeight="Bold" FontSize="14"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>

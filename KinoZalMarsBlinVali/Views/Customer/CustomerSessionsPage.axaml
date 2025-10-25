@@ -1,0 +1,109 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="1920" d:DesignHeight="1080"
+             x:Class="KinoZalMarsBlinVali.Views.CustomerSessionsPage">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Заголовок -->
+        <TextBlock Grid.Row="0" Text="🎬 Актуальные сеансы" 
+                   FontSize="24" FontWeight="Bold" Foreground="#0066CC"
+                   Margin="0,0,0,20"/>
+
+        <!-- Фильтры -->
+        <Border Grid.Row="1" Background="#F5F5F5" CornerRadius="8" Padding="15" Margin="0,0,0,20">
+            <StackPanel Orientation="Horizontal" Spacing="15">
+                <ComboBox x:Name="DateFilterComboBox" Width="150" SelectedIndex="0">
+                    <ComboBoxItem Content="Все сеансы"/>
+                    <ComboBoxItem Content="Сегодня"/>
+                    <ComboBoxItem Content="Завтра"/>
+                    <ComboBoxItem Content="На неделе"/>
+                </ComboBox>
+                
+                <ComboBox x:Name="GenreFilterComboBox" Width="150">
+                    <ComboBoxItem Content="Все жанры"/>
+                </ComboBox>
+                          
+                <TextBox x:Name="SearchTextBox" Width="300" 
+                         VerticalContentAlignment="Center"
+                         Watermark="Поиск по фильму..."/>
+                         
+                <Button Content="🔍 Поиск" Click="Search_Click"
+                        Background="#0066CC" Foreground="White" 
+                        Padding="20,10" FontWeight="Bold"/>
+                        
+                <Button Content="🔄 Обновить" Click="Refresh_Click"
+                        Background="#00A651" Foreground="White" 
+                        Padding="20,10" FontWeight="Bold"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Список сеансов -->
+        <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
+            <ItemsControl x:Name="SessionsItemsControl">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Background="White" CornerRadius="10" 
+                                BorderBrush="#e0e0e0" BorderThickness="1"
+                                Margin="0,0,0,15" Padding="20">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- Постер -->
+                                <Border Grid.Column="0" Width="120" Height="180" Background="#CCCCCC" 
+                                        CornerRadius="5" Margin="0,0,20,0">
+                                    <TextBlock Text="🎬" FontSize="40" 
+                                               HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+
+                                <!-- Информация о фильме -->
+                                <StackPanel Grid.Column="1" Spacing="5">
+                                    <TextBlock Text="{Binding Movie.Title}" 
+                                               FontSize="18" FontWeight="Bold"
+                                               Foreground="#0066CC"/>
+                                               
+                                    <TextBlock Text="{Binding Movie.Genre}" 
+                                               FontSize="14" Foreground="#666"/>
+                                               
+                                    <TextBlock Text="{Binding Movie.DurationMinutes, StringFormat='Продолжительность: {0} мин'}" 
+                                               FontSize="12" Foreground="#666"/>
+                                               
+                                    <TextBlock Text="{Binding Movie.AgeRating, StringFormat='Возрастное ограничение: {0}'}" 
+                                               FontSize="12" Foreground="#666"/>
+                                               
+                                    <TextBlock Text="{Binding StartTime, StringFormat='{}Начало: {0:dd.MM.yyyy HH:mm}'}" 
+                                               FontSize="14" FontWeight="SemiBold"/>
+                                               
+                                    <TextBlock Text="{Binding Hall.HallName, StringFormat='Зал: {0}'}" 
+                                               FontSize="14"/>
+                                               
+                                    <TextBlock Text="{Binding BasePrice, StringFormat='От {0}₽'}" 
+                                               FontSize="16" FontWeight="Bold" 
+                                               Foreground="#00A651"/>
+                                </StackPanel>
+
+                                <!-- Кнопка бронирования -->
+                                <Button Grid.Column="2" Content="🎫 Забронировать" 
+                                        Click="BookTicket_Click"
+                                        Background="#FF6B35" Foreground="White"
+                                        Padding="20,10" FontWeight="Bold"
+                                        VerticalAlignment="Center"
+                                        Tag="{Binding SessionId}"/>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+    </Grid>
+</UserControl>
