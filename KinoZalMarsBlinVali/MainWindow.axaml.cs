@@ -13,8 +13,18 @@ namespace KinoZalMarsBlinVali
             // Проверяем авторизацию пользователя
             if (AppDataContext.CurrentUser != null)
             {
-                // Показываем главную страницу для авторизованного пользователя
-                MainContentControl.Content = new MainPage();
+                // Если пользователь администратор или менеджер - открываем админ панель
+                if (AppDataContext.CurrentUser.Role == "admin" || AppDataContext.CurrentUser.Role == "manager")
+                {
+                    var adminWindow = new AdminWindow();
+                    adminWindow.Show();
+                    this.Close();
+                }
+                else
+                {
+                    // Для зрителей и кассиров показываем обычную главную страницу
+                    MainContentControl.Content = new MainPage();
+                }
             }
             else
             {

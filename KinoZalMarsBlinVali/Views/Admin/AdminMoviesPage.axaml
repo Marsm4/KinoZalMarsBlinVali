@@ -1,0 +1,71 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="1920" d:DesignHeight="1080"
+             x:Class="KinoZalMarsBlinVali.Views.AdminMoviesPage">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Заголовок -->
+        <TextBlock Grid.Row="0" Text="🎬 Управление фильмами" 
+                   FontSize="24" FontWeight="Bold" Foreground="#0066CC"
+                   Margin="0,0,0,20"/>
+
+        <!-- Панель действий -->
+        <Border Grid.Row="1" Background="#F5F5F5" CornerRadius="8" Padding="15" Margin="0,0,0,20">
+            <StackPanel Orientation="Horizontal" Spacing="15">
+                <Button Content="➕ Добавить фильм" Click="AddMovie_Click"
+                        Background="#00A651" Foreground="White" 
+                        Padding="20,10" FontWeight="Bold"/>
+                <Button Content="🔄 Обновить" Click="Refresh_Click"
+                        Background="#0066CC" Foreground="White" 
+                        Padding="20,10" FontWeight="Bold"/>
+                <TextBox x:Name="SearchTextBox" Width="300" 
+                         Watermark="Поиск по названию..."
+                         VerticalContentAlignment="Center"/>
+                <Button Content="🔍 Поиск" Click="Search_Click"
+                        Background="#FF6B35" Foreground="White" 
+                        Padding="20,10" FontWeight="Bold"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Таблица фильмов -->
+        <DataGrid Grid.Row="2" x:Name="MoviesDataGrid" AutoGenerateColumns="False" 
+                  IsReadOnly="True" SelectionMode="Single">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="ID" Binding="{Binding MovieId}" Width="60"/>
+                <DataGridTextColumn Header="Название" Binding="{Binding Title}" Width="200"/>
+                <DataGridTextColumn Header="Жанр" Binding="{Binding Genre}" Width="120"/>
+                <DataGridTextColumn Header="Продолжительность" Binding="{Binding DurationMinutes}" Width="120"/>
+                <DataGridTextColumn Header="Возрастное ограничение" Binding="{Binding AgeRating}" Width="120"/>
+                <DataGridTextColumn Header="Режиссер" Binding="{Binding Director}" Width="150"/>
+                <DataGridCheckBoxColumn Header="Активный" Binding="{Binding IsActive}" Width="80"/>
+                <DataGridTemplateColumn Header="Действия" Width="200">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal" Spacing="5">
+                                <Button Content="✏️" Click="EditMovie_Click"
+                                        Background="#0066CC" Foreground="White" 
+                                        Padding="8,4" FontSize="10"
+                                        Tag="{Binding MovieId}"/>
+                                <Button Content="👁️" Click="ViewMovie_Click"
+                                        Background="#00A651" Foreground="White" 
+                                        Padding="8,4" FontSize="10"
+                                        Tag="{Binding MovieId}"/>
+                                <Button Content="🗑️" Click="DeleteMovie_Click"
+                                        Background="#FF6B35" Foreground="White" 
+                                        Padding="8,4" FontSize="10"
+                                        Tag="{Binding MovieId}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</UserControl>
