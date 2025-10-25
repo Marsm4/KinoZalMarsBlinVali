@@ -1,0 +1,58 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="1920" d:DesignHeight="1080"
+             x:Class="KinoZalMarsBlinVali.Views.AuthPage">
+    <Grid Background="#f5f5f5">
+        <Border Background="White" 
+                CornerRadius="10" 
+                Padding="40" 
+                Width="400" 
+                Height="450"
+                HorizontalAlignment="Center" 
+                VerticalAlignment="Center"
+                BorderBrush="#e0e0e0" 
+                BorderThickness="1">
+            <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,*" Margin="0,20,0,0">
+                <TextBlock Grid.Row="0" Text="🎬 Кинотеатр" 
+                           FontSize="28" FontWeight="Bold" 
+                           HorizontalAlignment="Center" 
+                           Margin="0,0,0,20" 
+                           Foreground="#0066CC"/>
+                
+                <!-- Переключатель типа входа -->
+                <StackPanel Grid.Row="1" Orientation="Horizontal" 
+                           HorizontalAlignment="Center" Spacing="10" Margin="0,0,0,15">
+                    <RadioButton x:Name="rbEmployee" Content="Сотрудник" 
+                                IsChecked="True" GroupName="AuthType"
+                                FontWeight="SemiBold"/>
+                    <RadioButton x:Name="rbCustomer" Content="Зритель" 
+                                GroupName="AuthType"
+                                FontWeight="SemiBold"/>
+                </StackPanel>
+                
+                <TextBlock Grid.Row="2" Text="Логин/Email" FontWeight="SemiBold" FontSize="14"/>
+                <TextBox Grid.Row="3" x:Name="tbUsername" Margin="0,5,0,15" 
+                         FontSize="14" Height="40"
+                         Watermark="Введите логин или email"/>
+                
+                <TextBlock Grid.Row="4" Text="Пароль" FontWeight="SemiBold" FontSize="14"/>
+                <TextBox Grid.Row="5" x:Name="tbPassword" Margin="0,5,0,25" 
+                         FontSize="14" Height="40"
+                         PasswordChar="*" 
+                         Watermark="Введите пароль"/>
+                
+                <StackPanel Grid.Row="6" Orientation="Horizontal" 
+                            HorizontalAlignment="Center" Spacing="15">
+                    <Button Content="Войти" Click="Login_Click" 
+                            Background="#0066CC" Foreground="White" 
+                            Padding="30,10" FontWeight="Bold" FontSize="14"/>
+                    <Button Content="Регистрация" Click="Register_Click" 
+                            Background="#FF6B35" Foreground="White" 
+                            Padding="20,10" FontWeight="Bold" FontSize="14"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>
