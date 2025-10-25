@@ -5,6 +5,8 @@ namespace KinoZalMarsBlinVali.Views
 {
     public partial class ConfirmWindow : Window
     {
+        public bool Result { get; private set; } = false;
+
         public ConfirmWindow(string title, string message)
         {
             InitializeComponent();

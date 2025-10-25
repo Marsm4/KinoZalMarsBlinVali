@@ -1,8 +1,5 @@
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Layout;
-using Avalonia.Media;
 using KinoZalMarsBlinVali.Data;
 using KinoZalMarsBlinVali.Models;
 using Microsoft.EntityFrameworkCore;
@@ -69,7 +66,7 @@ namespace KinoZalMarsBlinVali.Views
             {
                 filtered = filtered.Where(t =>
                     (t.Session.Movie.Title != null && t.Session.Movie.Title.ToLower().Contains(searchText)) ||
-                    (t.Customer.Email != null && t.Customer.Email.ToLower().Contains(searchText)));
+                    (t.Customer != null && t.Customer.Email != null && t.Customer.Email.ToLower().Contains(searchText)));
             }
 
             ReservationsDataGrid.ItemsSource = filtered.Select(t => new CashierReservationViewModel(t)).ToList();
@@ -93,20 +90,25 @@ namespace KinoZalMarsBlinVali.Views
                 var reservation = _allReservations.FirstOrDefault(t => t.TicketId == ticketId);
                 if (reservation != null && reservation.Status == "reserved")
                 {
-                    var paymentWindow = new PaymentProcessingWindow(reservation);
-
-                    // Простой вызов ShowDialog
-                    await paymentWindow.ShowDialog((Window)this.VisualRoot);
-
-                    // Проверяем результат через свойство
-                    if (paymentWindow.PaymentSuccess)
+                    try
                     {
-                        LoadReservations();
-                        ShowSuccess("Оплата прошла успешно!");
+                        var paymentWindow = new PaymentProcessingWindow(reservation);
+                        await paymentWindow.ShowDialog((Window)this.VisualRoot);
+
+                        if (paymentWindow.PaymentSuccess)
+                        {
+                            LoadReservations();
+                             ShowSuccess("Оплата прошла успешно!");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                         ShowError($"Ошибка при оплате: {ex.Message}");
                     }
                 }
             }
         }
+
         private async void CancelReservation_Click(object? sender, RoutedEventArgs e)
         {
             if (sender is Button button && button.Tag is int ticketId)
@@ -114,68 +116,17 @@ namespace KinoZalMarsBlinVali.Views
                 var reservation = _allReservations.FirstOrDefault(t => t.TicketId == ticketId);
                 if (reservation != null && reservation.Status == "reserved")
                 {
-                    // Используем MessageBox (если доступен в Avalonia)
-                    var message = $"Вы уверены, что хотите отменить бронирование?\n\n" +
-                                 $"Фильм: {reservation.Session.Movie.Title}\n" +
-                                 $"Время: {reservation.Session.StartTime:dd.MM.yyyy HH:mm}\n" +
-                                 $"Место: Ряд {reservation.Seat.RowNumber}, Место {reservation.Seat.SeatNumber}";
-
-                    // Если MessageBox недоступен, создаем простой диалог
-                    var dialog = new Window
-                    {
-                        Title = "Отмена бронирования",
-                        Width = 400,
-                        Height = 300,
-                        WindowStartupLocation = WindowStartupLocation.CenterOwner
-                    };
-
-                    var stackPanel = new StackPanel { Margin = new Thickness(20) };
-
-                    var textBlock = new TextBlock
-                    {
-                        Text = message,
-                        TextWrapping = TextWrapping.Wrap,
-                        Margin = new Thickness(0, 0, 0, 20)
-                    };
-
-                    var buttonPanel = new StackPanel
-                    {
-                        Orientation = Orientation.Horizontal,
-                        HorizontalAlignment = HorizontalAlignment.Right,
-                        Spacing = 10
-                    };
-
-                    var yesButton = new Button
-                    {
-                        Content = "Да, отменить",
-                        Background = Brushes.Red,
-                        Foreground = Brushes.White,
-                        Padding = new Thickness(15, 8)
-                    };
-
-                    var noButton = new Button
-                    {
-                        Content = "Нет",
-                        Background = Brushes.Gray,
-                        Foreground = Brushes.White,
-                        Padding = new Thickness(15, 8)
-                    };
-
-                    bool result = false;
-                    yesButton.Click += (s, e) => { result = true; dialog.Close(); };
-                    noButton.Click += (s, e) => { result = false; dialog.Close(); };
-
-                    buttonPanel.Children.Add(noButton);
-                    buttonPanel.Children.Add(yesButton);
-
-                    stackPanel.Children.Add(textBlock);
-                    stackPanel.Children.Add(buttonPanel);
-
-                    dialog.Content = stackPanel;
+                    // Создаем простое окно подтверждения
+                    var dialog = new ConfirmationDialog(
+                        "Отмена бронирования",
+                        $"Вы уверены, что хотите отменить бронирование?\n\n" +
+                        $"Фильм: {reservation.Session.Movie.Title}\n" +
+                        $"Время: {reservation.Session.StartTime:dd.MM.yyyy HH:mm}\n" +
+                        $"Место: Ряд {reservation.Seat.RowNumber}, Место {reservation.Seat.SeatNumber}");
 
                     await dialog.ShowDialog((Window)this.VisualRoot);
 
-                    if (result)
+                    if (dialog.DialogResult == true)
                     {
                         try
                         {
@@ -192,6 +143,7 @@ namespace KinoZalMarsBlinVali.Views
                 }
             }
         }
+
         private void SearchReservations_Click(object? sender, RoutedEventArgs e)
         {
             ApplyFilters();
@@ -218,8 +170,19 @@ namespace KinoZalMarsBlinVali.Views
     public class CashierReservationViewModel
     {
         public Ticket Ticket { get; set; }
+
+        // Свойства для отображения в DataGrid
+        public int TicketId => Ticket.TicketId;
+        public string MovieTitle => Ticket.Session?.Movie?.Title ?? "Неизвестно";
+        public DateTime StartTime => Ticket.Session.StartTime;
+        public string CustomerEmail => Ticket.Customer?.Email ?? "Неизвестно";
         public string SeatInfo => $"Ряд {Ticket.Seat.RowNumber}, Место {Ticket.Seat.SeatNumber}";
-        public bool CanProcessPayment => Ticket.Status == "reserved" && Ticket.ReservationExpires > DateTime.Now;
+        public decimal FinalPrice => Ticket.FinalPrice;
+        public string Status => Ticket.Status ?? "Неизвестно";
+        public DateTime? ReservationExpires => Ticket.ReservationExpires;
+
+        public bool CanProcessPayment => Ticket.Status == "reserved" &&
+                                       Ticket.ReservationExpires > DateTime.Now;
         public bool CanCancel => Ticket.Status == "reserved";
 
         public CashierReservationViewModel(Ticket ticket)

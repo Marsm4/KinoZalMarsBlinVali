@@ -12,12 +12,12 @@ namespace KinoZalMarsBlinVali.Views
     {
         private Ticket _ticket;
         private Customer _customer;
-        private bool _paymentSuccess = false;
+        public bool PaymentSuccess { get; private set; } = false;
 
-        public string MovieTitle => _ticket.Session.Movie.Title;
-        public string SessionTime => _ticket.Session.StartTime.ToString("dd.MM.yyyy HH:mm");
-        public string SeatInfo => $"Ряд {_ticket.Seat.RowNumber}, Место {_ticket.Seat.SeatNumber}";
-        public string CustomerInfo => $"{_ticket.Customer.FirstName} {_ticket.Customer.LastName} ({_ticket.Customer.Email})";
+        public string MovieTitle => _ticket.Session?.Movie?.Title ?? "Неизвестно";
+        public string SessionTime => _ticket.Session?.StartTime.ToString("dd.MM.yyyy HH:mm") ?? "Неизвестно";
+        public string SeatInfo => $"Ряд {_ticket.Seat?.RowNumber}, Место {_ticket.Seat?.SeatNumber}";
+        public string CustomerInfo => $"{_ticket.Customer?.FirstName} {_ticket.Customer?.LastName} ({_ticket.Customer?.Email})";
         public decimal TotalPrice => _ticket.FinalPrice;
 
         public PaymentProcessingWindow(Ticket ticket)
@@ -31,7 +31,7 @@ namespace KinoZalMarsBlinVali.Views
 
         private void LoadCustomerBonusInfo()
         {
-            CurrentBonusText.Text = $"Текущие бонусы клиента: {_customer.BonusPoints ?? 0}";
+            CurrentBonusText.Text = $"Текущие бонусы клиента: {_customer?.BonusPoints ?? 0}";
         }
 
         private string GetPaymentMethod()
@@ -63,7 +63,7 @@ namespace KinoZalMarsBlinVali.Views
                 _ticket.ReservationExpires = null;
 
                 // Начисляем бонусные баллы
-                if (bonusPoints > 0)
+                if (bonusPoints > 0 && _customer != null)
                 {
                     _customer.BonusPoints = (_customer.BonusPoints ?? 0) + bonusPoints;
                 }
@@ -77,7 +77,7 @@ namespace KinoZalMarsBlinVali.Views
                     TransactionType = "ticket_sale",
                     Amount = _ticket.FinalPrice,
                     PaymentMethod = paymentMethod,
-                    Description = $"Оплата билета на {_ticket.Session.Movie.Title} ({SeatInfo})",
+                    Description = $"Оплата билета на {MovieTitle} ({SeatInfo})",
                     EmployeeId = AppDataContext.CurrentUser?.EmployeeId,
                     TicketId = _ticket.TicketId,
                     TransactionTime = DateTime.Now
@@ -86,7 +86,7 @@ namespace KinoZalMarsBlinVali.Views
                 AppDataContext.DbContext.FinancialTransactions.Add(transaction);
                 await AppDataContext.DbContext.SaveChangesAsync();
 
-                _paymentSuccess = true;
+                PaymentSuccess = true;
                 Close();
             }
             catch (Exception ex)
@@ -97,12 +97,9 @@ namespace KinoZalMarsBlinVali.Views
 
         private void Cancel_Click(object? sender, RoutedEventArgs e)
         {
-            _paymentSuccess = false;
+            PaymentSuccess = false;
             Close();
         }
-
-        // Добавляем свойство для получения результата
-        public bool PaymentSuccess => _paymentSuccess;
 
         private async Task ShowError(string message)
         {

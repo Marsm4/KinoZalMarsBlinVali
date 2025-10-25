@@ -1,0 +1,35 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Подтверждение"
+        Width="400"
+        Height="250"
+        WindowStartupLocation="CenterOwner"
+        x:Class="KinoZalMarsBlinVali.Views.ConfirmationDialog">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        
+        <TextBlock Grid.Row="0" 
+                   x:Name="MessageText" 
+                   TextWrapping="Wrap"
+                   VerticalAlignment="Center"/>
+        
+        <StackPanel Grid.Row="1" 
+                    Orientation="Horizontal" 
+                    HorizontalAlignment="Right"
+                    Spacing="10">
+            <Button Content="❌ Нет" 
+                    Click="NoButton_Click"
+                    Background="#6c757d" 
+                    Foreground="White"
+                    Padding="15,8"/>
+            <Button Content="✅ Да" 
+                    Click="YesButton_Click"
+                    Background="#00A651" 
+                    Foreground="White"
+                    Padding="15,8"/>
+        </StackPanel>
+    </Grid>
+</Window>
