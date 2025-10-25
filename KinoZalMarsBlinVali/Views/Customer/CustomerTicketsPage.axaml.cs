@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Media;
 using KinoZalMarsBlinVali.Data;
@@ -25,7 +25,7 @@ namespace KinoZalMarsBlinVali.Views
         {
             try
             {
-                var customerId = AppDataContext.CurrentUser?.EmployeeId; // CustomerId ��� �������
+                var customerId = AppDataContext.CurrentUser?.EmployeeId; // CustomerId для зрителя
 
                 _tickets = AppDataContext.DbContext.Tickets
                     .Include(t => t.Session)
@@ -41,7 +41,7 @@ namespace KinoZalMarsBlinVali.Views
             }
             catch (Exception ex)
             {
-                ShowError($"������ �������� �������: {ex.Message}");
+                ShowError($"Ошибка загрузки билетов: {ex.Message}");
             }
         }
 
@@ -54,19 +54,19 @@ namespace KinoZalMarsBlinVali.Views
             {
                 switch (statusFilter)
                 {
-                    case "��������":
+                    case "Активные":
                         filtered = filtered.Where(t => t.Status == "sold" && t.Session.StartTime > DateTime.Now);
                         break;
-                    case "���������������":
+                    case "Забронированные":
                         filtered = filtered.Where(t => t.Status == "reserved" && t.ReservationExpires > DateTime.Now);
                         break;
-                    case "��������������":
+                    case "Использованные":
                         filtered = filtered.Where(t => t.Status == "used" || t.Session.StartTime < DateTime.Now);
                         break;
                 }
             }
 
-            TicketsItemsControl.ItemsSource = filtered.Select(t => new TicketViewModel(t)).ToList();
+            TicketsItemsControl.ItemsSource = filtered.Select(t => new DetailedTicketViewModel(t)).ToList();
         }
 
         private async void ShowQrCode_Click(object? sender, RoutedEventArgs e)
@@ -76,11 +76,15 @@ namespace KinoZalMarsBlinVali.Views
                 var ticket = _tickets.FirstOrDefault(t => t.TicketId == ticketId);
                 if (ticket != null)
                 {
-                    // ���������� QR-��� (��������)
-                    var dialog = new MessageWindow("QR-���",
-                        $"����� �� {ticket.Session.Movie.Title}\n" +
-                        $"�����: ��� {ticket.Seat.RowNumber}, ����� {ticket.Seat.SeatNumber}\n" +
-                        $"�����: {ticket.Session.StartTime:dd.MM.yyyy HH:mm}");
+                    // Заглушка для QR-кода
+                    var dialog = new MessageWindow("QR-код",
+                        $"Билет #{ticket.TicketId}\n\n" +
+                        $"🎬 {ticket.Session.Movie.Title}\n" +
+                        $"📅 {ticket.Session.StartTime:dd.MM.yyyy HH:mm}\n" +
+                        $"🎭 Зал: {ticket.Session.Hall.HallName}\n" +
+                        $"💺 Ряд {ticket.Seat.RowNumber}, Место {ticket.Seat.SeatNumber}\n" +
+                        $"💰 {ticket.FinalPrice}₽\n\n" +
+                        $"QR-код будет сгенерирован позже");
                     await dialog.ShowDialog((Window)this.VisualRoot);
                 }
             }
@@ -91,27 +95,36 @@ namespace KinoZalMarsBlinVali.Views
             if (sender is Button button && button.Tag is int ticketId)
             {
                 var ticket = _tickets.FirstOrDefault(t => t.TicketId == ticketId);
-                if (ticket != null)
+                if (ticket != null && ticket.Status == "reserved")
                 {
-                    var confirm = new ConfirmWindow("������ ������������",
-                        "�� �������, ��� ������ �������� ������������?");
+                    // Создаем окно подтверждения
+                    var dialog = new ConfirmationDialog(
+                        "Отмена бронирования",
+                        $"Вы уверены, что хотите отменить бронирование?\n\n" +
+                        $"🎬 {ticket.Session.Movie.Title}\n" +
+                        $"📅 {ticket.Session.StartTime:dd.MM.yyyy HH:mm}\n" +
+                        $"💺 Ряд {ticket.Seat.RowNumber}, Место {ticket.Seat.SeatNumber}");
 
-                    var result = await confirm.ShowDialog<bool>((Window)this.VisualRoot);
+                    await dialog.ShowDialog((Window)this.VisualRoot);
 
-                    if (result)
+                    if (dialog.DialogResult == true)
                     {
                         try
                         {
-                            AppDataContext.DbContext.Tickets.Remove(ticket);
-                            AppDataContext.DbContext.SaveChanges();
+                            ticket.Status = "cancelled";
+                            await AppDataContext.DbContext.SaveChangesAsync();
                             LoadTickets();
-                             ShowSuccess("������������ ��������");
+                             ShowSuccess("Бронирование отменено");
                         }
                         catch (Exception ex)
                         {
-                             ShowError($"������ ������: {ex.Message}");
+                             ShowError($"Ошибка отмены: {ex.Message}");
                         }
                     }
+                }
+                else
+                {
+                     ShowError("Невозможно отменить оплаченный билет");
                 }
             }
         }
@@ -123,43 +136,81 @@ namespace KinoZalMarsBlinVali.Views
 
         private async void ShowError(string message)
         {
-            var dialog = new MessageWindow("������", message);
+            var dialog = new MessageWindow("Ошибка", message);
             await dialog.ShowDialog((Window)this.VisualRoot);
         }
 
         private async void ShowSuccess(string message)
         {
-            var dialog = new MessageWindow("�����", message);
+            var dialog = new MessageWindow("Успех", message);
             await dialog.ShowDialog((Window)this.VisualRoot);
         }
     }
 
-    public class TicketViewModel
+    public class DetailedTicketViewModel
     {
         public Ticket Ticket { get; set; }
-        public string SeatInfo => $"��� {Ticket.Seat.RowNumber}, ����� {Ticket.Seat.SeatNumber}";
+
+        // Основная информация
+        public string MovieTitle => Ticket.Session?.Movie?.Title ?? "Неизвестно";
+        public string SessionDateTime => $"📅 {Ticket.Session?.StartTime:dd.MM.yyyy} ⏰ {Ticket.Session?.StartTime:HH:mm}";
+        public string HallInfo => $"🎭 Зал: {Ticket.Session?.Hall?.HallName ?? "Неизвестно"}";
+        public string SeatDetailedInfo => $"💺 Ряд {Ticket.Seat?.RowNumber}, Место {Ticket.Seat?.SeatNumber}";
+        public string TicketTypeInfo => $"🎫 {Ticket.TicketType?.TypeName ?? "Стандарт"}";
+        public string PriceInfo => $"💰 Стоимость: {Ticket.FinalPrice}₽";
+
+        // Информация о бронировании/покупке
+        public string BookingInfo
+        {
+            get
+            {
+                if (Ticket.Status == "reserved")
+                    return $"⏳ Бронь действительна до: {Ticket.ReservationExpires:HH:mm}";
+                else if (Ticket.Status == "sold")
+                    return $"🛒 Куплен: {Ticket.PurchaseTime:dd.MM.yyyy HH:mm}";
+                else if (Ticket.Status == "used")
+                    return $"✅ Использован";
+                else
+                    return "";
+            }
+        }
+
+        // Статус
         public string StatusText => Ticket.Status switch
         {
-            "sold" => "�������",
-            "reserved" => "������������",
-            "used" => "�����������",
-            "cancelled" => "�������",
-            _ => Ticket.Status
+            "sold" => "ОПЛАЧЕН",
+            "reserved" => "ЗАБРОНИРОВАН",
+            "used" => "ИСПОЛЬЗОВАН",
+            "cancelled" => "ОТМЕНЕН",
+            _ => Ticket.Status?.ToUpper() ?? "НЕИЗВЕСТНО"
+        };
+
+        public string StatusIcon => Ticket.Status switch
+        {
+            "sold" => "✅",
+            "reserved" => "⏳",
+            "used" => "🎬",
+            "cancelled" => "❌",
+            _ => "❓"
         };
 
         public IBrush StatusColor => Ticket.Status switch
         {
-            "sold" => new SolidColorBrush(Color.FromRgb(76, 175, 80)),
-            "reserved" => new SolidColorBrush(Color.FromRgb(255, 152, 0)),
-            "used" => new SolidColorBrush(Color.FromRgb(158, 158, 158)),
-            "cancelled" => new SolidColorBrush(Color.FromRgb(244, 67, 54)),
+            "sold" => new SolidColorBrush(Color.FromRgb(76, 175, 80)),     // Зеленый
+            "reserved" => new SolidColorBrush(Color.FromRgb(255, 152, 0)), // Оранжевый
+            "used" => new SolidColorBrush(Color.FromRgb(158, 158, 158)),   // Серый
+            "cancelled" => new SolidColorBrush(Color.FromRgb(244, 67, 54)), // Красный
             _ => new SolidColorBrush(Color.FromRgb(158, 158, 158))
         };
 
-        public bool IsActive => Ticket.Status == "sold" && Ticket.Session.StartTime > DateTime.Now;
-        public bool CanCancel => Ticket.Status == "reserved" && Ticket.ReservationExpires > DateTime.Now;
+        public bool IsActive => (Ticket.Status == "sold" || Ticket.Status == "reserved") &&
+                               Ticket.Session.StartTime > DateTime.Now;
+        public bool CanCancel => Ticket.Status == "reserved" &&
+                               Ticket.ReservationExpires > DateTime.Now;
 
-        public TicketViewModel(Ticket ticket)
+        public int TicketId => Ticket.TicketId;
+
+        public DetailedTicketViewModel(Ticket ticket)
         {
             Ticket = ticket;
         }

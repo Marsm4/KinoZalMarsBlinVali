@@ -47,9 +47,9 @@
                  SelectionMode="Single">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="ID" Binding="{Binding TicketId}" Width="60"/>
-                <DataGridTextColumn Header="Фильм" Binding="{Binding Session.Movie.Title}" Width="200"/>
-                <DataGridTextColumn Header="Время" Binding="{Binding Session.StartTime, StringFormat='{}{0:dd.MM.yyyy HH:mm}'}" Width="150"/>
-                <DataGridTextColumn Header="Клиент" Binding="{Binding Customer.Email}" Width="200"/>
+                <DataGridTextColumn Header="Фильм" Binding="{Binding MovieTitle}" Width="200"/>
+                <DataGridTextColumn Header="Время" Binding="{Binding StartTime, StringFormat='{}{0:dd.MM.yyyy HH:mm}'}" Width="150"/>
+                <DataGridTextColumn Header="Клиент" Binding="{Binding CustomerEmail}" Width="200"/>
                 <DataGridTextColumn Header="Место" Binding="{Binding SeatInfo}" Width="120"/>
                 <DataGridTextColumn Header="Цена" Binding="{Binding FinalPrice, StringFormat='{}{0}₽'}" Width="100"/>
                 <DataGridTextColumn Header="Статус" Binding="{Binding Status}" Width="120"/>

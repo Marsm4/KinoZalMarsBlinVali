@@ -46,42 +46,56 @@
                                 </Grid.ColumnDefinitions>
 
                                 <!-- Информация о билете -->
-                                <StackPanel Grid.Column="0" Spacing="5">
-                                    <TextBlock Text="{Binding Session.Movie.Title}" 
+                                <StackPanel Grid.Column="0" Spacing="8">
+                                    <!-- Заголовок с названием фильма -->
+                                    <TextBlock Text="{Binding MovieTitle}" 
                                                FontSize="18" FontWeight="Bold"
                                                Foreground="#0066CC"/>
-                                               
-                                    <TextBlock Text="{Binding Session.StartTime, StringFormat='{}Начало: {0:dd.MM.yyyy HH:mm}'}" 
-                                               FontSize="14" FontWeight="SemiBold"/>
-                                               
-                                    <TextBlock Text="{Binding SeatInfo}" 
-                                               FontSize="14"/>
-                                               
-                                    <TextBlock Text="{Binding TicketType.TypeName}" 
-                                               FontSize="12" Foreground="#666"/>
-                                               
-                                    <TextBlock Text="{Binding FinalPrice, StringFormat='Цена: {0}₽'}" 
-                                               FontSize="14" FontWeight="Bold"/>
-                                               
+                                    
+                                    <!-- Детальная информация -->
+                                    <StackPanel Spacing="4">
+                                        <TextBlock Text="{Binding SessionDateTime}" 
+                                                   FontSize="14" FontWeight="SemiBold"/>
+                                        
+                                        <TextBlock Text="{Binding HallInfo}" 
+                                                   FontSize="13"/>
+                                        
+                                        <TextBlock Text="{Binding SeatDetailedInfo}" 
+                                                   FontSize="13" FontWeight="SemiBold"/>
+                                        
+                                        <TextBlock Text="{Binding TicketTypeInfo}" 
+                                                   FontSize="12" Foreground="#666"/>
+                                        
+                                        <TextBlock Text="{Binding PriceInfo}" 
+                                                   FontSize="13" FontWeight="Bold"/>
+                                        
+                                        <TextBlock Text="{Binding BookingInfo}" 
+                                                   FontSize="11" Foreground="#888"/>
+                                    </StackPanel>
+                                    
+                                    <!-- Статус -->
                                     <Border Background="{Binding StatusColor}" CornerRadius="5" 
-                                            Padding="5,2" HorizontalAlignment="Left">
-                                        <TextBlock Text="{Binding StatusText}" 
-                                                   FontSize="10" FontWeight="Bold" 
-                                                   Foreground="White"/>
+                                            Padding="8,4" HorizontalAlignment="Left" Margin="0,5,0,0">
+                                        <StackPanel Orientation="Horizontal" Spacing="5">
+                                            <TextBlock Text="{Binding StatusIcon}" FontSize="12"/>
+                                            <TextBlock Text="{Binding StatusText}" 
+                                                       FontSize="11" FontWeight="Bold" 
+                                                       Foreground="White"/>
+                                        </StackPanel>
                                     </Border>
                                 </StackPanel>
 
                                 <!-- Действия -->
-                                <StackPanel Grid.Column="1" Orientation="Vertical" Spacing="5">
+                                <StackPanel Grid.Column="1" Orientation="Vertical" Spacing="8" VerticalAlignment="Center">
                                     <Button Content="📱 QR-код" Click="ShowQrCode_Click"
                                             Background="#0066CC" Foreground="White"
-                                            Padding="15,8" FontWeight="Bold"
+                                            Padding="12,6" FontWeight="SemiBold" FontSize="11"
                                             Tag="{Binding TicketId}"
                                             IsVisible="{Binding IsActive}"/>
                                             
                                     <Button Content="❌ Отменить" Click="CancelTicket_Click"
                                             Background="#FF6B35" Foreground="White"
-                                            Padding="15,8" FontWeight="Bold"
+                                            Padding="12,6" FontWeight="SemiBold" FontSize="11"
                                             Tag="{Binding TicketId}"
                                             IsVisible="{Binding CanCancel}"/>
                                 </StackPanel>
