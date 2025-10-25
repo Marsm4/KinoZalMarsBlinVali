@@ -1,0 +1,62 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="1920" d:DesignHeight="1080"
+             x:Class="KinoZalMarsBlinVali.Views.SessionTicketsPage">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Заголовок и кнопка назад -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="15" Margin="0,0,0,20">
+            <Button Content="← Назад" Click="Back_Click"
+                    Background="#6c757d" Foreground="White" 
+                    Padding="15,8" FontWeight="Bold"/>
+            <TextBlock x:Name="TitleText" Text="Билеты сеанса" 
+                       FontSize="24" FontWeight="Bold" Foreground="#0066CC"
+                       VerticalAlignment="Center"/>
+        </StackPanel>
+
+        <!-- Статистика -->
+        <Border Grid.Row="1" Background="#E8F5E8" CornerRadius="8" Padding="15" Margin="0,0,0,20">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="30">
+                <StackPanel HorizontalAlignment="Center">
+                    <TextBlock Text="Всего мест" FontWeight="SemiBold" Foreground="#0066CC" FontSize="11"/>
+                    <TextBlock x:Name="TotalSeatsText" Text="0" FontSize="14" FontWeight="Bold" HorizontalAlignment="Center"/>
+                </StackPanel>
+                <StackPanel HorizontalAlignment="Center">
+                    <TextBlock Text="Продано" FontWeight="SemiBold" Foreground="#00A651" FontSize="11"/>
+                    <TextBlock x:Name="SoldTicketsText" Text="0" FontSize="14" FontWeight="Bold" HorizontalAlignment="Center"/>
+                </StackPanel>
+                <StackPanel HorizontalAlignment="Center">
+                    <TextBlock Text="Свободно" FontWeight="SemiBold" Foreground="#FF6B35" FontSize="11"/>
+                    <TextBlock x:Name="AvailableSeatsText" Text="0" FontSize="14" FontWeight="Bold" HorizontalAlignment="Center"/>
+                </StackPanel>
+                <StackPanel HorizontalAlignment="Center">
+                    <TextBlock Text="Выручка" FontWeight="SemiBold" Foreground="#0066CC" FontSize="11"/>
+                    <TextBlock x:Name="RevenueText" Text="0₽" FontSize="14" FontWeight="Bold" HorizontalAlignment="Center"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <!-- Таблица билетов -->
+        <DataGrid Grid.Row="2" x:Name="TicketsDataGrid" AutoGenerateColumns="False" 
+                  IsReadOnly="True" SelectionMode="Single">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="ID" Binding="{Binding TicketId}" Width="60"/>
+                <DataGridTextColumn Header="Ряд" Binding="{Binding Seat.RowNumber}" Width="60"/>
+                <DataGridTextColumn Header="Место" Binding="{Binding Seat.SeatNumber}" Width="60"/>
+                <DataGridTextColumn Header="Тип места" Binding="{Binding Seat.SeatType}" Width="80"/>
+                <DataGridTextColumn Header="Тип билета" Binding="{Binding TicketType.TypeName}" Width="100"/>
+                <DataGridTextColumn Header="Цена" Binding="{Binding FinalPrice, StringFormat='{}{0}₽'}" Width="80"/>
+                <DataGridTextColumn Header="Статус" Binding="{Binding Status}" Width="80"/>
+                <DataGridTextColumn Header="Покупатель" Binding="{Binding Customer.Email}" Width="150"/>
+                <DataGridTextColumn Header="Время покупки" Binding="{Binding PurchaseTime, StringFormat='{}{0:dd.MM.yyyy HH:mm}'}" Width="150"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</UserControl>
