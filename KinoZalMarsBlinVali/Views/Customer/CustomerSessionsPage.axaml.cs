@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+п»їusing Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.VisualTree;
 using KinoZalMarsBlinVali.Data;
@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace KinoZalMarsBlinVali.Views
 {
@@ -35,11 +36,21 @@ namespace KinoZalMarsBlinVali.Views
                     .OrderBy(s => s.StartTime)
                     .ToList();
 
+                // РћС‚Р»Р°РґРѕС‡РЅР°СЏ РёРЅС„РѕСЂРјР°С†РёСЏ
+                Console.WriteLine($"=== LOADED SESSIONS ===");
+                foreach (var session in _sessions)
+                {
+                    Console.WriteLine($"рџЋ¬ {session.Movie.Title}");
+                    Console.WriteLine($"рџ–јпёЏ PosterPath: {session.Movie.PosterPath}");
+                    Console.WriteLine($"рџ“… Start: {session.StartTime}");
+                    Console.WriteLine($"---");
+                }
+
                 ApplyFilters();
             }
             catch (Exception ex)
             {
-                ShowError($"Ошибка загрузки сеансов: {ex.Message}");
+                ShowError($"РћС€РёР±РєР° Р·Р°РіСЂСѓР·РєРё СЃРµР°РЅСЃРѕРІ: {ex.Message}");
             }
         }
 
@@ -54,9 +65,9 @@ namespace KinoZalMarsBlinVali.Views
                     .OrderBy(g => g)
                     .ToList();
 
-                // Очищаем и добавляем "Все жанры" первым элементом
+                // РћС‡РёС‰Р°РµРј Рё РґРѕР±Р°РІР»СЏРµРј "Р’СЃРµ Р¶Р°РЅСЂС‹" РїРµСЂРІС‹Рј СЌР»РµРјРµРЅС‚РѕРј
                 GenreFilterComboBox.Items.Clear();
-                GenreFilterComboBox.Items.Add("Все жанры");
+                GenreFilterComboBox.Items.Add("Р’СЃРµ Р¶Р°РЅСЂС‹");
                 foreach (var genre in genres)
                 {
                     GenreFilterComboBox.Items.Add(genre);
@@ -65,7 +76,8 @@ namespace KinoZalMarsBlinVali.Views
             }
             catch (Exception ex)
             {
-                // Игнорируем ошибки загрузки жанров
+                // РРіРЅРѕСЂРёСЂСѓРµРј РѕС€РёР±РєРё Р·Р°РіСЂСѓР·РєРё Р¶Р°РЅСЂРѕРІ
+                Console.WriteLine($"РћС€РёР±РєР° Р·Р°РіСЂСѓР·РєРё Р¶Р°РЅСЂРѕРІ: {ex.Message}");
             }
         }
 
@@ -73,41 +85,44 @@ namespace KinoZalMarsBlinVali.Views
         {
             var filtered = _sessions.AsEnumerable();
 
-            // Фильтр по дате
+            // Р¤РёР»СЊС‚СЂ РїРѕ РґР°С‚Рµ
             var dateFilter = (DateFilterComboBox.SelectedItem as ComboBoxItem)?.Content?.ToString();
             if (!string.IsNullOrEmpty(dateFilter))
             {
                 var today = DateTime.Today;
                 switch (dateFilter)
                 {
-                    case "Сегодня":
+                    case "РЎРµРіРѕРґРЅСЏ":
                         filtered = filtered.Where(s => s.StartTime.Date == today);
                         break;
-                    case "Завтра":
+                    case "Р—Р°РІС‚СЂР°":
                         filtered = filtered.Where(s => s.StartTime.Date == today.AddDays(1));
                         break;
-                    case "На неделе":
+                    case "РќР° РЅРµРґРµР»Рµ":
                         var endOfWeek = today.AddDays(7 - (int)today.DayOfWeek);
                         filtered = filtered.Where(s => s.StartTime.Date >= today && s.StartTime.Date <= endOfWeek);
                         break;
                 }
             }
 
-            // Фильтр по жанру
+            // Р¤РёР»СЊС‚СЂ РїРѕ Р¶Р°РЅСЂСѓ
             var selectedGenre = GenreFilterComboBox.SelectedItem as string;
-            if (!string.IsNullOrEmpty(selectedGenre) && selectedGenre != "Все жанры")
+            if (!string.IsNullOrEmpty(selectedGenre) && selectedGenre != "Р’СЃРµ Р¶Р°РЅСЂС‹")
             {
                 filtered = filtered.Where(s => s.Movie.Genre == selectedGenre);
             }
 
-            // Фильтр по поиску
+            // Р¤РёР»СЊС‚СЂ РїРѕ РїРѕРёСЃРєСѓ
             var searchText = SearchTextBox.Text?.ToLower() ?? "";
             if (!string.IsNullOrWhiteSpace(searchText))
             {
                 filtered = filtered.Where(s => s.Movie.Title.ToLower().Contains(searchText));
             }
 
-            SessionsItemsControl.ItemsSource = filtered.ToList();
+            var result = filtered.ToList();
+            Console.WriteLine($"рџ”Ќ РћС‚С„РёР»СЊС‚СЂРѕРІР°РЅРѕ СЃРµР°РЅСЃРѕРІ: {result.Count}");
+
+            SessionsItemsControl.ItemsSource = result;
         }
 
         private void BookTicket_Click(object? sender, RoutedEventArgs e)
@@ -117,7 +132,10 @@ namespace KinoZalMarsBlinVali.Views
                 var session = _sessions.FirstOrDefault(s => s.SessionId == sessionId);
                 if (session != null)
                 {
-                    // ИСПРАВЛЕНИЕ: Правильная навигация к странице бронирования
+                    Console.WriteLine($"рџЋ« Р‘СЂРѕРЅРёСЂРѕРІР°РЅРёРµ СЃРµР°РЅСЃР°: {session.Movie.Title}");
+                    Console.WriteLine($"рџ–јпёЏ PosterPath РґР»СЏ Р±СЂРѕРЅРёСЂРѕРІР°РЅРёСЏ: {session.Movie.PosterPath}");
+
+                    // РРЎРџР РђР’Р›Р•РќРР•: РџСЂР°РІРёР»СЊРЅР°СЏ РЅР°РІРёРіР°С†РёСЏ Рє СЃС‚СЂР°РЅРёС†Рµ Р±СЂРѕРЅРёСЂРѕРІР°РЅРёСЏ
                     var customerMainPage = this.FindAncestorOfType<CustomerMainPage>();
                     if (customerMainPage != null)
                     {
@@ -125,7 +143,7 @@ namespace KinoZalMarsBlinVali.Views
                     }
                     else
                     {
-                        // Альтернативный способ навигации
+                        // РђР»СЊС‚РµСЂРЅР°С‚РёРІРЅС‹Р№ СЃРїРѕСЃРѕР± РЅР°РІРёРіР°С†РёРё
                         if (this.Parent is ContentControl contentControl &&
                             contentControl.Parent is CustomerMainPage mainPage)
                         {
@@ -148,7 +166,7 @@ namespace KinoZalMarsBlinVali.Views
 
         private async void ShowError(string message)
         {
-            var dialog = new MessageWindow("Ошибка", message);
+            var dialog = new MessageWindow("РћС€РёР±РєР°", message);
             await dialog.ShowDialog((Window)this.VisualRoot);
         }
     }

@@ -2,8 +2,14 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:conv="clr-namespace:KinoZalMarsBlinVali.Converters"
              mc:Ignorable="d" d:DesignWidth="1920" d:DesignHeight="1080"
              x:Class="KinoZalMarsBlinVali.Views.CustomerSessionsPage">
+    
+    <UserControl.Resources>
+        <conv:ImagePathConverter x:Key="ImagePathConverter"/>
+    </UserControl.Resources>
+    
     <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -62,8 +68,9 @@
                                 <!-- Постер -->
                                 <Border Grid.Column="0" Width="120" Height="180" Background="#CCCCCC" 
                                         CornerRadius="5" Margin="0,0,20,0">
-                                    <TextBlock Text="🎬" FontSize="40" 
-                                               HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    <Image Source="{Binding Movie.PosterPath, Converter={StaticResource ImagePathConverter}}"
+                                           Stretch="UniformToFill"
+                                           Width="120" Height="180"/>
                                 </Border>
 
                                 <!-- Информация о фильме -->
@@ -90,6 +97,10 @@
                                     <TextBlock Text="{Binding BasePrice, StringFormat='От {0}₽'}" 
                                                FontSize="16" FontWeight="Bold" 
                                                Foreground="#00A651"/>
+                                               
+                                    <!-- Доступные места -->
+                                    <TextBlock Text="{Binding AvailableSeats, StringFormat='Доступно мест: {0}'}" 
+                                               FontSize="12" Foreground="#666"/>
                                 </StackPanel>
 
                                 <!-- Кнопка бронирования -->
