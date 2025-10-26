@@ -94,6 +94,9 @@ namespace KinoZalMarsBlinVali.Views
             MovieTitle.Text = _session.Movie.Title;
             SessionInfo.Text = $"{_session.StartTime:dd.MM.yyyy HH:mm} - {_session.EndTime:HH:mm}";
             HallInfo.Text = $"Зал: {_session.Hall.HallName}";
+
+            // Убедитесь, что DataContext установлен для привязки изображения
+            this.DataContext = _session;
         }
 
         private void LoadSeats()

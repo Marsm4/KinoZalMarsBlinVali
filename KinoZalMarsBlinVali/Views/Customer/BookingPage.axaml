@@ -23,18 +23,21 @@
         </StackPanel>
 
         <!-- Информация о сеансе -->
-        <Border Grid.Row="1" Background="#E8F5E8" CornerRadius="8" Padding="15" Margin="0,0,0,20">
-            <StackPanel Orientation="Horizontal" Spacing="30">
-                <Border Width="80" Height="120" Background="#CCCCCC" CornerRadius="5">
-                    <TextBlock Text="🎬" FontSize="40" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                </Border>
-                <StackPanel>
-                    <TextBlock x:Name="MovieTitle" FontSize="18" FontWeight="Bold"/>
-                    <TextBlock x:Name="SessionInfo" FontSize="14" Foreground="#666"/>
-                    <TextBlock x:Name="HallInfo" FontSize="14" Foreground="#666"/>
-                </StackPanel>
-            </StackPanel>
+      <!-- Информация о сеансе -->
+<Border Grid.Row="1" Background="#E8F5E8" CornerRadius="8" Padding="15" Margin="0,0,0,20">
+    <StackPanel Orientation="Horizontal" Spacing="30">
+        <Border Width="80" Height="120" Background="#CCCCCC" CornerRadius="5">
+            <Image Source="{Binding Session.Movie.PosterPath}" 
+                   Width="80" Height="120" 
+                   Stretch="UniformToFill"/>
         </Border>
+        <StackPanel>
+            <TextBlock x:Name="MovieTitle" FontSize="18" FontWeight="Bold"/>
+            <TextBlock x:Name="SessionInfo" FontSize="14" Foreground="#666"/>
+            <TextBlock x:Name="HallInfo" FontSize="14" Foreground="#666"/>
+        </StackPanel>
+    </StackPanel>
+</Border>
 
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>

@@ -80,7 +80,7 @@ namespace KinoZalMarsBlinVali.Views
                     AppDataContext.DbContext.Movies.Add(_movie);
                 }
 
-                AppDataContext.DbContext.SaveChanges();
+                await AppDataContext.DbContext.SaveChangesAsync(); // Добавлен await
 
                 // Показываем сообщение об успехе
                 var successDialog = new MessageWindow("Успех",
