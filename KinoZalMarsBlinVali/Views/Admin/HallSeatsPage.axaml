@@ -8,8 +8,8 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
         <!-- Заголовок и кнопка назад -->
@@ -98,9 +98,8 @@
                                             <Button Content="{Binding SeatNumber}"
                                                     Width="35" Height="35" FontSize="10"
                                                     Click="SeatButton_Click"
-                                                    Tag="{Binding}">
-                                          
-                                            </Button>
+                                                    Tag="{Binding}"
+                                                    Background="{Binding SeatBackground}"/>
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
                                 </ItemsControl>

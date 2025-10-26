@@ -1,10 +1,13 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Avalonia.Media;
 using KinoZalMarsBlinVali.Data;
 using KinoZalMarsBlinVali.Models;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 namespace KinoZalMarsBlinVali.Views
@@ -26,7 +29,37 @@ namespace KinoZalMarsBlinVali.Views
         public class SeatRow
         {
             public int RowNumber { get; set; }
-            public ObservableCollection<HallSeat> Seats { get; set; } = new ObservableCollection<HallSeat>();
+            public ObservableCollection<SeatInfo> Seats { get; set; } = new ObservableCollection<SeatInfo>();
+        }
+
+        public class SeatInfo : INotifyPropertyChanged
+        {
+            public HallSeat Seat { get; set; }
+
+            public IBrush SeatBackground
+            {
+                get
+                {
+                    return Seat.SeatType switch
+                    {
+                        "vip" => new SolidColorBrush(Colors.Orange),
+                        "disabled" => new SolidColorBrush(Colors.Gray),
+                        _ => new SolidColorBrush(Colors.Green)
+                    };
+                }
+            }
+
+            public event PropertyChangedEventHandler? PropertyChanged;
+
+            protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+            {
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            }
+
+            public void UpdateBackground()
+            {
+                OnPropertyChanged(nameof(SeatBackground));
+            }
         }
 
         private void LoadSeats()
@@ -68,7 +101,12 @@ namespace KinoZalMarsBlinVali.Views
                     {
                         seat.SeatType = "standard";
                     }
-                    seatRow.Seats.Add(seat);
+
+                    var seatInfo = new SeatInfo
+                    {
+                        Seat = seat
+                    };
+                    seatRow.Seats.Add(seatInfo);
                 }
 
                 _seatRows.Add(seatRow);
@@ -79,24 +117,23 @@ namespace KinoZalMarsBlinVali.Views
 
         private async void SeatButton_Click(object? sender, RoutedEventArgs e)
         {
-            if (sender is Button button && button.Tag is HallSeat seat)
+            if (sender is Button button && button.Tag is SeatInfo seatInfo)
             {
                 var selectedType = (SeatTypeComboBox.SelectedItem as ComboBoxItem)?.Content?.ToString() ?? "standard";
 
                 // Меняем тип места
-                seat.SeatType = selectedType;
+                seatInfo.Seat.SeatType = selectedType;
 
                 // Обновляем множитель цены
-                seat.PriceMultiplier = selectedType switch
+                seatInfo.Seat.PriceMultiplier = selectedType switch
                 {
                     "vip" => 1.5m,
                     "disabled" => 0m,
                     _ => 1.0m
                 };
 
-                // Обновляем классы кнопки
-                button.Classes.Clear();
-                button.Classes.Add(seat.SeatType);
+                // Обновляем цвет кнопки
+                seatInfo.UpdateBackground();
             }
         }
 
