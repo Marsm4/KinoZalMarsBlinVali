@@ -25,13 +25,14 @@ namespace KinoZalMarsBlinVali.Views
             LoadComboBoxData();
         }
 
-        public SessionEditPage(Session session) : this()
+        public SessionEditPage(Session session)
         {
             _session = session;
             _isEditMode = true;
-            InitializeComponent();
+            InitializeComponent(); // ТОЛЬКО ОДИН РАЗ!
             DataContext = this;
-            LoadSessionData();
+            LoadComboBoxData(); // Сначала загружаем данные в комбобоксы
+            LoadSessionData();  // Затем загружаем данные сеанса
         }
 
         private void LoadComboBoxData()

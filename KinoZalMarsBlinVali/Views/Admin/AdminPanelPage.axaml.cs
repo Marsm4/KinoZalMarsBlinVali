@@ -43,7 +43,7 @@ namespace KinoZalMarsBlinVali.Views
 
         private void Reports_Click(object? sender, RoutedEventArgs e)
         {
-            MainContentControl.Content = new AdminReportsPage();
+            MainContentControl.Content = new CashierReportsPage();
         }
 
         private void Logout_Click(object? sender, RoutedEventArgs e)

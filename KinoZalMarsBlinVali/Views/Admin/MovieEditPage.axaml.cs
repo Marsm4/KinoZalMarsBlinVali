@@ -1,6 +1,7 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
+using KinoZalMarsBlinVali.Converters;
 using KinoZalMarsBlinVali.Data;
 using KinoZalMarsBlinVali.Models;
 using System;
@@ -25,11 +26,12 @@ namespace KinoZalMarsBlinVali.Views
             DataContext = this;
         }
 
-        public MovieEditPage(Movie movie) : this()
+        public MovieEditPage(Movie movie)
         {
             _movie = movie;
             _isEditMode = true;
-            InitializeComponent();
+
+            InitializeComponent(); // ТОЛЬКО ОДИН РАЗ!
             DataContext = this;
             LoadMovieData();
         }

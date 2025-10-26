@@ -5,9 +5,9 @@
              xmlns:conv="clr-namespace:KinoZalMarsBlinVali.Converters"
              mc:Ignorable="d" d:DesignWidth="1920" d:DesignHeight="1080"
              x:Class="KinoZalMarsBlinVali.Views.MovieEditPage">
-    <UserControl.Resources>
-        <conv:ImagePathConverter x:Key="ImagePathConverter"/>
-    </UserControl.Resources>
+<UserControl.Resources>
+    <conv:ImagePathConverter x:Key="ImagePathConverter" x:Shared="false"/>
+</UserControl.Resources>
     
     <Grid Margin="20">
         <Grid.RowDefinitions>
