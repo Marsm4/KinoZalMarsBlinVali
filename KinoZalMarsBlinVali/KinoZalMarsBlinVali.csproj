@@ -32,4 +32,12 @@
 
 	  <AvaloniaResource Include="Assets\**" />
   </ItemGroup>
+
+
+	<ItemGroup>
+		<AvaloniaResource Include="Assets\**" />
+		<None Update="Assets\**">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
 </Project>

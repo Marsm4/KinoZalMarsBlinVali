@@ -2,8 +2,13 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:conv="clr-namespace:KinoZalMarsBlinVali.Converters"
              mc:Ignorable="d" d:DesignWidth="1920" d:DesignHeight="1080"
              x:Class="KinoZalMarsBlinVali.Views.MovieEditPage">
+    <UserControl.Resources>
+        <conv:ImagePathConverter x:Key="ImagePathConverter"/>
+    </UserControl.Resources>
+    
     <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -75,10 +80,26 @@
                                  AcceptsReturn="True" TextWrapping="Wrap"/>
                     </StackPanel>
 
-                    <!-- Путь к постеру -->
+                    <!-- Постер -->
                     <StackPanel>
-                        <TextBlock Text="Путь к постеру" FontWeight="SemiBold" FontSize="14"/>
-                        <TextBox x:Name="PosterPathTextBox" Height="35" FontSize="14"/>
+                        <TextBlock Text="Постер фильма" FontWeight="SemiBold" FontSize="14"/>
+                        
+                        <!-- Предпросмотр изображения -->
+                    <Border BorderBrush="#CCCCCC" BorderThickness="1" 
+        Background="#F5F5F5" Width="200" Height="300" 
+        Margin="0,0,0,10" HorizontalAlignment="Left">
+    <Image Source="{Binding Text, ElementName=PosterPathTextBox, Converter={StaticResource ImagePathConverter}}"
+           Stretch="Uniform"
+           HorizontalAlignment="Center"
+           VerticalAlignment="Center"/>
+</Border>
+                        
+                        <StackPanel Orientation="Horizontal" Spacing="10">
+                            <TextBox x:Name="PosterPathTextBox" Height="35" FontSize="14" 
+                                     Width="300" Watermark="Путь к изображению"/>
+                            <Button Content="📁 Выбрать файл" Click="SelectImage_Click" 
+                                    Padding="10,5" Height="35"/>
+                        </StackPanel>
                     </StackPanel>
 
                     <!-- Статус -->

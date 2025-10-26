@@ -2,8 +2,14 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:conv="clr-namespace:KinoZalMarsBlinVali.Converters"
              mc:Ignorable="d" d:DesignWidth="1920" d:DesignHeight="1080"
              x:Class="KinoZalMarsBlinVali.Views.BookingPage">
+    
+    <UserControl.Resources>
+        <conv:ImagePathConverter x:Key="ImagePathConverter"/>
+    </UserControl.Resources>
+    
     <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -23,21 +29,20 @@
         </StackPanel>
 
         <!-- Информация о сеансе -->
-      <!-- Информация о сеансе -->
-<Border Grid.Row="1" Background="#E8F5E8" CornerRadius="8" Padding="15" Margin="0,0,0,20">
-    <StackPanel Orientation="Horizontal" Spacing="30">
-        <Border Width="80" Height="120" Background="#CCCCCC" CornerRadius="5">
-            <Image Source="{Binding Session.Movie.PosterPath}" 
-                   Width="80" Height="120" 
-                   Stretch="UniformToFill"/>
+        <Border Grid.Row="1" Background="#E8F5E8" CornerRadius="8" Padding="15" Margin="0,0,0,20">
+            <StackPanel Orientation="Horizontal" Spacing="30">
+                <Border Width="80" Height="120" Background="#CCCCCC" CornerRadius="5">
+                    <Image Source="{Binding PosterPath, Converter={StaticResource ImagePathConverter}}" 
+                           Width="80" Height="120" 
+                           Stretch="UniformToFill"/>
+                </Border>
+                <StackPanel>
+                    <TextBlock x:Name="MovieTitle" FontSize="18" FontWeight="Bold"/>
+                    <TextBlock x:Name="SessionInfo" FontSize="14" Foreground="#666"/>
+                    <TextBlock x:Name="HallInfo" FontSize="14" Foreground="#666"/>
+                </StackPanel>
+            </StackPanel>
         </Border>
-        <StackPanel>
-            <TextBlock x:Name="MovieTitle" FontSize="18" FontWeight="Bold"/>
-            <TextBlock x:Name="SessionInfo" FontSize="14" Foreground="#666"/>
-            <TextBlock x:Name="HallInfo" FontSize="14" Foreground="#666"/>
-        </StackPanel>
-    </StackPanel>
-</Border>
 
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
@@ -120,7 +125,6 @@
                 <StackPanel Spacing="15">
                     <TextBlock Text="Выбранные места:" FontWeight="Bold" FontSize="16"/>
                     
-                    <!-- ИСПРАВЛЕНИЕ: Правильный ItemsControl для выбранных мест -->
                     <ItemsControl x:Name="SelectedSeatsItemsControl" MaxHeight="200">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>

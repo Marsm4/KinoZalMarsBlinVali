@@ -95,8 +95,19 @@ namespace KinoZalMarsBlinVali.Views
             SessionInfo.Text = $"{_session.StartTime:dd.MM.yyyy HH:mm} - {_session.EndTime:HH:mm}";
             HallInfo.Text = $"Зал: {_session.Hall.HallName}";
 
-            // Убедитесь, что DataContext установлен для привязки изображения
-            this.DataContext = _session;
+            // Отладочная информация
+            Console.WriteLine($"🎬 Загружаем сеанс: {_session.Movie.Title}");
+            Console.WriteLine($"🖼️ Путь к постеру: {_session.Movie.PosterPath}");
+
+            if (string.IsNullOrEmpty(_session.Movie.PosterPath))
+            {
+                Console.WriteLine("⚠️ Путь к постеру пустой!");
+                // Установите путь к заглушке по умолчанию
+                _session.Movie.PosterPath = "Assets/placeholder.jpg";
+            }
+
+            // Устанавливаем DataContext для привязки изображения
+            this.DataContext = _session.Movie;
         }
 
         private void LoadSeats()
@@ -198,7 +209,6 @@ namespace KinoZalMarsBlinVali.Views
 
         private void TicketType_SelectionChanged(object? sender, SelectionChangedEventArgs e)
         {
-            // ИСПРАВЛЕНИЕ: Проверка на null
             if (TicketTypeComboBox == null) return;
 
             var ticketType = TicketTypeComboBox.SelectedItem as TicketType;
@@ -264,7 +274,6 @@ namespace KinoZalMarsBlinVali.Views
                     $"Билеты успешно забронированы! У вас есть 30 минут для оплаты.");
                 await successDialog.ShowDialog((Window)this.VisualRoot);
 
-                // Возвращаемся к списку сеансов
                 Back_Click(sender, e);
             }
             catch (Exception ex)
