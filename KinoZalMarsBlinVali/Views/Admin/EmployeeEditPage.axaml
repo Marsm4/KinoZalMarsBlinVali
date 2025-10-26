@@ -1,0 +1,95 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="1920" d:DesignHeight="1080"
+             x:Class="KinoZalMarsBlinVali.Views.EmployeeEditPage">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Заголовок и кнопка назад -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="15" Margin="0,0,0,20">
+            <Button Content="← Назад" Click="Back_Click"
+                    Background="#6c757d" Foreground="White" 
+                    Padding="15,8" FontWeight="Bold"/>
+            <TextBlock Text="{Binding WindowTitle}" 
+                       FontSize="24" FontWeight="Bold" Foreground="#0066CC"
+                       VerticalAlignment="Center"/>
+        </StackPanel>
+
+        <!-- Форма редактирования -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <Grid Width="500" HorizontalAlignment="Left">
+                <StackPanel Spacing="15">
+                    <!-- Логин -->
+                    <StackPanel>
+                        <TextBlock Text="Логин *" FontWeight="SemiBold" FontSize="14"/>
+                        <TextBox x:Name="UsernameTextBox" Height="35" FontSize="14"/>
+                    </StackPanel>
+
+                    <!-- Пароль -->
+                    <StackPanel>
+                        <TextBlock Text="Пароль *" FontWeight="SemiBold" FontSize="14"/>
+                        <TextBox x:Name="PasswordTextBox" Height="35" FontSize="14"
+                                 PasswordChar="*"/>
+                    </StackPanel>
+
+                    <!-- Имя -->
+                    <StackPanel>
+                        <TextBlock Text="Имя *" FontWeight="SemiBold" FontSize="14"/>
+                        <TextBox x:Name="FirstNameTextBox" Height="35" FontSize="14"/>
+                    </StackPanel>
+
+                    <!-- Фамилия -->
+                    <StackPanel>
+                        <TextBlock Text="Фамилия *" FontWeight="SemiBold" FontSize="14"/>
+                        <TextBox x:Name="LastNameTextBox" Height="35" FontSize="14"/>
+                    </StackPanel>
+
+                    <!-- Должность -->
+                    <StackPanel>
+                        <TextBlock Text="Должность *" FontWeight="SemiBold" FontSize="14"/>
+                        <ComboBox x:Name="PositionComboBox" Height="35" FontSize="14">
+                            <ComboBoxItem Content="Кассир"/>
+                            <ComboBoxItem Content="Менеджер"/>
+                            <ComboBoxItem Content="Администратор"/>
+                            <ComboBoxItem Content="Уборщик"/>
+                            <ComboBoxItem Content="Охранник"/>
+                        </ComboBox>
+                    </StackPanel>
+
+                    <!-- Роль -->
+                    <StackPanel>
+                        <TextBlock Text="Роль в системе *" FontWeight="SemiBold" FontSize="14"/>
+                        <ComboBox x:Name="RoleComboBox" Height="35" FontSize="14">
+                            <ComboBoxItem Content="cashier"/>
+                            <ComboBoxItem Content="manager"/>
+                            <ComboBoxItem Content="admin"/>
+                        </ComboBox>
+                    </StackPanel>
+
+                    <!-- Статус -->
+                    <StackPanel>
+                        <CheckBox x:Name="IsActiveCheckBox" Content="Активный сотрудник"
+                                  FontWeight="SemiBold" IsChecked="True" FontSize="14"/>
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
+        </ScrollViewer>
+
+        <!-- Кнопки -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" 
+                    HorizontalAlignment="Left" Spacing="20" Margin="0,20,0,0">
+            <Button Content="Сохранить" Click="Save_Click"
+                    Background="#00A651" Foreground="White" 
+                    Padding="30,10" FontWeight="Bold" FontSize="14"/>
+            <Button Content="Отмена" Click="Back_Click"
+                    Background="#6c757d" Foreground="White" 
+                    Padding="30,10" FontWeight="Bold" FontSize="14"/>
+        </StackPanel>
+    </Grid>
+</UserControl>

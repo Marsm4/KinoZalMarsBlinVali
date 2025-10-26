@@ -43,7 +43,7 @@
                 <DataGridTextColumn Header="Жанр" Binding="{Binding Genre}" Width="120"/>
                 <DataGridTextColumn Header="Продолжительность" Binding="{Binding DurationMinutes}" Width="120"/>
                 <DataGridTextColumn Header="Возрастное ограничение" Binding="{Binding AgeRating}" Width="120"/>
-                <DataGridTextColumn Header="Режиссер" Binding="{Binding Director}" Width="150"/>
+                <DataGridTextColumn Header="Режиссер" Binding="{Binding Director}" Width="280"/>
                 <DataGridCheckBoxColumn Header="Активный" Binding="{Binding IsActive}" Width="80"/>
                 <DataGridTemplateColumn Header="Действия" Width="200">
                     <DataGridTemplateColumn.CellTemplate>
