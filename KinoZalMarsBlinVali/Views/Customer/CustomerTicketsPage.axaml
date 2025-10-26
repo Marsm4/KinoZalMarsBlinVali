@@ -86,19 +86,26 @@
                                 </StackPanel>
 
                                 <!-- Действия -->
-                                <StackPanel Grid.Column="1" Orientation="Vertical" Spacing="8" VerticalAlignment="Center">
-                                    <Button Content="📱 QR-код" Click="ShowQrCode_Click"
-                                            Background="#0066CC" Foreground="White"
-                                            Padding="12,6" FontWeight="SemiBold" FontSize="11"
-                                            Tag="{Binding TicketId}"
-                                            IsVisible="{Binding IsActive}"/>
-                                            
-                                    <Button Content="❌ Отменить" Click="CancelTicket_Click"
-                                            Background="#FF6B35" Foreground="White"
-                                            Padding="12,6" FontWeight="SemiBold" FontSize="11"
-                                            Tag="{Binding TicketId}"
-                                            IsVisible="{Binding CanCancel}"/>
-                                </StackPanel>
+                                <!-- В CustomerTicketsPage.xaml добавляем кнопку оплаты -->
+<StackPanel Grid.Column="1" Orientation="Vertical" Spacing="8" VerticalAlignment="Center">
+    <Button Content="💳 Оплатить" Click="PayTicket_Click"
+            Background="#00A651" Foreground="White"
+            Padding="12,6" FontWeight="SemiBold" FontSize="11"
+            Tag="{Binding TicketId}"
+            IsVisible="{Binding CanPay}"/>
+            
+    <Button Content="📱 QR-код" Click="ShowQrCode_Click"
+            Background="#0066CC" Foreground="White"
+            Padding="12,6" FontWeight="SemiBold" FontSize="11"
+            Tag="{Binding TicketId}"
+            IsVisible="{Binding IsActive}"/>
+            
+    <Button Content="❌ Отменить" Click="CancelTicket_Click"
+            Background="#FF6B35" Foreground="White"
+            Padding="12,6" FontWeight="SemiBold" FontSize="11"
+            Tag="{Binding TicketId}"
+            IsVisible="{Binding CanCancel}"/>
+</StackPanel>
                             </Grid>
                         </Border>
                     </DataTemplate>

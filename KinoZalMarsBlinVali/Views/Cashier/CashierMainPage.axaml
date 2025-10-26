@@ -25,7 +25,10 @@
                         Background="Transparent" Foreground="White" 
                         Padding="15,8" FontWeight="Bold"
                         Classes="nav-button"/>
-                        
+                        <Button Content="💰 Балансы" Click="NavigateToBalance_Click"
+        Background="Transparent" Foreground="White" 
+        Padding="15,8" FontWeight="Bold"
+        Classes="nav-button"/>
                 <Button Content="⭐ Бонусы" Click="NavigateToBonus_Click"
                         Background="Transparent" Foreground="White" 
                         Padding="15,8" FontWeight="Bold"

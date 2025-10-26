@@ -128,6 +128,41 @@ namespace KinoZalMarsBlinVali.Views
                 }
             }
         }
+        private async void PayTicket_Click(object? sender, RoutedEventArgs e)
+        {
+            if (sender is Button button && button.Tag is int ticketId)
+            {
+                var ticket = _tickets.FirstOrDefault(t => t.TicketId == ticketId);
+                if (ticket != null && ticket.Status == "reserved")
+                {
+                    try
+                    {
+                        var customer = AppDataContext.DbContext.Customers
+                            .FirstOrDefault(c => c.CustomerId == ticket.CustomerId);
+
+                        if (customer == null)
+                        {
+                             ShowError("Ошибка: клиент не найден");
+                            return;
+                        }
+
+                        // Создаем окно оплаты с баланса
+                        var paymentWindow = new CustomerPaymentWindow(ticket, customer);
+                        await paymentWindow.ShowDialog((Window)this.VisualRoot);
+
+                        if (paymentWindow.PaymentSuccess)
+                        {
+                            LoadTickets();
+                             ShowSuccess("Билет успешно оплачен!");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                         ShowError($"Ошибка при оплате: {ex.Message}");
+                    }
+                }
+            }
+        }
 
         private void Refresh_Click(object? sender, RoutedEventArgs e)
         {
@@ -158,6 +193,8 @@ namespace KinoZalMarsBlinVali.Views
         public string SeatDetailedInfo => $"💺 Ряд {Ticket.Seat?.RowNumber}, Место {Ticket.Seat?.SeatNumber}";
         public string TicketTypeInfo => $"🎫 {Ticket.TicketType?.TypeName ?? "Стандарт"}";
         public string PriceInfo => $"💰 Стоимость: {Ticket.FinalPrice}₽";
+        public bool CanPay => Ticket.Status == "reserved" &&
+                      Ticket.ReservationExpires > DateTime.Now;
 
         // Информация о бронировании/покупке
         public string BookingInfo

@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+п»їusing Avalonia.Controls;
 using Avalonia.Interactivity;
 using KinoZalMarsBlinVali.Data;
 using KinoZalMarsBlinVali.Models;
@@ -22,7 +22,7 @@ namespace KinoZalMarsBlinVali.Views
         {
             try
             {
-                var customerId = AppDataContext.CurrentUser?.EmployeeId; // CustomerId для зрителя
+                var customerId = AppDataContext.CurrentUser?.EmployeeId;
 
                 _customer = AppDataContext.DbContext.Customers
                     .FirstOrDefault(c => c.CustomerId == customerId);
@@ -33,15 +33,15 @@ namespace KinoZalMarsBlinVali.Views
                     LastNameTextBox.Text = _customer.LastName ?? "";
                     EmailTextBox.Text = _customer.Email ?? "";
                     PhoneTextBox.Text = _customer.Phone ?? "";
+                    BalanceText.Text = $"{_customer.Balance}в‚Ѕ";
                     BonusPointsText.Text = (_customer.BonusPoints ?? 0).ToString();
                 }
             }
             catch (Exception ex)
             {
-                ShowError($"Ошибка загрузки данных: {ex.Message}");
+                ShowError($"РћС€РёР±РєР° Р·Р°РіСЂСѓР·РєРё РґР°РЅРЅС‹С…: {ex.Message}");
             }
         }
-
         private async void SaveProfile_Click(object? sender, RoutedEventArgs e)
         {
             if (_customer == null) return;
@@ -55,7 +55,7 @@ namespace KinoZalMarsBlinVali.Views
 
                 AppDataContext.DbContext.SaveChanges();
 
-                // Обновляем данные в CurrentUser
+                // РћР±РЅРѕРІР»СЏРµРј РґР°РЅРЅС‹Рµ РІ CurrentUser
                 if (AppDataContext.CurrentUser != null)
                 {
                     AppDataContext.CurrentUser.FirstName = _customer.FirstName;
@@ -63,11 +63,11 @@ namespace KinoZalMarsBlinVali.Views
                     AppDataContext.CurrentUser.Username = _customer.Email;
                 }
 
-                 ShowSuccess("Профиль успешно обновлен");
+                 ShowSuccess("РџСЂРѕС„РёР»СЊ СѓСЃРїРµС€РЅРѕ РѕР±РЅРѕРІР»РµРЅ");
             }
             catch (Exception ex)
             {
-                 ShowError($"Ошибка сохранения: {ex.Message}");
+                 ShowError($"РћС€РёР±РєР° СЃРѕС…СЂР°РЅРµРЅРёСЏ: {ex.Message}");
             }
         }
 
@@ -78,13 +78,13 @@ namespace KinoZalMarsBlinVali.Views
 
         private async void ShowError(string message)
         {
-            var dialog = new MessageWindow("Ошибка", message);
+            var dialog = new MessageWindow("РћС€РёР±РєР°", message);
             await dialog.ShowDialog((Window)this.VisualRoot);
         }
 
         private async void ShowSuccess(string message)
         {
-            var dialog = new MessageWindow("Успех", message);
+            var dialog = new MessageWindow("РЈСЃРїРµС…", message);
             await dialog.ShowDialog((Window)this.VisualRoot);
         }
     }

@@ -21,13 +21,23 @@
                 Width="500" HorizontalAlignment="Left">
             <StackPanel Spacing="20">
                 <!-- Бонусные баллы -->
-                <Border Background="#E8F5E8" CornerRadius="8" Padding="15">
-                    <StackPanel HorizontalAlignment="Center">
-                        <TextBlock Text="Бонусные баллы" FontSize="14" Foreground="#666"/>
-                        <TextBlock x:Name="BonusPointsText" FontSize="24" FontWeight="Bold" 
-                                   Foreground="#00A651" HorizontalAlignment="Center"/>
-                    </StackPanel>
-                </Border>
+                 <Border Background="#E3F2FD" CornerRadius="8" Padding="15">
+        <StackPanel HorizontalAlignment="Center">
+            <TextBlock Text="Баланс" FontSize="14" Foreground="#666"/>
+            <TextBlock x:Name="BalanceText" FontSize="24" FontWeight="Bold" 
+                       Foreground="#0066CC" HorizontalAlignment="Center"/>
+        </StackPanel>
+    </Border>
+
+    <!-- Бонусные баллы -->
+    <Border Background="#E8F5E8" CornerRadius="8" Padding="15">
+        <StackPanel HorizontalAlignment="Center">
+            <TextBlock Text="Бонусные баллы" FontSize="14" Foreground="#666"/>
+            <TextBlock x:Name="BonusPointsText" FontSize="24" FontWeight="Bold" 
+                       Foreground="#00A651" HorizontalAlignment="Center"/>
+        </StackPanel>
+    </Border>
+
 
                 <!-- Информация -->
                 <StackPanel Spacing="15">

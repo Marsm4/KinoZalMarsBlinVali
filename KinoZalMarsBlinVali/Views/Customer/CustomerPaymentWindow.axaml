@@ -1,0 +1,56 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Оплата билета"
+        Width="500"
+        Height="450"
+        x:Class="KinoZalMarsBlinVali.Views.CustomerPaymentWindow">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Text="💳 Оплата билета" 
+                   FontSize="18" FontWeight="Bold" Foreground="#0066CC"
+                   Margin="0,0,0,15"/>
+
+        <!-- Информация о билете -->
+        <Border Grid.Row="1" Background="#F5F5F5" CornerRadius="8" Padding="15">
+            <StackPanel Spacing="10">
+                <TextBlock Text="{Binding MovieTitle}" FontWeight="Bold" FontSize="16"/>
+                <TextBlock Text="{Binding SessionTime}" FontSize="14"/>
+                <TextBlock Text="{Binding SeatInfo}" FontSize="14"/>
+                <TextBlock Text="{Binding PriceInfo}" FontSize="16" FontWeight="Bold" Foreground="#00A651"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Информация о балансе -->
+        <StackPanel Grid.Row="2" Spacing="10" Margin="0,15,0,10">
+            <TextBlock Text="Ваш баланс:" FontWeight="SemiBold"/>
+            <TextBlock x:Name="BalanceText" FontSize="14" FontWeight="Bold"/>
+            <TextBlock x:Name="BonusPointsText" FontSize="12" Foreground="#666"/>
+        </StackPanel>
+
+        <!-- Использование бонусов -->
+        <StackPanel Grid.Row="3" Spacing="10" Margin="0,0,0,10">
+            <TextBlock Text="Использовать бонусные баллы:" FontWeight="SemiBold"/>
+            <TextBox x:Name="BonusPointsUsedTextBox" Text="0"
+                     Watermark="Количество бонусов для списания"/>
+            <TextBlock x:Name="FinalPriceText" FontSize="14" FontWeight="Bold"/>
+        </StackPanel>
+
+        <!-- Кнопки -->
+        <StackPanel Grid.Row="4" Orientation="Horizontal" 
+                    HorizontalAlignment="Right" Spacing="10">
+            <Button Content="✅ Оплатить с баланса" Click="ConfirmPayment_Click"
+                    Background="#00A651" Foreground="White" 
+                    Padding="15,8" FontWeight="Bold"/>
+            <Button Content="❌ Отмена" Click="Cancel_Click"
+                    Background="#6c757d" Foreground="White" 
+                    Padding="15,8" FontWeight="Bold"/>
+        </StackPanel>
+    </Grid>
+</Window>

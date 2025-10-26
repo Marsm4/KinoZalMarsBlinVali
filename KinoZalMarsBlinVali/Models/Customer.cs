@@ -16,6 +16,7 @@ public partial class Customer
     public string? LastName { get; set; }
 
     public int? BonusPoints { get; set; }
+    public decimal Balance { get; set; } = 0; 
 
     public DateTime? CreatedAt { get; set; }
 
