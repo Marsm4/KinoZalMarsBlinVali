@@ -33,7 +33,6 @@ namespace KinoZalMarsBlinVali
             }
         }
 
-        // Метод для смены страниц из других контролов
         public void NavigateTo(UserControl page)
         {
             MainContentControl.Content = page;
