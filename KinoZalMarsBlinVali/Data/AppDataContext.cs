@@ -11,7 +11,7 @@ namespace KinoZalMarsBlinVali.Data
     {
         public static Employee? CurrentUser { get; set; }
         public static CinemaDbContext DbContext { get; set; } = new CinemaDbContext();
-        // Свойство для определения типа пользователя
+ 
         public static bool IsCustomer => CurrentUser?.Role == "customer";
         public static bool IsEmployee => CurrentUser?.Role != "customer";
     }

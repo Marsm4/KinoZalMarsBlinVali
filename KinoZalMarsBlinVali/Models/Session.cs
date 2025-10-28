@@ -49,11 +49,10 @@ public partial class Session
             }
         }
     }
-    // Метод для безопасного получения названия фильма
+   
     [NotMapped]
     public string MovieTitle => Movie?.Title ?? "Неизвестно";
 
-    // Метод для безопасного получения названия зала
     [NotMapped]
     public string HallName => Hall?.HallName ?? "Неизвестно";
 }

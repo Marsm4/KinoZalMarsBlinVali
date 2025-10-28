@@ -18,7 +18,7 @@ namespace KinoZalMarsBlinVali.Views
                 UserInfoText.Text = $"{currentUser.FirstName} {currentUser.LastName} ({currentUser.Position})";
             }
 
-            // ѕо умолчанию показываем страницу фильмов
+     
             Movies_Click(null, null);
         }
 

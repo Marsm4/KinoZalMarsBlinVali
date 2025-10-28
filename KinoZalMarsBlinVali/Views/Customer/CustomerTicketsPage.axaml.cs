@@ -76,7 +76,6 @@ namespace KinoZalMarsBlinVali.Views
                 var ticket = _tickets.FirstOrDefault(t => t.TicketId == ticketId);
                 if (ticket != null)
                 {
-                    // Заглушка для QR-кода
                     var dialog = new MessageWindow("QR-код",
                         $"Билет #{ticket.TicketId}\n\n" +
                         $"🎬 {ticket.Session.Movie.Title}\n" +
@@ -97,7 +96,6 @@ namespace KinoZalMarsBlinVali.Views
                 var ticket = _tickets.FirstOrDefault(t => t.TicketId == ticketId);
                 if (ticket != null && ticket.Status == "reserved")
                 {
-                    // Создаем окно подтверждения
                     var dialog = new ConfirmationDialog(
                         "Отмена бронирования",
                         $"Вы уверены, что хотите отменить бронирование?\n\n" +
@@ -142,23 +140,30 @@ namespace KinoZalMarsBlinVali.Views
 
                         if (customer == null)
                         {
-                             ShowError("Ошибка: клиент не найден");
+                            ShowError("Ошибка: клиент не найден");
                             return;
                         }
 
-                        // Создаем окно оплаты с баланса
                         var paymentWindow = new CustomerPaymentWindow(ticket, customer);
                         await paymentWindow.ShowDialog((Window)this.VisualRoot);
 
                         if (paymentWindow.PaymentSuccess)
                         {
+                            int bonusPoints = (int)(ticket.FinalPrice * 0.05m);
+                            customer.BonusPoints = (customer.BonusPoints ?? 0) + bonusPoints;
+
+                       
+                            AppDataContext.DbContext.SaveChanges();
+
                             LoadTickets();
-                             ShowSuccess("Билет успешно оплачен!");
+
+                             ShowSuccess($"Билет успешно оплачен!\n" +
+                                            $"Начислено бонусных баллов: {bonusPoints}");
                         }
                     }
                     catch (Exception ex)
                     {
-                         ShowError($"Ошибка при оплате: {ex.Message}");
+                        ShowError($"Ошибка при оплате: {ex.Message}");
                     }
                 }
             }
@@ -186,7 +191,6 @@ namespace KinoZalMarsBlinVali.Views
     {
         public Ticket Ticket { get; set; }
 
-        // Основная информация
         public string MovieTitle => Ticket.Session?.Movie?.Title ?? "Неизвестно";
         public string SessionDateTime => $"📅 {Ticket.Session?.StartTime:dd.MM.yyyy} ⏰ {Ticket.Session?.StartTime:HH:mm}";
         public string HallInfo => $"🎭 Зал: {Ticket.Session?.Hall?.HallName ?? "Неизвестно"}";
@@ -196,7 +200,7 @@ namespace KinoZalMarsBlinVali.Views
         public bool CanPay => Ticket.Status == "reserved" &&
                       Ticket.ReservationExpires > DateTime.Now;
 
-        // Информация о бронировании/покупке
+
         public string BookingInfo
         {
             get
@@ -212,7 +216,7 @@ namespace KinoZalMarsBlinVali.Views
             }
         }
 
-        // Статус
+
         public string StatusText => Ticket.Status switch
         {
             "sold" => "ОПЛАЧЕН",
@@ -233,10 +237,10 @@ namespace KinoZalMarsBlinVali.Views
 
         public IBrush StatusColor => Ticket.Status switch
         {
-            "sold" => new SolidColorBrush(Color.FromRgb(76, 175, 80)),     // Зеленый
-            "reserved" => new SolidColorBrush(Color.FromRgb(255, 152, 0)), // Оранжевый
-            "used" => new SolidColorBrush(Color.FromRgb(158, 158, 158)),   // Серый
-            "cancelled" => new SolidColorBrush(Color.FromRgb(244, 67, 54)), // Красный
+            "sold" => new SolidColorBrush(Color.FromRgb(76, 175, 80)),   
+            "reserved" => new SolidColorBrush(Color.FromRgb(255, 152, 0)), 
+            "used" => new SolidColorBrush(Color.FromRgb(158, 158, 158)),   
+            "cancelled" => new SolidColorBrush(Color.FromRgb(244, 67, 54)), 
             _ => new SolidColorBrush(Color.FromRgb(158, 158, 158))
         };
 

@@ -12,7 +12,7 @@ namespace KinoZalMarsBlinVali.Views
         public CustomerMainPage()
         {
             InitializeComponent();
-            // По умолчанию показываем страницу сеансов
+
             NavigateToSessions_Click(null, null);
         }
 
@@ -28,7 +28,7 @@ namespace KinoZalMarsBlinVali.Views
             UpdateActiveButton(sender as Button);
         }
 
-        private void NavigateToProfile_Click(object? sender, RoutedEventArgs e)
+        public void NavigateToProfile_Click(object? sender, RoutedEventArgs e)
         {
             MainContentControl.Content = new CustomerProfilePage();
             UpdateActiveButton(sender as Button);
@@ -38,11 +38,11 @@ namespace KinoZalMarsBlinVali.Views
         {
             try
             {
-                // ИСПРАВЛЕНИЕ: Безопасное получение дочерних элементов
+               
                 var border = this.GetVisualChildren().FirstOrDefault() as Border;
                 if (border?.Child != null)
                 {
-                    // Сбрасываем стили всех кнопок навигации
+                   
                     foreach (var child in border.Child.GetVisualChildren())
                     {
                         if (child is Button button && button.Classes.Contains("nav-button"))
@@ -51,7 +51,7 @@ namespace KinoZalMarsBlinVali.Views
                         }
                     }
 
-                    // Устанавливаем активный стиль
+                    
                     if (activeButton != null)
                     {
                         activeButton.Background = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Color.FromRgb(0, 86, 179));
@@ -60,7 +60,33 @@ namespace KinoZalMarsBlinVali.Views
             }
             catch
             {
-                // Игнорируем ошибки обновления стилей кнопок
+    
+            }
+        }
+        public void NavigateToAddBalance()
+        {
+            MainContentControl.Content = new AddBalancePage();
+            ResetActiveButtons();
+        }
+        private void ResetActiveButtons()
+        {
+            try
+            {
+                var border = this.GetVisualChildren().FirstOrDefault() as Border;
+                if (border?.Child != null)
+                {
+                    foreach (var child in border.Child.GetVisualChildren())
+                    {
+                        if (child is Button button && button.Classes.Contains("nav-button"))
+                        {
+                            button.Background = Avalonia.Media.Brushes.Transparent;
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                // Игнорируем ошибки
             }
         }
 

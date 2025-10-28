@@ -14,7 +14,7 @@ namespace KinoZalMarsBlinVali.Views
         {
             if (value is string seatType)
             {
-                return seatType; // Avalonia автоматически преобразует строку в классы
+                return seatType; 
             }
             return "standard";
         }

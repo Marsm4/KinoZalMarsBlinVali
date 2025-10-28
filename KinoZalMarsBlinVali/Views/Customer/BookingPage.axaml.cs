@@ -95,18 +95,17 @@ namespace KinoZalMarsBlinVali.Views
             SessionInfo.Text = $"{_session.StartTime:dd.MM.yyyy HH:mm} - {_session.EndTime:HH:mm}";
             HallInfo.Text = $"Зал: {_session.Hall.HallName}";
 
-            // Отладочная информация
             Console.WriteLine($"🎬 Загружаем сеанс: {_session.Movie.Title}");
             Console.WriteLine($"🖼️ Путь к постеру: {_session.Movie.PosterPath}");
 
             if (string.IsNullOrEmpty(_session.Movie.PosterPath))
             {
                 Console.WriteLine("⚠️ Путь к постеру пустой!");
-                // Установите путь к заглушке по умолчанию
+        
                 _session.Movie.PosterPath = "Assets/placeholder.jpg";
             }
 
-            // Устанавливаем DataContext для привязки изображения
+
             this.DataContext = _session.Movie;
         }
 
@@ -114,21 +113,20 @@ namespace KinoZalMarsBlinVali.Views
         {
             try
             {
-                // Получаем все места в зале
+              
                 var hallSeats = AppDataContext.DbContext.HallSeats
                     .Where(s => s.HallId == _session.HallId && s.IsActive == true)
                     .OrderBy(s => s.RowNumber)
                     .ThenBy(s => s.SeatNumber)
                     .ToList();
 
-                // Получаем занятые места на этот сеанс
                 var occupiedSeatIds = AppDataContext.DbContext.Tickets
                     .Where(t => t.SessionId == _session.SessionId &&
                                (t.Status == "sold" || t.Status == "reserved"))
                     .Select(t => t.SeatId)
                     .ToList();
 
-                // Создаем структуру рядов и мест
+            
                 var seatRows = new ObservableCollection<SeatRow>();
                 var rows = hallSeats.GroupBy(s => s.RowNumber).OrderBy(g => g.Key);
 
@@ -178,7 +176,7 @@ namespace KinoZalMarsBlinVali.Views
             {
                 if (seatInfo.IsSelected)
                 {
-                    // Убираем из выбранных
+                    
                     seatInfo.IsSelected = false;
                     var selected = _selectedSeats.FirstOrDefault(s => s.Seat.SeatId == seatInfo.Seat.SeatId);
                     if (selected != null)
@@ -186,7 +184,7 @@ namespace KinoZalMarsBlinVali.Views
                 }
                 else
                 {
-                    // Добавляем в выбранных
+                   
                     seatInfo.IsSelected = true;
                     var basePrice = _session.BasePrice;
                     var seatMultiplier = seatInfo.Seat.PriceMultiplier ?? 1.0m;

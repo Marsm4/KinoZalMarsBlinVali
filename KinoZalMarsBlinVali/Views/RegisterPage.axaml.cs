@@ -23,7 +23,6 @@ namespace KinoZalMarsBlinVali.Views
             string phone = tbPhone.Text ?? string.Empty;
             string password = tbPassword.Text ?? string.Empty;
 
-            // Валидация
             if (string.IsNullOrWhiteSpace(firstName) || string.IsNullOrWhiteSpace(lastName) ||
                 string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(phone) ||
                 string.IsNullOrWhiteSpace(password))
@@ -46,7 +45,7 @@ namespace KinoZalMarsBlinVali.Views
 
             try
             {
-                // Проверяем, нет ли уже пользователя с таким email
+         
                 var existingCustomer = AppDataContext.DbContext.Customers
                     .FirstOrDefault(c => c.Email == email);
 
@@ -56,25 +55,23 @@ namespace KinoZalMarsBlinVali.Views
                     return;
                 }
 
-                // Создаем нового зрителя
+            
                 var newCustomer = new Customer
                 {
                     FirstName = firstName.Trim(),
                     LastName = lastName.Trim(),
                     Email = email.Trim().ToLower(),
                     Phone = phone.Trim(),
-                    Password = password, // Сохраняем пароль
+                    Password = password, 
                     BonusPoints = 0,
                     CreatedAt = DateTime.Now
                 };
 
-                // Сохраняем в базу данных
                 AppDataContext.DbContext.Customers.Add(newCustomer);
                 AppDataContext.DbContext.SaveChanges();
 
                 ShowSuccess("Регистрация прошла успешно! Теперь вы можете войти в систему как зритель.");
 
-                // Возвращаемся на страницу авторизации
                 BackToAuth();
             }
             catch (Exception ex)

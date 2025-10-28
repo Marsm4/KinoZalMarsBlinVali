@@ -34,7 +34,7 @@ namespace KinoZalMarsBlinVali.Views
 
         private void AddHall_Click(object? sender, RoutedEventArgs e)
         {
-            // Переходим на страницу добавления зала
+           
             if (this.Parent is ContentControl contentControl &&
                 contentControl.Parent is Grid grid &&
                 grid.Parent is AdminPanelPage adminPanel)
@@ -50,7 +50,7 @@ namespace KinoZalMarsBlinVali.Views
                 var hall = _halls.FirstOrDefault(h => h.HallId == hallId);
                 if (hall != null)
                 {
-                    // Переходим на страницу редактирования зала
+                  
                     if (this.Parent is ContentControl contentControl &&
                         contentControl.Parent is Grid grid &&
                         grid.Parent is AdminPanelPage adminPanel)
@@ -68,7 +68,7 @@ namespace KinoZalMarsBlinVali.Views
                 var hall = _halls.FirstOrDefault(h => h.HallId == hallId);
                 if (hall != null)
                 {
-                    // Переходим на страницу редактирования мест
+                   
                     if (this.Parent is ContentControl contentControl &&
                         contentControl.Parent is Grid grid &&
                         grid.Parent is AdminPanelPage adminPanel)

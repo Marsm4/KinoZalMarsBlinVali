@@ -93,18 +93,18 @@ namespace KinoZalMarsBlinVali.Views
 
                 AppDataContext.DbContext.SaveChanges();
 
-                // Если это новый зал, создаем места автоматически
+               
                 if (!_isEditMode)
                 {
                     CreateHallSeats(_hall.HallId, _hall.SeatRows, _hall.SeatColumns);
                 }
 
-                // Показываем сообщение об успехе
+            
                 var successDialog = new MessageWindow("Успех",
                     _isEditMode ? "Зал успешно обновлен!" : "Зал успешно добавлен!");
                 await successDialog.ShowDialog((Window)this.VisualRoot);
 
-                // Возвращаемся назад
+     
                 Back_Click(sender, e);
             }
             catch (Exception ex)
@@ -118,7 +118,7 @@ namespace KinoZalMarsBlinVali.Views
         {
             try
             {
-                // Создаем места для зала
+ 
                 for (int row = 1; row <= rows; row++)
                 {
                     for (int column = 1; column <= columns; column++)
@@ -139,7 +139,6 @@ namespace KinoZalMarsBlinVali.Views
             }
             catch (Exception ex)
             {
-                // Логируем ошибку, но не прерываем выполнение
                 System.Diagnostics.Debug.WriteLine($"Ошибка создания мест: {ex.Message}");
             }
         }
@@ -169,7 +168,7 @@ namespace KinoZalMarsBlinVali.Views
 
         private void Back_Click(object? sender, RoutedEventArgs e)
         {
-            // Возвращаемся на страницу управления залами
+          
             if (this.Parent is ContentControl contentControl &&
                 contentControl.Parent is Grid grid &&
                 grid.Parent is AdminPanelPage adminPanel)

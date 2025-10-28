@@ -106,8 +106,6 @@ namespace KinoZalMarsBlinVali.Views
                 {
                     _selectedCustomer.BonusPoints = (_selectedCustomer.BonusPoints ?? 0) + points;
                     await AppDataContext.DbContext.SaveChangesAsync();
-
-                    // Создаем запись о начислении бонусов
                     var transaction = new FinancialTransaction
                     {
                         TransactionType = "bonus_add",
@@ -123,7 +121,6 @@ namespace KinoZalMarsBlinVali.Views
                     UpdateSelectedCustomerInfo();
                     await ShowSuccess($"Начислено {points} бонусных баллов клиенту {_selectedCustomer.FirstName} {_selectedCustomer.LastName}");
 
-                    // Обновляем список
                     LoadAllCustomers();
                 }
                 catch (Exception ex)
@@ -154,7 +151,7 @@ namespace KinoZalMarsBlinVali.Views
                     {
                         _selectedCustomer.BonusPoints = currentBonus - points;
 
-                        // Создаем запись о списании бонусов
+
                         var transaction = new FinancialTransaction
                         {
                             TransactionType = "bonus_remove",
@@ -170,7 +167,6 @@ namespace KinoZalMarsBlinVali.Views
                         UpdateSelectedCustomerInfo();
                         await ShowSuccess($"Списано {points} бонусных баллов у клиента {_selectedCustomer.FirstName} {_selectedCustomer.LastName}");
 
-                        // Обновляем список
                         LoadAllCustomers();
                     }
                     else
@@ -199,7 +195,6 @@ namespace KinoZalMarsBlinVali.Views
 
             try
             {
-                // ИСПРАВЛЕНИЕ: Убираем оператор распространения NULL из LINQ запроса
                 var currentUserId = AppDataContext.CurrentUser?.EmployeeId;
 
                 if (currentUserId.HasValue)

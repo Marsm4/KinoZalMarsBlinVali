@@ -65,7 +65,7 @@ namespace KinoZalMarsBlinVali.Views
         {
             try
             {
-                // Настройка диалога выбора файла
+
                 var fileType = new FilePickerFileType("Изображения")
                 {
                     Patterns = new[] { "*.jpg", "*.jpeg", "*.png", "*.bmp", "*.gif" },
@@ -79,7 +79,7 @@ namespace KinoZalMarsBlinVali.Views
                     AllowMultiple = false
                 };
 
-                // Получаем TopLevel для показа диалога
+              
                 var topLevel = TopLevel.GetTopLevel(this);
                 if (topLevel != null)
                 {
@@ -89,7 +89,6 @@ namespace KinoZalMarsBlinVali.Views
                     {
                         var selectedFile = files[0];
 
-                        // Копируем файл в папку проекта
                         var imagePath = await CopyImageToProject(selectedFile);
                         PosterPathTextBox.Text = imagePath;
                     }
@@ -105,11 +104,11 @@ namespace KinoZalMarsBlinVali.Views
         {
             try
             {
-                // Определяем правильный путь к папке проекта
+                
                 var currentDir = Directory.GetCurrentDirectory();
                 string projectRoot;
 
-                // Если мы в bin/Debug или bin/Release
+               
                 if (currentDir.Contains("bin\\Debug") || currentDir.Contains("bin\\Release"))
                 {
                     projectRoot = Path.GetFullPath(Path.Combine(currentDir, "..", "..", ".."));
@@ -121,23 +120,22 @@ namespace KinoZalMarsBlinVali.Views
 
                 var postersDir = Path.Combine(projectRoot, "Assets", "Posters");
 
-                // Создаем директорию, если не существует
+                
                 if (!Directory.Exists(postersDir))
                 {
                     Directory.CreateDirectory(postersDir);
                     Console.WriteLine($"✅ Создана папка: {postersDir}");
                 }
 
-                // Генерируем уникальное имя файла
+               
                 var fileName = $"poster_{Guid.NewGuid():N}{Path.GetExtension(sourceFile.Name)}";
                 var destinationPath = Path.Combine(postersDir, fileName);
 
-                // Копируем файл
+        
                 using var sourceStream = await sourceFile.OpenReadAsync();
                 using var destinationStream = File.Create(destinationPath);
                 await sourceStream.CopyToAsync(destinationStream);
 
-                // Возвращаем относительный путь для БД - БЕЗ начального слеша!
                 var relativePath = $"Assets/Posters/{fileName}";
 
                 Console.WriteLine($"✅ Файл сохранен: {destinationPath}");
@@ -179,12 +177,11 @@ namespace KinoZalMarsBlinVali.Views
 
                 await AppDataContext.DbContext.SaveChangesAsync();
 
-                // Показываем сообщение об успехе
                 var successDialog = new MessageWindow("Успех",
                     _isEditMode ? "Фильм успешно обновлен!" : "Фильм успешно добавлен!");
                 await successDialog.ShowDialog((Window)this.VisualRoot);
 
-                // Возвращаемся назад через родительский AdminPanelPage
+       
                 Back_Click(sender, e);
             }
             catch (Exception ex)
@@ -213,7 +210,6 @@ namespace KinoZalMarsBlinVali.Views
 
         private void Back_Click(object? sender, RoutedEventArgs e)
         {
-            // Возвращаемся на страницу управления фильмами через родительский AdminPanelPage
             if (this.Parent is ContentControl contentControl &&
                 contentControl.Parent is Grid grid &&
                 grid.Parent is AdminPanelPage adminPanel)

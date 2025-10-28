@@ -35,11 +35,11 @@ namespace KinoZalMarsBlinVali.Views
         private void LoadEmployeeData()
         {
             UsernameTextBox.Text = _employee.Username;
-            PasswordTextBox.Text = ""; // Не показываем пароль при редактировании
+            PasswordTextBox.Text = ""; 
             FirstNameTextBox.Text = _employee.FirstName;
             LastNameTextBox.Text = _employee.LastName;
 
-            // Устанавливаем должность
+           
             if (!string.IsNullOrEmpty(_employee.Position))
             {
                 foreach (ComboBoxItem item in PositionComboBox.Items)
@@ -52,7 +52,7 @@ namespace KinoZalMarsBlinVali.Views
                 }
             }
 
-            // Устанавливаем роль
+ 
             if (!string.IsNullOrEmpty(_employee.Role))
             {
                 foreach (ComboBoxItem item in RoleComboBox.Items)
@@ -77,10 +77,9 @@ namespace KinoZalMarsBlinVali.Views
             {
                 _employee.Username = UsernameTextBox.Text?.Trim() ?? "";
 
-                // Пароль обновляем только если он был изменен
                 if (!string.IsNullOrEmpty(PasswordTextBox.Text))
                 {
-                    _employee.Password = PasswordTextBox.Text; // В реальном приложении нужно хэшировать
+                    _employee.Password = PasswordTextBox.Text; 
                 }
 
                 _employee.FirstName = FirstNameTextBox.Text?.Trim() ?? "";
@@ -97,12 +96,12 @@ namespace KinoZalMarsBlinVali.Views
 
                 await AppDataContext.DbContext.SaveChangesAsync();
 
-                // Показываем сообщение об успехе
+                
                 var successDialog = new MessageWindow("Успех",
                     _isEditMode ? "Сотрудник успешно обновлен!" : "Сотрудник успешно добавлен!");
                 await successDialog.ShowDialog((Window)this.VisualRoot);
 
-                // Возвращаемся назад
+                
                 Back_Click(sender, e);
             }
             catch (Exception ex)
@@ -150,7 +149,6 @@ namespace KinoZalMarsBlinVali.Views
                 return false;
             }
 
-            // Проверка уникальности логина
             var existingEmployee = AppDataContext.DbContext.Employees
                 .FirstOrDefault(emp => emp.Username == UsernameTextBox.Text.Trim() &&
                                       emp.EmployeeId != _employee.EmployeeId);
@@ -165,7 +163,6 @@ namespace KinoZalMarsBlinVali.Views
 
         private void Back_Click(object? sender, RoutedEventArgs e)
         {
-            // Возвращаемся на страницу управления сотрудниками
             if (this.Parent is ContentControl contentControl &&
                 contentControl.Parent is Grid grid &&
                 grid.Parent is AdminPanelPage adminPanel)

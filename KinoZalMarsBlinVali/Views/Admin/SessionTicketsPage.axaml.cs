@@ -53,15 +53,15 @@ namespace KinoZalMarsBlinVali.Views
         {
             try
             {
-                // Получаем общее количество мест в зале
+
                 var totalSeats = AppDataContext.DbContext.HallSeats
                     .Count(s => s.HallId == _session.HallId && s.IsActive == true);
 
-                // Подсчитываем проданные билеты
+
                 var soldTickets = _tickets.Count(t => t.Status == "sold" || t.Status == "used");
                 var availableSeats = totalSeats - soldTickets;
 
-                // Подсчитываем выручку
+
                 var revenue = _tickets
                     .Where(t => t.Status == "sold" || t.Status == "used")
                     .Sum(t => t.FinalPrice);
@@ -79,7 +79,6 @@ namespace KinoZalMarsBlinVali.Views
 
         private void Back_Click(object? sender, RoutedEventArgs e)
         {
-            // Возвращаемся на страницу управления сеансами
             if (this.Parent is ContentControl contentControl &&
                 contentControl.Parent is Grid grid &&
                 grid.Parent is AdminPanelPage adminPanel)

@@ -56,10 +56,10 @@ namespace KinoZalMarsBlinVali.Views
                 DateTime? startDate = null;
                 DateTime? endDate = null;
 
-                // Определяем период на основе выбранного типа отчета
+              
                 if (AllTimeReport?.IsChecked == true)
                 {
-                    // За все время - без фильтрации по дате
+               
                 }
                 else if (TodayReport?.IsChecked == true)
                 {
@@ -87,7 +87,6 @@ namespace KinoZalMarsBlinVali.Views
                     }
                 }
 
-                // Основные запросы
                 var ticketsQuery = AppDataContext.DbContext.Tickets
                     .Include(t => t.Seat)
                     .Include(t => t.Session)
@@ -104,7 +103,7 @@ namespace KinoZalMarsBlinVali.Views
                     .Where(ts => ts.Ticket.EmployeeId == currentUser.EmployeeId)
                     .AsQueryable();
 
-                // Применяем фильтрацию по дате
+    
                 if (startDate.HasValue)
                 {
                     ticketsQuery = ticketsQuery.Where(t => t.PurchaseTime >= startDate ||
@@ -125,7 +124,7 @@ namespace KinoZalMarsBlinVali.Views
                                                               ts.Ticket.PurchaseTime == null);
                 }
 
-                // Применяем дополнительные фильтры
+
                 if (IncludeSoldTickets?.IsChecked == false)
                 {
                     ticketsQuery = ticketsQuery.Where(t => t.Status != "sold" && t.Status != "used");
@@ -136,7 +135,7 @@ namespace KinoZalMarsBlinVali.Views
                     ticketsQuery = ticketsQuery.Where(t => t.Status != "reserved");
                 }
 
-                // Вычисляем статистику - исправленные строки
+  
                 var totalSales = ticketsQuery.Count(t => t.Status == "sold" || t.Status == "used");
 
                 var totalRevenue = ticketsQuery
@@ -153,7 +152,6 @@ namespace KinoZalMarsBlinVali.Views
                     .Where(ts => ts.Ticket.Status == "sold" || ts.Ticket.Status == "used")
                     .Sum(ts => (ts.Quantity ?? 1) * ts.Service.Price);
 
-                // Детальная статистика
                 var vipTickets = ticketsQuery
                     .Count(t => (t.Status == "sold" || t.Status == "used") &&
                                t.Seat.SeatType == "vip");
@@ -167,12 +165,12 @@ namespace KinoZalMarsBlinVali.Views
 
                 var transactionsCount = transactionsQuery.Count();
 
-                // Обновляем UI
+         
                 UpdateStatistics(totalSales, totalRevenue, activeReservations, bonusTransactions,
                                servicesRevenue, vipTickets, standardTickets, averageTicket,
                                cancelledTickets, transactionsCount);
 
-                // Загружаем транзакции
+
                 var filteredTransactions = transactionsQuery
                     .OrderByDescending(t => t.TransactionTime)
                     .Take(50)
@@ -229,9 +227,7 @@ namespace KinoZalMarsBlinVali.Views
         {
             try
             {
-                // Здесь можно добавить логику экспорта в PDF или печати
-                //var printDialog = new PrintDialog();
-                // Реализация печати будет добавлена позже
+
                 ShowSuccess("Функция печати будет реализована в будущем обновлении");
             }
             catch (Exception ex)
@@ -253,14 +249,14 @@ namespace KinoZalMarsBlinVali.Views
                 }
                 else
                 {
-                    // Вместо ShowDialog с null, просто показываем окно
+                    
                     dialog.WindowStartupLocation = WindowStartupLocation.CenterScreen;
                      dialog.Show();
                 }
             }
             catch
             {
-                // Если всё равно ошибка, просто создаем и показываем окно
+     
                 dialog.WindowStartupLocation = WindowStartupLocation.CenterScreen;
                  dialog.Show();
             }

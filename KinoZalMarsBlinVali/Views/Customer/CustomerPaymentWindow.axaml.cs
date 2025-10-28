@@ -41,7 +41,7 @@ namespace KinoZalMarsBlinVali.Views
             {
                 var maxBonus = _customer.BonusPoints ?? 0;
                 var actualBonus = Math.Min(bonusPoints, maxBonus);
-                var discount = actualBonus; // 1 бонус = 1 рубль
+                var discount = actualBonus; 
                 var finalPrice = Math.Max(0, _ticket.FinalPrice - discount);
 
                 FinalPriceText.Text = $"Итоговая сумма: {finalPrice}₽ (скидка {discount}₽)";
@@ -56,7 +56,6 @@ namespace KinoZalMarsBlinVali.Views
         {
             try
             {
-                // Рассчитываем скидку по бонусам
                 int bonusPointsUsed = 0;
                 decimal discount = 0;
 
@@ -69,36 +68,32 @@ namespace KinoZalMarsBlinVali.Views
 
                 var finalAmount = _ticket.FinalPrice - discount;
 
-                // Проверяем достаточно ли средств
                 if (_customer.Balance < finalAmount)
                 {
                     await ShowError($"Недостаточно средств на балансе. Необходимо: {finalAmount}₽, доступно: {_customer.Balance}₽");
                     return;
                 }
 
-                // Списание средств
                 _customer.Balance -= finalAmount;
 
-                // Списание бонусов
                 if (bonusPointsUsed > 0)
                 {
                     _customer.BonusPoints = (_customer.BonusPoints ?? 0) - bonusPointsUsed;
                 }
 
-                // Обновляем статус билета
                 _ticket.Status = "sold";
                 _ticket.PurchaseTime = DateTime.Now;
                 _ticket.ReservationExpires = null;
-                _ticket.FinalPrice = finalAmount; // Сохраняем итоговую цену со скидкой
+                _ticket.FinalPrice = finalAmount; 
 
-                // Создаем финансовую транзакцию
+
                 var transaction = new FinancialTransaction
                 {
                     TransactionType = "ticket_sale",
                     Amount = finalAmount,
                     PaymentMethod = "balance",
                     Description = $"Оплата билета с баланса. Бонусы использовано: {bonusPointsUsed}",
-                    EmployeeId = null, // Оплата зрителем
+                    EmployeeId = null,
                     TicketId = _ticket.TicketId,
                     TransactionTime = DateTime.Now
                 };

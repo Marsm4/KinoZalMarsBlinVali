@@ -12,7 +12,7 @@ namespace KinoZalMarsBlinVali.Views
         public CashierMainPage()
         {
             InitializeComponent();
-            // По умолчанию показываем страницу оплаты
+           
             NavigateToPayment_Click(null, null);
         }
 
@@ -39,7 +39,7 @@ namespace KinoZalMarsBlinVali.Views
             MainContentControl.Content = new CashierReportsPage();
             UpdateActiveButton(sender as Button);
         }
-        // В CashierMainPage.xaml.cs добавляем метод
+
         private void NavigateToBalance_Click(object? sender, RoutedEventArgs e)
         {
             MainContentControl.Content = new CashierBalancePage();

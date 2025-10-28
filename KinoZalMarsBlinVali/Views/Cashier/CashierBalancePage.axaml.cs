@@ -107,7 +107,7 @@ namespace KinoZalMarsBlinVali.Views
                 {
                     _selectedCustomer.Balance += amount;
 
-                    // Создаем запись о пополнении баланса
+
                     var transaction = new FinancialTransaction
                     {
                         TransactionType = "balance_add",
@@ -124,7 +124,6 @@ namespace KinoZalMarsBlinVali.Views
                     UpdateSelectedCustomerInfo();
                     await ShowSuccess($"Баланс пополнен на {amount}₽. Новый баланс: {_selectedCustomer.Balance}₽");
 
-                    // Обновляем список
                     LoadAllCustomers();
                 }
                 catch (Exception ex)
@@ -154,7 +153,6 @@ namespace KinoZalMarsBlinVali.Views
                     {
                         _selectedCustomer.Balance -= amount;
 
-                        // Создаем запись о списании с баланса
                         var transaction = new FinancialTransaction
                         {
                             TransactionType = "balance_remove",
@@ -171,7 +169,6 @@ namespace KinoZalMarsBlinVali.Views
                         UpdateSelectedCustomerInfo();
                         await ShowSuccess($"С баланса списано {amount}₽. Новый баланс: {_selectedCustomer.Balance}₽");
 
-                        // Обновляем список
                         LoadAllCustomers();
                     }
                     else

@@ -34,7 +34,7 @@ namespace KinoZalMarsBlinVali.Views
 
         private void AddMovie_Click(object? sender, RoutedEventArgs e)
         {
-            // Переходим на страницу добавления фильма через родительский AdminPanelPage
+          
             if (this.Parent is ContentControl contentControl &&
                 contentControl.Parent is Grid grid &&
                 grid.Parent is AdminPanelPage adminPanel)
@@ -50,7 +50,7 @@ namespace KinoZalMarsBlinVali.Views
                 var movie = _movies.FirstOrDefault(m => m.MovieId == movieId);
                 if (movie != null)
                 {
-                    // Переходим на страницу редактирования фильма через родительский AdminPanelPage
+                  
                     if (this.Parent is ContentControl contentControl &&
                         contentControl.Parent is Grid grid &&
                         grid.Parent is AdminPanelPage adminPanel)

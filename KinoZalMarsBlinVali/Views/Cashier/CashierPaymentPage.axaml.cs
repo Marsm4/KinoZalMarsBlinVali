@@ -81,16 +81,13 @@ namespace KinoZalMarsBlinVali.Views
                 {
                     try
                     {
-                        // Создаем и показываем окно оплаты
+
                         var paymentWindow = new PaymentProcessingWindow(reservation);
 
-                        // Простой вызов ShowDialog без возвращаемого значения
                         await paymentWindow.ShowDialog((Window)this.VisualRoot);
 
-                        // Проверяем результат через свойство
                         if (paymentWindow.PaymentSuccess)
                         {
-                            // Обновляем список после успешной оплаты
                             LoadActiveReservations();
                              ShowSuccess($"Оплата прошла успешно! Билет #{reservation.TicketId} подтвержден.");
                         }

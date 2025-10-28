@@ -50,28 +50,24 @@ namespace KinoZalMarsBlinVali.Views
         {
             try
             {
-                // Проверяем ввод бонусных баллов
                 if (!int.TryParse(BonusPointsTextBox.Text, out int bonusPoints) || bonusPoints < 0)
                 {
                     await ShowError("Введите корректное количество бонусных баллов");
                     return;
                 }
 
-                // Обновляем статус билета
                 _ticket.Status = "sold";
                 _ticket.PurchaseTime = DateTime.Now;
                 _ticket.ReservationExpires = null;
 
-                // Начисляем бонусные баллы
+ 
                 if (bonusPoints > 0 && _customer != null)
                 {
                     _customer.BonusPoints = (_customer.BonusPoints ?? 0) + bonusPoints;
                 }
 
-                // Получаем способ оплаты
                 var paymentMethod = GetPaymentMethod();
 
-                // Создаем финансовую транзакцию
                 var transaction = new FinancialTransaction
                 {
                     TransactionType = "ticket_sale",

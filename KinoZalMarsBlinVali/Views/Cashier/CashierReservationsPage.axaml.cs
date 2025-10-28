@@ -46,21 +46,20 @@ namespace KinoZalMarsBlinVali.Views
         {
             var filtered = _allReservations.AsEnumerable();
 
-            // Фильтр по статусу
             var statusFilter = (StatusFilterComboBox.SelectedItem as ComboBoxItem)?.Content?.ToString();
             if (!string.IsNullOrEmpty(statusFilter) && statusFilter != "Все статусы")
             {
                 filtered = filtered.Where(t => t.Status == GetStatusFromFilter(statusFilter));
             }
 
-            // Фильтр по дате
+          
             if (DateFilterPicker.SelectedDate.HasValue)
             {
                 var selectedDate = DateFilterPicker.SelectedDate.Value.DateTime;
                 filtered = filtered.Where(t => t.Session.StartTime.Date == selectedDate.Date);
             }
 
-            // Фильтр по поиску
+   
             var searchText = SearchTextBox.Text?.ToLower() ?? "";
             if (!string.IsNullOrWhiteSpace(searchText))
             {
@@ -116,7 +115,7 @@ namespace KinoZalMarsBlinVali.Views
                 var reservation = _allReservations.FirstOrDefault(t => t.TicketId == ticketId);
                 if (reservation != null && reservation.Status == "reserved")
                 {
-                    // Создаем простое окно подтверждения
+                    
                     var dialog = new ConfirmationDialog(
                         "Отмена бронирования",
                         $"Вы уверены, что хотите отменить бронирование?\n\n" +
@@ -171,7 +170,6 @@ namespace KinoZalMarsBlinVali.Views
     {
         public Ticket Ticket { get; set; }
 
-        // Свойства для отображения в DataGrid
         public int TicketId => Ticket.TicketId;
         public string MovieTitle => Ticket.Session?.Movie?.Title ?? "Неизвестно";
         public DateTime StartTime => Ticket.Session.StartTime;

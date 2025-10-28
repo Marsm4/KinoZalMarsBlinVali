@@ -31,13 +31,11 @@ namespace KinoZalMarsBlinVali.Views
 
                 if (isCustomerLogin)
                 {
-                    // Авторизация зрителя (существующий код)
                     var customer = AppDataContext.DbContext.Customers
                         .FirstOrDefault(c => c.Email == username && c.Password == password);
 
                     if (customer != null)
                     {
-                        // Создаем временный объект Employee для зрителя
                         AppDataContext.CurrentUser = new Employee
                         {
                             EmployeeId = customer.CustomerId,
@@ -62,7 +60,6 @@ namespace KinoZalMarsBlinVali.Views
                 }
                 else
                 {
-                    // Авторизация сотрудника
                     var employee = AppDataContext.DbContext.Employees
                         .FirstOrDefault(u => u.Username == username &&
                                            u.Password == password &&
@@ -72,10 +69,8 @@ namespace KinoZalMarsBlinVali.Views
                     {
                         AppDataContext.CurrentUser = employee;
 
-                        // Проверяем роль пользователя
                         if (employee.Role == "admin" || employee.Role == "manager")
                         {
-                            // Администратор или менеджер
                             if (this.VisualRoot is MainWindow mainWindow)
                             {
                                 mainWindow.NavigateTo(new AdminPanelPage());
@@ -83,7 +78,7 @@ namespace KinoZalMarsBlinVali.Views
                         }
                         else if (employee.Role == "cashier")
                         {
-                            // КАССИР - переходим на главную страницу кассира
+                            
                             if (this.VisualRoot is MainWindow mainWindow)
                             {
                                 mainWindow.NavigateTo(new CashierMainPage());
@@ -91,7 +86,7 @@ namespace KinoZalMarsBlinVali.Views
                         }
                         else
                         {
-                            // Обычный сотрудник
+                      
                             if (this.VisualRoot is MainWindow mainWindow)
                             {
                                 mainWindow.NavigateTo(new MainPage());
@@ -112,7 +107,7 @@ namespace KinoZalMarsBlinVali.Views
 
         private void Register_Click(object? sender, RoutedEventArgs e)
         {
-            // Переходим на страницу регистрации (только для зрителей)
+ 
             if (this.VisualRoot is MainWindow mainWindow)
             {
                 mainWindow.NavigateTo(new RegisterPage());

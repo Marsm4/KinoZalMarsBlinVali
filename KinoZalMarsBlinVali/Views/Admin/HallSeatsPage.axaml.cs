@@ -96,7 +96,7 @@ namespace KinoZalMarsBlinVali.Views
 
                 foreach (var seat in rowGroup.OrderBy(s => s.SeatNumber))
                 {
-                    // Убедимся, что у места есть правильный тип
+
                     if (string.IsNullOrEmpty(seat.SeatType))
                     {
                         seat.SeatType = "standard";
@@ -121,10 +121,9 @@ namespace KinoZalMarsBlinVali.Views
             {
                 var selectedType = (SeatTypeComboBox.SelectedItem as ComboBoxItem)?.Content?.ToString() ?? "standard";
 
-                // Меняем тип места
+              
                 seatInfo.Seat.SeatType = selectedType;
 
-                // Обновляем множитель цены
                 seatInfo.Seat.PriceMultiplier = selectedType switch
                 {
                     "vip" => 1.5m,
@@ -132,7 +131,6 @@ namespace KinoZalMarsBlinVali.Views
                     _ => 1.0m
                 };
 
-                // Обновляем цвет кнопки
                 seatInfo.UpdateBackground();
             }
         }
@@ -157,7 +155,7 @@ namespace KinoZalMarsBlinVali.Views
 
         private void Back_Click(object? sender, RoutedEventArgs e)
         {
-            // Возвращаемся на страницу управления залами
+            
             if (this.Parent is ContentControl contentControl &&
                 contentControl.Parent is Grid grid &&
                 grid.Parent is AdminPanelPage adminPanel)

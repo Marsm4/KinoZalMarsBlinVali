@@ -36,7 +36,6 @@ namespace KinoZalMarsBlinVali.Views
                     .OrderBy(s => s.StartTime)
                     .ToList();
 
-                // Отладочная информация
                 Console.WriteLine($"=== LOADED SESSIONS ===");
                 foreach (var session in _sessions)
                 {
@@ -65,7 +64,6 @@ namespace KinoZalMarsBlinVali.Views
                     .OrderBy(g => g)
                     .ToList();
 
-                // Очищаем и добавляем "Все жанры" первым элементом
                 GenreFilterComboBox.Items.Clear();
                 GenreFilterComboBox.Items.Add("Все жанры");
                 foreach (var genre in genres)
@@ -76,7 +74,6 @@ namespace KinoZalMarsBlinVali.Views
             }
             catch (Exception ex)
             {
-                // Игнорируем ошибки загрузки жанров
                 Console.WriteLine($"Ошибка загрузки жанров: {ex.Message}");
             }
         }
@@ -85,7 +82,6 @@ namespace KinoZalMarsBlinVali.Views
         {
             var filtered = _sessions.AsEnumerable();
 
-            // Фильтр по дате
             var dateFilter = (DateFilterComboBox.SelectedItem as ComboBoxItem)?.Content?.ToString();
             if (!string.IsNullOrEmpty(dateFilter))
             {
@@ -105,14 +101,12 @@ namespace KinoZalMarsBlinVali.Views
                 }
             }
 
-            // Фильтр по жанру
             var selectedGenre = GenreFilterComboBox.SelectedItem as string;
             if (!string.IsNullOrEmpty(selectedGenre) && selectedGenre != "Все жанры")
             {
                 filtered = filtered.Where(s => s.Movie.Genre == selectedGenre);
             }
 
-            // Фильтр по поиску
             var searchText = SearchTextBox.Text?.ToLower() ?? "";
             if (!string.IsNullOrWhiteSpace(searchText))
             {
@@ -135,7 +129,6 @@ namespace KinoZalMarsBlinVali.Views
                     Console.WriteLine($"🎫 Бронирование сеанса: {session.Movie.Title}");
                     Console.WriteLine($"🖼️ PosterPath для бронирования: {session.Movie.PosterPath}");
 
-                    // ИСПРАВЛЕНИЕ: Правильная навигация к странице бронирования
                     var customerMainPage = this.FindAncestorOfType<CustomerMainPage>();
                     if (customerMainPage != null)
                     {
@@ -143,7 +136,6 @@ namespace KinoZalMarsBlinVali.Views
                     }
                     else
                     {
-                        // Альтернативный способ навигации
                         if (this.Parent is ContentControl contentControl &&
                             contentControl.Parent is CustomerMainPage mainPage)
                         {

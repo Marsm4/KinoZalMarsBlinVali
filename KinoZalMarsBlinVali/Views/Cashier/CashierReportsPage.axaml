@@ -78,9 +78,9 @@
                             Background="#666666" Foreground="White" 
                             Padding="20,12" FontWeight="Bold" FontSize="12"/>
                             
-                    <Button Content="🖨️ Печать отчета" Click="PrintReport_Click"
+                    <!--   <Button Content="🖨️ Печать отчета" Click="PrintReport_Click"
                             Background="#00A651" Foreground="White" 
-                            Padding="20,12" FontWeight="Bold" FontSize="12"/>
+                            Padding="20,12" FontWeight="Bold" FontSize="12"/> -->
                 </StackPanel>
             </Grid>
         </Border>

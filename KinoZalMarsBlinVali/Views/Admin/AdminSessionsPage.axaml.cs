@@ -50,7 +50,7 @@ namespace KinoZalMarsBlinVali.Views
         {
             var filtered = sessions.AsEnumerable();
 
-            // Фильтр по дате
+           
             var dateFilter = (DateFilterComboBox.SelectedItem as ComboBoxItem)?.Content?.ToString();
             if (!string.IsNullOrEmpty(dateFilter))
             {
@@ -70,7 +70,6 @@ namespace KinoZalMarsBlinVali.Views
                 }
             }
 
-            // Фильтр по поиску
             var searchText = SearchTextBox.Text?.ToLower() ?? "";
             if (!string.IsNullOrWhiteSpace(searchText))
             {
@@ -82,7 +81,7 @@ namespace KinoZalMarsBlinVali.Views
 
         private void AddSession_Click(object? sender, RoutedEventArgs e)
         {
-            // Переходим на страницу добавления сеанса
+            
             if (this.Parent is ContentControl contentControl &&
                 contentControl.Parent is Grid grid &&
                 grid.Parent is AdminPanelPage adminPanel)
@@ -98,7 +97,7 @@ namespace KinoZalMarsBlinVali.Views
                 var session = _sessions.FirstOrDefault(s => s.SessionId == sessionId);
                 if (session != null)
                 {
-                    // Переходим на страницу редактирования сеанса
+                  
                     if (this.Parent is ContentControl contentControl &&
                         contentControl.Parent is Grid grid &&
                         grid.Parent is AdminPanelPage adminPanel)
@@ -116,7 +115,7 @@ namespace KinoZalMarsBlinVali.Views
                 var session = _sessions.FirstOrDefault(s => s.SessionId == sessionId);
                 if (session != null)
                 {
-                    // Переходим на страницу просмотра билетов
+                
                     if (this.Parent is ContentControl contentControl &&
                         contentControl.Parent is Grid grid &&
                         grid.Parent is AdminPanelPage adminPanel)

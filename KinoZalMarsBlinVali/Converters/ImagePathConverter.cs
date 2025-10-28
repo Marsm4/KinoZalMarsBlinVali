@@ -60,7 +60,6 @@ namespace KinoZalMarsBlinVali.Converters
             var currentDir = Directory.GetCurrentDirectory();
             string projectRoot;
 
-            // Определяем корень проекта
             if (currentDir.Contains("bin\\Debug") || currentDir.Contains("bin\\Release"))
             {
                 projectRoot = Path.GetFullPath(Path.Combine(currentDir, "..", "..", ".."));
@@ -83,7 +82,6 @@ namespace KinoZalMarsBlinVali.Converters
         {
             try
             {
-                // Пытаемся найти заглушку
                 var placeholderPath = GetFullImagePath("Assets/placeholder.jpg");
                 if (File.Exists(placeholderPath))
                 {

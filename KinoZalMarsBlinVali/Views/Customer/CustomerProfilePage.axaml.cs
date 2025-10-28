@@ -1,5 +1,6 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Avalonia.VisualTree;
 using KinoZalMarsBlinVali.Data;
 using KinoZalMarsBlinVali.Models;
 using System;
@@ -42,6 +43,7 @@ namespace KinoZalMarsBlinVali.Views
                 ShowError($"Ошибка загрузки данных: {ex.Message}");
             }
         }
+
         private async void SaveProfile_Click(object? sender, RoutedEventArgs e)
         {
             if (_customer == null) return;
@@ -55,7 +57,6 @@ namespace KinoZalMarsBlinVali.Views
 
                 AppDataContext.DbContext.SaveChanges();
 
-                // Обновляем данные в CurrentUser
                 if (AppDataContext.CurrentUser != null)
                 {
                     AppDataContext.CurrentUser.FirstName = _customer.FirstName;
@@ -63,17 +64,26 @@ namespace KinoZalMarsBlinVali.Views
                     AppDataContext.CurrentUser.Username = _customer.Email;
                 }
 
-                 ShowSuccess("Профиль успешно обновлен");
+                ShowSuccess("Профиль успешно обновлен");
             }
             catch (Exception ex)
             {
-                 ShowError($"Ошибка сохранения: {ex.Message}");
+                ShowError($"Ошибка сохранения: {ex.Message}");
             }
         }
 
         private void ResetProfile_Click(object? sender, RoutedEventArgs e)
         {
             LoadCustomerData();
+        }
+
+        private void AddBalance_Click(object? sender, RoutedEventArgs e)
+        {
+       
+            if (this.FindAncestorOfType<CustomerMainPage>() is CustomerMainPage mainPage)
+            {
+                mainPage.NavigateToAddBalance();
+            }
         }
 
         private async void ShowError(string message)

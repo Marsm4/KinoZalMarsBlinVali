@@ -36,7 +36,7 @@ namespace KinoZalMarsBlinVali.Views
 
         private void AddEmployee_Click(object? sender, RoutedEventArgs e)
         {
-            // Переходим на страницу добавления сотрудника
+            
             if (this.Parent is ContentControl contentControl &&
                 contentControl.Parent is Grid grid &&
                 grid.Parent is AdminPanelPage adminPanel)
@@ -91,7 +91,7 @@ namespace KinoZalMarsBlinVali.Views
                 var employee = _employees.FirstOrDefault(emp => emp.EmployeeId == employeeId);
                 if (employee != null)
                 {
-                    // Нельзя удалить самого себя
+                  
                     if (employee.EmployeeId == AppDataContext.CurrentUser?.EmployeeId)
                     {
                          ShowError("Нельзя удалить свой собственный аккаунт");
@@ -107,7 +107,7 @@ namespace KinoZalMarsBlinVali.Views
                     {
                         try
                         {
-                            // Мягкое удаление - деактивация
+                           
                             employee.IsActive = false;
                             AppDataContext.DbContext.SaveChanges();
                             LoadEmployees();
