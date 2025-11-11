@@ -16,11 +16,16 @@ public partial class Customer
     public string? LastName { get; set; }
 
     public int? BonusPoints { get; set; }
-    public decimal Balance { get; set; } = 0; 
 
     public DateTime? CreatedAt { get; set; }
 
     public string Password { get; set; } = null!;
+
+    public decimal Balance { get; set; }
+
+    public string? ProfilePhotoPath { get; set; }
+
+    public decimal? Balance1 { get; set; }
 
     public virtual ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
 }

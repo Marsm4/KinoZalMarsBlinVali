@@ -22,6 +22,8 @@
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="FontWeight" Value="Bold"/>
         </Style>
+
+         <StyleInclude Source="avares://KinoZalMarsBlinVali/Assets/Styles.axaml"/>
     </Application.Styles>
 
 

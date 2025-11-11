@@ -29,7 +29,6 @@ namespace KinoZalMarsBlinVali.Converters
                     else
                     {
                         Console.WriteLine($"❌ Файл не найден: {fullPath}");
-                        // Возвращаем заглушку или null
                         return CreatePlaceholderImage();
                     }
                 }
@@ -48,13 +47,11 @@ namespace KinoZalMarsBlinVali.Converters
 
         private string GetFullImagePath(string imagePath)
         {
-            // Если путь уже абсолютный
             if (Path.IsPathRooted(imagePath))
             {
                 return imagePath;
             }
 
-            // Убираем начальный слеш если есть (для совместимости со старыми записями)
             var cleanPath = imagePath.TrimStart('/');
 
             var currentDir = Directory.GetCurrentDirectory();
@@ -82,7 +79,15 @@ namespace KinoZalMarsBlinVali.Converters
         {
             try
             {
-                var placeholderPath = GetFullImagePath("Assets/placeholder.jpg");
+                // Сначала пробуем найти аватар по умолчанию
+                var placeholderPath = GetFullImagePath("Assets/ProfilePhotos/default_avatar.png");
+                if (File.Exists(placeholderPath))
+                {
+                    return new Bitmap(placeholderPath);
+                }
+
+                // Если нет, пробуем общую заглушку
+                placeholderPath = GetFullImagePath("Assets/placeholder.jpg");
                 if (File.Exists(placeholderPath))
                 {
                     return new Bitmap(placeholderPath);
@@ -90,7 +95,7 @@ namespace KinoZalMarsBlinVali.Converters
             }
             catch
             {
-                // Игнорируем ошибки создания заглушки
+                // Игнорируем ошибки при загрузке заглушки
             }
             return null;
         }

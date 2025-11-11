@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
 
 namespace KinoZalMarsBlinVali.Models;
 
@@ -26,33 +24,4 @@ public partial class Session
     public virtual Movie Movie { get; set; } = null!;
 
     public virtual ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
-
-
-
-
-
-
-    [NotMapped]
-    public int AvailableSeats
-    {
-        get
-        {
-            try
-            {
-                var totalSeats = Hall?.TotalSeats ?? 0;
-                var soldTickets = Tickets?.Count(t => t.Status == "sold" || t.Status == "used") ?? 0;
-                return totalSeats - soldTickets;
-            }
-            catch
-            {
-                return 0;
-            }
-        }
-    }
-   
-    [NotMapped]
-    public string MovieTitle => Movie?.Title ?? "Неизвестно";
-
-    [NotMapped]
-    public string HallName => Hall?.HallName ?? "Неизвестно";
 }

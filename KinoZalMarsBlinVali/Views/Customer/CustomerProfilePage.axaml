@@ -2,8 +2,14 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:conv="clr-namespace:KinoZalMarsBlinVali.Converters"
              mc:Ignorable="d" d:DesignWidth="1920" d:DesignHeight="1080"
              x:Class="KinoZalMarsBlinVali.Views.CustomerProfilePage">
+    
+    <UserControl.Resources>
+        <conv:ImagePathConverter x:Key="ImagePathConverter"/>
+    </UserControl.Resources>
+    
     <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -12,72 +18,100 @@
 
         <!-- Заголовок -->
         <TextBlock Grid.Row="0" Text="👤 Мой профиль" 
-                   FontSize="24" FontWeight="Bold" Foreground="#0066CC"
+                   Classes="title-large"
                    Margin="0,0,0,20"/>
 
         <!-- Информация о профиле -->
-        <Border Grid.Row="1" Background="White" CornerRadius="10" 
-                BorderBrush="#e0e0e0" BorderThickness="1" Padding="30"
-                Width="500" HorizontalAlignment="Left">
-            <StackPanel Spacing="20">
-                <!-- Баланс -->
-                <Border Background="#E3F2FD" CornerRadius="8" Padding="15">
-                    <StackPanel HorizontalAlignment="Center">
-                        <TextBlock Text="Баланс" FontSize="14" Foreground="#666"/>
-                        <TextBlock x:Name="BalanceText" FontSize="24" FontWeight="Bold" 
-                               Foreground="#0066CC" HorizontalAlignment="Center"/>
-                        <Button Content="💳 Пополнить баланс" Click="AddBalance_Click"
-                                Background="#0066CC" Foreground="White" 
-                                Padding="15,8" FontWeight="SemiBold" FontSize="12"
-                                Margin="0,10,0,0"/>
-                    </StackPanel>
-                </Border>
-
-                <!-- Бонусные баллы -->
-                <Border Background="#E8F5E8" CornerRadius="8" Padding="15">
-                    <StackPanel HorizontalAlignment="Center">
-                        <TextBlock Text="Бонусные баллы" FontSize="14" Foreground="#666"/>
-                        <TextBlock x:Name="BonusPointsText" FontSize="24" FontWeight="Bold" 
-                               Foreground="#00A651" HorizontalAlignment="Center"/>
-                        <TextBlock x:Name="BonusInfoText" FontSize="11" Foreground="#666" 
-                               TextAlignment="Center" TextWrapping="Wrap"
-                               Text="1 балл = 1 рубль. Начисляется 5% от суммы покупки"/>
-                    </StackPanel>
-                </Border>
-
-                <!-- Информация -->
-                <StackPanel Spacing="15">
-                    <StackPanel>
-                        <TextBlock Text="Имя" FontWeight="SemiBold" FontSize="14"/>
-                        <TextBox x:Name="FirstNameTextBox" FontSize="14" Height="35"/>
-                    </StackPanel>
-
-                    <StackPanel>
-                        <TextBlock Text="Фамилия" FontWeight="SemiBold" FontSize="14"/>
-                        <TextBox x:Name="LastNameTextBox" FontSize="14" Height="35"/>
-                    </StackPanel>
-
-                    <StackPanel>
-                        <TextBlock Text="Email" FontWeight="SemiBold" FontSize="14"/>
-                        <TextBox x:Name="EmailTextBox" FontSize="14" Height="35"/>
-                    </StackPanel>
-
-                    <StackPanel>
-                        <TextBlock Text="Телефон" FontWeight="SemiBold" FontSize="14"/>
-                        <TextBox x:Name="PhoneTextBox" FontSize="14" Height="35"/>
-                    </StackPanel>
+        <Grid Grid.Row="1" ColumnDefinitions="Auto,*" ColumnSpacing="30">
+            
+            <!-- Фотография профиля -->
+            <Border Grid.Column="0" Classes="card"
+                    Width="300" Height="400">
+                <StackPanel Spacing="15" HorizontalAlignment="Center">
+                    <TextBlock Text="Фотография профиля" 
+                               Classes="title-small"
+                               HorizontalAlignment="Center"/>
+                    
+                    <!-- Аватар -->
+                    <Border Width="150" Height="150" CornerRadius="75"
+                            Background="#F5F5F5" BorderBrush="#0066CC" 
+                            BorderThickness="2" ClipToBounds="True">
+                        <Image Source="{Binding ProfilePhotoPath, Converter={StaticResource ImagePathConverter}}"
+                               Stretch="UniformToFill"/>
+                    </Border>
+                    
+                    <Button Content="📷 Изменить фото" Click="ChangePhoto_Click"
+                            Classes="primary"
+                            HorizontalAlignment="Center"/>
+                    
+                    <Button Content="🗑️ Удалить фото" Click="RemovePhoto_Click"
+                            Classes="danger"
+                            HorizontalAlignment="Center"/>
                 </StackPanel>
+            </Border>
 
-                <!-- Кнопки -->
-                <StackPanel Orientation="Horizontal" Spacing="15">
-                    <Button Content="💾 Сохранить" Click="SaveProfile_Click"
-                            Background="#00A651" Foreground="White" 
-                            Padding="20,10" FontWeight="Bold"/>
-                    <Button Content="🔄 Сбросить" Click="ResetProfile_Click"
-                            Background="#6c757d" Foreground="White" 
-                            Padding="20,10" FontWeight="Bold"/>
-                </StackPanel>
-            </StackPanel>
-        </Border>
+            <!-- Основная информация -->
+            <Border Grid.Column="1" Classes="card">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel Spacing="20" Width="400">
+                        
+                        <!-- Баланс -->
+                        <Border Classes="info-card">
+                            <StackPanel HorizontalAlignment="Center">
+                                <TextBlock Text="Баланс" FontSize="14" Foreground="#666"/>
+                                <TextBlock x:Name="BalanceText" FontSize="24" FontWeight="Bold" 
+                                       Foreground="#0066CC" HorizontalAlignment="Center"/>
+                                <Button Content="💳 Пополнить баланс" Click="AddBalance_Click"
+                                        Classes="primary"
+                                        Margin="0,10,0,0"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Бонусные баллы -->
+                        <Border Classes="success-card">
+                            <StackPanel HorizontalAlignment="Center">
+                                <TextBlock Text="Бонусные баллы" FontSize="14" Foreground="#666"/>
+                                <TextBlock x:Name="BonusPointsText" FontSize="24" FontWeight="Bold" 
+                                       Foreground="#00A651" HorizontalAlignment="Center"/>
+                                <TextBlock x:Name="BonusInfoText" FontSize="11" Foreground="#666" 
+                                       TextAlignment="Center" TextWrapping="Wrap"
+                                       Text="1 балл = 1 рубль. Начисляется 5% от суммы покупки"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Информация -->
+                        <StackPanel Spacing="15">
+                            <StackPanel>
+                                <TextBlock Text="Имя" Classes="title-small"/>
+                                <TextBox x:Name="FirstNameTextBox" Classes="standard"/>
+                            </StackPanel>
+
+                            <StackPanel>
+                                <TextBlock Text="Фамилия" Classes="title-small"/>
+                                <TextBox x:Name="LastNameTextBox" Classes="standard"/>
+                            </StackPanel>
+
+                            <StackPanel>
+                                <TextBlock Text="Email" Classes="title-small"/>
+                                <TextBox x:Name="EmailTextBox" Classes="standard"/>
+                            </StackPanel>
+
+                            <StackPanel>
+                                <TextBlock Text="Телефон" Classes="title-small"/>
+                                <TextBox x:Name="PhoneTextBox" Classes="standard"/>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <!-- Кнопки -->
+                        <StackPanel Orientation="Horizontal" Spacing="15">
+                            <Button Content="💾 Сохранить" Click="SaveProfile_Click"
+                                    Classes="success"/>
+                            <Button Content="🔄 Сбросить" Click="ResetProfile_Click"
+                                    Classes="secondary"/>
+                        </StackPanel>
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
+        </Grid>
     </Grid>
 </UserControl>

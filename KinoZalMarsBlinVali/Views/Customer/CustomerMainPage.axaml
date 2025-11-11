@@ -11,29 +11,26 @@
         </Grid.RowDefinitions>
 
         <!-- Навигационная панель -->
-        <Border Grid.Row="0" Background="#0066CC" Padding="15">
+        <Border Grid.Row="0" Background="#0066CC" Padding="15" Classes="card">
             <StackPanel Orientation="Horizontal" Spacing="20">
                 <TextBlock Text="🎬 Кинотеатр" FontSize="20" FontWeight="Bold" 
                           Foreground="White" VerticalAlignment="Center"/>
                 
                 <Button Content="📅 Сеансы" Click="NavigateToSessions_Click"
-                        Background="Transparent" Foreground="White" 
-                        Padding="15,8" FontWeight="Bold"
-                        Classes="nav-button"/>
+                        Classes="primary nav-button"
+                        Padding="15,8"/>
                         
                 <Button Content="🎫 Мои билеты" Click="NavigateToMyTickets_Click"
-                        Background="Transparent" Foreground="White" 
-                        Padding="15,8" FontWeight="Bold"
-                        Classes="nav-button"/>
+                        Classes="primary nav-button"
+                        Padding="15,8"/>
                         
                 <Button Content="👤 Профиль" Click="NavigateToProfile_Click"
-                        Background="Transparent" Foreground="White" 
-                        Padding="15,8" FontWeight="Bold"
-                        Classes="nav-button"/>
+                        Classes="primary nav-button"
+                        Padding="15,8"/>
                         
                 <Button Content="🚪 Выйти" Click="Logout_Click"
-                        Background="#FF6B35" Foreground="White" 
-                        Padding="15,8" FontWeight="Bold"
+                        Classes="danger"
+                        Padding="15,8"
                         Margin="20,0,0,0"/>
             </StackPanel>
         </Border>

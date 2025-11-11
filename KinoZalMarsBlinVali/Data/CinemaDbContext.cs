@@ -76,6 +76,10 @@ public partial class CinemaDbContext : DbContext
             entity.HasIndex(e => e.Email, "customers_email_key").IsUnique();
 
             entity.Property(e => e.CustomerId).HasColumnName("customer_id");
+            entity.Property(e => e.Balance).HasDefaultValue(0);
+            entity.Property(e => e.Balance1)
+                .HasDefaultValueSql("0")
+                .HasColumnName("balance");
             entity.Property(e => e.BonusPoints)
                 .HasDefaultValue(0)
                 .HasColumnName("bonus_points");
@@ -98,6 +102,9 @@ public partial class CinemaDbContext : DbContext
             entity.Property(e => e.Phone)
                 .HasMaxLength(50)
                 .HasColumnName("phone");
+            entity.Property(e => e.ProfilePhotoPath)
+                .HasMaxLength(500)
+                .HasColumnName("profile_photo_path");
         });
 
         modelBuilder.Entity<Employee>(entity =>
