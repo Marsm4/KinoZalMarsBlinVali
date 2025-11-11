@@ -101,10 +101,8 @@ namespace KinoZalMarsBlinVali.Views
             if (string.IsNullOrEmpty(_session.Movie.PosterPath))
             {
                 Console.WriteLine("⚠️ Путь к постеру пустой!");
-        
                 _session.Movie.PosterPath = "Assets/placeholder.jpg";
             }
-
 
             this.DataContext = _session.Movie;
         }

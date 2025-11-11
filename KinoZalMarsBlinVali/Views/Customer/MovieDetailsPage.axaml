@@ -1,0 +1,105 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:conv="clr-namespace:KinoZalMarsBlinVali.Converters"
+             mc:Ignorable="d" d:DesignWidth="1920" d:DesignHeight="1080"
+             x:Class="KinoZalMarsBlinVali.Views.MovieDetailsPage">
+    
+    <UserControl.Resources>
+        <conv:ImagePathConverter x:Key="ImagePathConverter"/>
+    </UserControl.Resources>
+    
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+                       <RowDefinition Height="Auto"/>
+                       <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Заголовок и кнопка назад -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="15" Margin="0,0,0,20">
+            <Button Content="← Назад к расписанию" Click="Back_Click"
+                    Classes="secondary"
+                    Padding="15,8"/>
+            <TextBlock x:Name="TitleText" Text="Детали фильма" 
+                       Classes="title-large"
+                       VerticalAlignment="Center"/>
+        </StackPanel>
+
+        <!-- Основная информация о фильме -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="30">
+                
+                <!-- Постер и кнопка -->
+                <StackPanel Grid.Column="0" Spacing="20" Width="300">
+                    <Border Width="280" Height="420" Background="#CCCCCC" CornerRadius="10">
+                        <Image Source="{Binding PosterPath, Converter={StaticResource ImagePathConverter}}"
+                               Stretch="UniformToFill"
+                               Width="280" Height="420"/>
+                    </Border>
+                    
+                    <Button Content="🎫 Выбрать сеанс" Click="SelectSession_Click"
+                            Classes="success"
+                            Padding="20,12" FontSize="16" FontWeight="Bold"
+                            HorizontalAlignment="Stretch"/>
+                </StackPanel>
+
+                <!-- Детальная информация -->
+                <StackPanel Grid.Column="1" Spacing="20">
+                    <!-- Основная информация -->
+                    <Border Classes="card">
+                        <StackPanel Spacing="15">
+                            <TextBlock x:Name="MovieTitleText" Classes="title-large"/>
+                            
+                            <StackPanel Orientation="Horizontal" Spacing="20">
+                                <TextBlock x:Name="MovieGenreText" FontSize="14" FontWeight="SemiBold"/>
+                                <TextBlock x:Name="MovieAgeRatingText" FontSize="14" FontWeight="Bold" Foreground="#FF6B35"/>
+                                <TextBlock x:Name="MovieDurationText" FontSize="14" Foreground="#666"/>
+                            </StackPanel>
+                            
+                            <TextBlock x:Name="MovieDirectorText" FontSize="14" Foreground="#666"/>
+                            
+                            <!-- Актерский состав -->
+                            <StackPanel>
+                                <TextBlock Text="В ролях:" FontWeight="SemiBold" FontSize="14"/>
+                                <TextBlock x:Name="MovieCastText" FontSize="13" Foreground="#666" TextWrapping="Wrap"/>
+                            </StackPanel>
+                            
+                            <!-- Описание -->
+                            <StackPanel>
+                                <TextBlock Text="Описание:" FontWeight="SemiBold" FontSize="14"/>
+                                <TextBlock x:Name="MovieDescriptionText" FontSize="13" Foreground="#666" 
+                                           TextWrapping="Wrap" MaxWidth="600"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Ближайшие сеансы -->
+                    <Border Classes="card">
+                        <StackPanel Spacing="15">
+                            <TextBlock Text="📅 Ближайшие сеансы" FontSize="16" FontWeight="Bold"/>
+                            
+                            <ItemsControl x:Name="SessionsItemsControl">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Background="#F8F9FA" CornerRadius="5" Padding="10" Margin="0,0,0,5">
+                                            <Grid ColumnDefinitions="*,Auto,Auto,Auto,Auto">
+                                                <TextBlock Grid.Column="0" Text="{Binding SessionInfo}" FontSize="13"/>
+                                                <TextBlock Grid.Column="1" Text="{Binding HallInfo}" FontSize="13" Foreground="#666"/>
+                                                <Button Grid.Column="2" Content="Выбрать" Click="BookThisSession_Click"
+                                                        Classes="primary" Padding="12,5" FontSize="14"
+                                                        Tag="{Binding SessionId}"/>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </Grid>
+        </ScrollViewer>
+    </Grid>
+</UserControl>
