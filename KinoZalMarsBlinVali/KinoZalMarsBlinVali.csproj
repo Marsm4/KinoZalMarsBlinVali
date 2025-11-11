@@ -33,12 +33,16 @@
 
 	<ItemGroup>
 		<AvaloniaResource Include="Assets\**" />
+		<AvaloniaXaml Remove="Assets\Colors.axaml" />
 		<None Update="Assets\**">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
 	</ItemGroup>
 
 	<ItemGroup>
+		<AvaloniaResource Update="Assets\Colors.axaml">
+		  <SubType>Designer</SubType>
+		</AvaloniaResource>
 		<AvaloniaResource Update="Assets\Styles.axaml">
 			<SubType>Designer</SubType>
 		</AvaloniaResource>

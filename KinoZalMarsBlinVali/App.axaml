@@ -24,6 +24,10 @@
         </Style>
 
          <StyleInclude Source="avares://KinoZalMarsBlinVali/Assets/Styles.axaml"/>
+
+
+
+
     </Application.Styles>
 
 

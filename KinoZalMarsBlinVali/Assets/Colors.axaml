@@ -1,0 +1,31 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    
+    <!-- Цветовая палитра -->
+    <Color x:Key="PrimaryColor">#6366F1</Color>
+    <Color x:Key="PrimaryDarkColor">#4F46E5</Color>
+    <Color x:Key="SuccessColor">#10B981</Color>
+    <Color x:Key="SuccessDarkColor">#059669</Color>
+    <Color x:Key="DangerColor">#EF4444</Color>
+    <Color x:Key="DangerDarkColor">#DC2626</Color>
+    <Color x:Key="WarningColor">#F59E0B</Color>
+    <Color x:Key="BackgroundDark">#0F172A</Color>
+    <Color x:Key="CardDark">#1E293B</Color>
+    <Color x:Key="BorderDark">#334155</Color>
+    <Color x:Key="TextPrimary">#F1F5F9</Color>
+    <Color x:Key="TextSecondary">#94A3B8</Color>
+
+    <!-- Солидные кисти -->
+    <SolidColorBrush x:Key="PrimaryBrush" Color="{DynamicResource PrimaryColor}"/>
+    <SolidColorBrush x:Key="PrimaryDarkBrush" Color="{DynamicResource PrimaryDarkColor}"/>
+    <SolidColorBrush x:Key="SuccessBrush" Color="{DynamicResource SuccessColor}"/>
+    <SolidColorBrush x:Key="SuccessDarkBrush" Color="{DynamicResource SuccessDarkColor}"/>
+    <SolidColorBrush x:Key="DangerBrush" Color="{DynamicResource DangerColor}"/>
+    <SolidColorBrush x:Key="DangerDarkBrush" Color="{DynamicResource DangerDarkColor}"/>
+    <SolidColorBrush x:Key="BackgroundDarkBrush" Color="{DynamicResource BackgroundDark}"/>
+    <SolidColorBrush x:Key="CardDarkBrush" Color="{DynamicResource CardDark}"/>
+    <SolidColorBrush x:Key="BorderDarkBrush" Color="{DynamicResource BorderDark}"/>
+    <SolidColorBrush x:Key="TextPrimaryBrush" Color="{DynamicResource TextPrimary}"/>
+    <SolidColorBrush x:Key="TextSecondaryBrush" Color="{DynamicResource TextSecondary}"/>
+
+</ResourceDictionary>
