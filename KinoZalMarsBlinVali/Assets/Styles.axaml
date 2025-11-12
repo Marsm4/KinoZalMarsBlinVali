@@ -1,238 +1,103 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     
-    <Styles.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceInclude Source="avares://KinoZalMarsBlinVali/Assets/Colors.axaml"/>
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </Styles.Resources>
-
-    <!-- Основной стиль для темной темы -->
-    <Style Selector="Grid.background-dark">
-        <Setter Property="Background" Value="{DynamicResource BackgroundDarkBrush}"/>
-    </Style>
-
-    <!-- Тексты -->
     <Style Selector="TextBlock.title-large">
-        <Setter Property="FontSize" Value="28"/>
+        <Setter Property="FontSize" Value="24"/>
         <Setter Property="FontWeight" Value="Bold"/>
-        <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
-        <Setter Property="TextAlignment" Value="Center"/>
+        <Setter Property="Foreground" Value="#0066CC"/>
     </Style>
     
     <Style Selector="TextBlock.title-medium">
-        <Setter Property="FontSize" Value="20"/>
+        <Setter Property="FontSize" Value="18"/>
         <Setter Property="FontWeight" Value="Bold"/>
-        <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+        <Setter Property="Foreground" Value="#0066CC"/>
     </Style>
     
     <Style Selector="TextBlock.title-small">
-        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="FontSize" Value="14"/>
         <Setter Property="FontWeight" Value="SemiBold"/>
-        <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+        <Setter Property="Foreground" Value="#333333"/>
     </Style>
-
-    <Style Selector="TextBlock.body">
-        <Setter Property="FontSize" Value="14"/>
-        <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
-    </Style>
-
-    <!-- Кнопки -->
+    
     <Style Selector="Button.primary">
-        <Setter Property="Background" Value="{DynamicResource PrimaryBrush}"/>
+        <Setter Property="Background" Value="#0066CC"/>
         <Setter Property="Foreground" Value="White"/>
-        <Setter Property="Padding" Value="20,12"/>
+        <Setter Property="Padding" Value="15,8"/>
         <Setter Property="FontWeight" Value="Bold"/>
-        <Setter Property="FontSize" Value="14"/>
-        <Setter Property="CornerRadius" Value="12"/>
-        <Setter Property="BorderThickness" Value="0"/>
-        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="CornerRadius" Value="5"/>
     </Style>
     
     <Style Selector="Button.primary:pointerover">
-        <Setter Property="Background" Value="{DynamicResource PrimaryDarkBrush}"/>
-    </Style>
-
-    <Style Selector="Button.primary:pressed">
-        <Setter Property="Background" Value="{DynamicResource PrimaryDarkBrush}"/>
-        <Setter Property="Opacity" Value="0.9"/>
+        <Setter Property="Background" Value="#0052A3"/>
     </Style>
     
     <Style Selector="Button.success">
-        <Setter Property="Background" Value="{DynamicResource SuccessBrush}"/>
+        <Setter Property="Background" Value="#00A651"/>
         <Setter Property="Foreground" Value="White"/>
-        <Setter Property="Padding" Value="20,12"/>
+        <Setter Property="Padding" Value="15,8"/>
         <Setter Property="FontWeight" Value="Bold"/>
-        <Setter Property="FontSize" Value="14"/>
-        <Setter Property="CornerRadius" Value="12"/>
-        <Setter Property="BorderThickness" Value="0"/>
-        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="CornerRadius" Value="5"/>
     </Style>
     
     <Style Selector="Button.success:pointerover">
-        <Setter Property="Background" Value="{DynamicResource SuccessDarkBrush}"/>
+        <Setter Property="Background" Value="#008F43"/>
     </Style>
     
     <Style Selector="Button.danger">
-        <Setter Property="Background" Value="{DynamicResource DangerBrush}"/>
+        <Setter Property="Background" Value="#FF6B35"/>
         <Setter Property="Foreground" Value="White"/>
-        <Setter Property="Padding" Value="20,12"/>
+        <Setter Property="Padding" Value="15,8"/>
         <Setter Property="FontWeight" Value="Bold"/>
-        <Setter Property="FontSize" Value="14"/>
-        <Setter Property="CornerRadius" Value="12"/>
-        <Setter Property="BorderThickness" Value="0"/>
-        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="CornerRadius" Value="5"/>
     </Style>
     
     <Style Selector="Button.danger:pointerover">
-        <Setter Property="Background" Value="{DynamicResource DangerDarkBrush}"/>
+        <Setter Property="Background" Value="#E55A2B"/>
     </Style>
     
     <Style Selector="Button.secondary">
-        <Setter Property="Background" Value="#475569"/>
+        <Setter Property="Background" Value="#6C757D"/>
         <Setter Property="Foreground" Value="White"/>
-        <Setter Property="Padding" Value="20,12"/>
+        <Setter Property="Padding" Value="15,8"/>
         <Setter Property="FontWeight" Value="Bold"/>
-        <Setter Property="FontSize" Value="14"/>
-        <Setter Property="CornerRadius" Value="12"/>
-        <Setter Property="BorderThickness" Value="0"/>
-        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="CornerRadius" Value="5"/>
     </Style>
     
     <Style Selector="Button.secondary:pointerover">
-        <Setter Property="Background" Value="#374151"/>
+        <Setter Property="Background" Value="#5A6268"/>
     </Style>
-
-    <!-- Карточки -->
+    
     <Style Selector="Border.card">
-        <Setter Property="Background" Value="{DynamicResource CardDarkBrush}"/>
-        <Setter Property="CornerRadius" Value="16"/>
-        <Setter Property="BorderBrush" Value="{DynamicResource BorderDarkBrush}"/>
+        <Setter Property="Background" Value="White"/>
+        <Setter Property="CornerRadius" Value="10"/>
+        <Setter Property="BorderBrush" Value="#E0E0E0"/>
         <Setter Property="BorderThickness" Value="1"/>
-        <Setter Property="Padding" Value="24"/>
-    </Style>
-
-    <Style Selector="Border.card:pointerover">
-        <Setter Property="BorderBrush" Value="{DynamicResource PrimaryBrush}"/>
+        <Setter Property="Padding" Value="20"/>
     </Style>
     
     <Style Selector="Border.info-card">
-        <Setter Property="Background" Value="#1E40AF"/>
-        <Setter Property="CornerRadius" Value="12"/>
-        <Setter Property="Padding" Value="20"/>
-        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Background" Value="#E3F2FD"/>
+        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="Padding" Value="15"/>
     </Style>
     
     <Style Selector="Border.success-card">
-        <Setter Property="Background" Value="#047857"/>
-        <Setter Property="CornerRadius" Value="12"/>
-        <Setter Property="Padding" Value="20"/>
-        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Background" Value="#E8F5E8"/>
+        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="Padding" Value="15"/>
     </Style>
-
-    <!-- Поля ввода -->
+    
     <Style Selector="TextBox.standard">
         <Setter Property="FontSize" Value="14"/>
-        <Setter Property="Height" Value="48"/>
-        <Setter Property="Padding" Value="16,12"/>
-        <Setter Property="CornerRadius" Value="12"/>
-        <Setter Property="Background" Value="{DynamicResource CardDarkBrush}"/>
-        <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
-        <Setter Property="BorderBrush" Value="{DynamicResource BorderDarkBrush}"/>
-        <Setter Property="BorderThickness" Value="2"/>
-        <Setter Property="CaretBrush" Value="{DynamicResource PrimaryBrush}"/>
+        <Setter Property="Height" Value="35"/>
+        <Setter Property="Padding" Value="10,5"/>
+        <Setter Property="CornerRadius" Value="5"/>
     </Style>
-
-    <Style Selector="TextBox.standard:focus">
-        <Setter Property="BorderBrush" Value="{DynamicResource PrimaryBrush}"/>
-    </Style>
-
+    
     <Style Selector="ComboBox.standard">
         <Setter Property="FontSize" Value="14"/>
-        <Setter Property="Height" Value="48"/>
-        <Setter Property="Padding" Value="16,12"/>
-        <Setter Property="CornerRadius" Value="12"/>
-        <Setter Property="Background" Value="{DynamicResource CardDarkBrush}"/>
-        <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
-        <Setter Property="BorderBrush" Value="{DynamicResource BorderDarkBrush}"/>
-        <Setter Property="BorderThickness" Value="2"/>
-    </Style>
-
-    <Style Selector="ComboBox.standard:focus">
-        <Setter Property="BorderBrush" Value="{DynamicResource PrimaryBrush}"/>
-    </Style>
-
-    <!-- Стили для DatePicker -->
-    <Style Selector="DatePicker">
-        <Setter Property="Background" Value="{DynamicResource CardDarkBrush}"/>
-        <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
-        <Setter Property="BorderBrush" Value="{DynamicResource BorderDarkBrush}"/>
-        <Setter Property="BorderThickness" Value="2"/>
-        <Setter Property="CornerRadius" Value="12"/>
-        <Setter Property="Height" Value="48"/>
-        <Setter Property="Padding" Value="16,12"/>
-    </Style>
-
-    <!-- Стили для ScrollViewer -->
-    <Style Selector="ScrollViewer">
-        <Setter Property="Background" Value="Transparent"/>
-    </Style>
-
-    <Style Selector="ScrollBar">
-        <Setter Property="Background" Value="{DynamicResource BorderDarkBrush}"/>
-        <Setter Property="Width" Value="8"/>
-        <Setter Property="Height" Value="8"/>
-    </Style>
-
-    <Style Selector="ScrollBar:pointerover">
-        <Setter Property="Background" Value="{DynamicResource TextSecondaryBrush}"/>
-    </Style>
-
-    <Style Selector="ScrollBar Thumb">
-        <Setter Property="Background" Value="{DynamicResource PrimaryBrush}"/>
-        <Setter Property="CornerRadius" Value="4"/>
-    </Style>
-
-    <!-- Стили для панели дат -->
-    <Style Selector="Button.date-button">
-        <Setter Property="Background" Value="{DynamicResource CardDarkBrush}"/>
-        <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
-        <Setter Property="BorderBrush" Value="{DynamicResource BorderDarkBrush}"/>
-        <Setter Property="BorderThickness" Value="2"/>
-        <Setter Property="CornerRadius" Value="12"/>
-        <Setter Property="Padding" Value="20,16"/>
-        <Setter Property="MinWidth" Value="100"/>
-        <Setter Property="Cursor" Value="Hand"/>
-    </Style>
-
-    <Style Selector="Button.date-button:pointerover">
-        <Setter Property="Background" Value="{DynamicResource PrimaryBrush}"/>
-        <Setter Property="Foreground" Value="White"/>
-        <Setter Property="BorderBrush" Value="{DynamicResource PrimaryBrush}"/>
-    </Style>
-
-    <Style Selector="Button.date-button.selected">
-        <Setter Property="Background" Value="{DynamicResource PrimaryBrush}"/>
-        <Setter Property="Foreground" Value="White"/>
-        <Setter Property="BorderBrush" Value="{DynamicResource PrimaryBrush}"/>
-    </Style>
-
-    <!-- Стили для карточек фильмов -->
-    <Style Selector="Border.movie-card">
-        <Setter Property="Background" Value="{DynamicResource CardDarkBrush}"/>
-        <Setter Property="CornerRadius" Value="16"/>
-        <Setter Property="BorderBrush" Value="{DynamicResource BorderDarkBrush}"/>
-        <Setter Property="BorderThickness" Value="1"/>
-        <Setter Property="Padding" Value="24"/>
-        <Setter Property="Margin" Value="0,0,0,20"/>
-        <Setter Property="Cursor" Value="Hand"/>
-    </Style>
-
-    <Style Selector="Border.movie-card:pointerover">
-        <Setter Property="BorderBrush" Value="{DynamicResource PrimaryBrush}"/>
-        <Setter Property="Background" Value="#2D3748"/>
+        <Setter Property="Height" Value="35"/>
+        <Setter Property="Padding" Value="10,5"/>
     </Style>
 
 </Styles>
