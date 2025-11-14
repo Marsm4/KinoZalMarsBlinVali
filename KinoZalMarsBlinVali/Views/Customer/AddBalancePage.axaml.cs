@@ -74,9 +74,9 @@ namespace KinoZalMarsBlinVali.Views
                     await ShowSuccess($"Баланс успешно пополнен на {amount}₽!\n\nНовый баланс: {customer.Balance}₽");
 
                     // Возвращаемся на страницу профиля
-                    if (this.VisualRoot is MainWindow mainWindow)
+                    if (this.FindAncestorOfType<CustomerMainPage>() is CustomerMainPage mainPage)
                     {
-                        mainWindow.NavigateTo(new CustomerProfilePage());
+                        mainPage.NavigateToProfile_Click(null, null);
                     }
                 }
             }
