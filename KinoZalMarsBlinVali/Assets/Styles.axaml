@@ -1,6 +1,7 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     
+    <!-- Текстовые стили -->
     <Style Selector="TextBlock.title-large">
         <Setter Property="FontSize" Value="24"/>
         <Setter Property="FontWeight" Value="Bold"/>
@@ -18,58 +19,87 @@
         <Setter Property="FontWeight" Value="SemiBold"/>
         <Setter Property="Foreground" Value="#333333"/>
     </Style>
-    
+
+    <!-- Стили кнопок -->
     <Style Selector="Button.primary">
         <Setter Property="Background" Value="#0066CC"/>
         <Setter Property="Foreground" Value="White"/>
         <Setter Property="Padding" Value="15,8"/>
-        <Setter Property="FontWeight" Value="Bold"/>
-        <Setter Property="CornerRadius" Value="5"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Cursor" Value="Hand"/>
     </Style>
     
     <Style Selector="Button.primary:pointerover">
         <Setter Property="Background" Value="#0052A3"/>
     </Style>
     
+    <Style Selector="Button.primary:pressed">
+        <Setter Property="Background" Value="#004080"/>
+    </Style>
+
     <Style Selector="Button.success">
         <Setter Property="Background" Value="#00A651"/>
         <Setter Property="Foreground" Value="White"/>
         <Setter Property="Padding" Value="15,8"/>
-        <Setter Property="FontWeight" Value="Bold"/>
-        <Setter Property="CornerRadius" Value="5"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Cursor" Value="Hand"/>
     </Style>
     
     <Style Selector="Button.success:pointerover">
         <Setter Property="Background" Value="#008F43"/>
     </Style>
-    
+
     <Style Selector="Button.danger">
         <Setter Property="Background" Value="#FF6B35"/>
         <Setter Property="Foreground" Value="White"/>
         <Setter Property="Padding" Value="15,8"/>
-        <Setter Property="FontWeight" Value="Bold"/>
-        <Setter Property="CornerRadius" Value="5"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Cursor" Value="Hand"/>
     </Style>
     
     <Style Selector="Button.danger:pointerover">
         <Setter Property="Background" Value="#E55A2B"/>
     </Style>
-    
+
     <Style Selector="Button.secondary">
         <Setter Property="Background" Value="#6C757D"/>
         <Setter Property="Foreground" Value="White"/>
         <Setter Property="Padding" Value="15,8"/>
-        <Setter Property="FontWeight" Value="Bold"/>
-        <Setter Property="CornerRadius" Value="5"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Cursor" Value="Hand"/>
     </Style>
     
     <Style Selector="Button.secondary:pointerover">
         <Setter Property="Background" Value="#5A6268"/>
     </Style>
+
+    <!-- Стили для кнопок навигации -->
+    <Style Selector="Button.nav-button">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Padding" Value="15,8"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="CornerRadius" Value="5"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Cursor" Value="Hand"/>
+    </Style>
     
+    <Style Selector="Button.nav-button:pointerover">
+        <Setter Property="Background" Value="#0052A3"/>
+    </Style>
+
+    <!-- Стили карточек -->
     <Style Selector="Border.card">
         <Setter Property="Background" Value="White"/>
-        <Setter Property="CornerRadius" Value="10"/>
+        <Setter Property="CornerRadius" Value="12"/>
         <Setter Property="BorderBrush" Value="#E0E0E0"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="Padding" Value="20"/>
@@ -77,27 +107,100 @@
     
     <Style Selector="Border.info-card">
         <Setter Property="Background" Value="#E3F2FD"/>
-        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="CornerRadius" Value="10"/>
         <Setter Property="Padding" Value="15"/>
+        <Setter Property="BorderBrush" Value="#BBDEFB"/>
+        <Setter Property="BorderThickness" Value="1"/>
     </Style>
     
     <Style Selector="Border.success-card">
         <Setter Property="Background" Value="#E8F5E8"/>
-        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="CornerRadius" Value="10"/>
         <Setter Property="Padding" Value="15"/>
+        <Setter Property="BorderBrush" Value="#C8E6C9"/>
+        <Setter Property="BorderThickness" Value="1"/>
     </Style>
-    
+
+    <!-- Стили полей ввода -->
     <Style Selector="TextBox.standard">
         <Setter Property="FontSize" Value="14"/>
-        <Setter Property="Height" Value="35"/>
-        <Setter Property="Padding" Value="10,5"/>
-        <Setter Property="CornerRadius" Value="5"/>
+        <Setter Property="Height" Value="40"/>
+        <Setter Property="Padding" Value="12,8"/>
+        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="BorderBrush" Value="#E0E0E0"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Background" Value="White"/>
     </Style>
     
     <Style Selector="ComboBox.standard">
         <Setter Property="FontSize" Value="14"/>
-        <Setter Property="Height" Value="35"/>
-        <Setter Property="Padding" Value="10,5"/>
+        <Setter Property="Height" Value="40"/>
+        <Setter Property="Padding" Value="12,8"/>
+        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="BorderBrush" Value="#E0E0E0"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Background" Value="White"/>
+    </Style>
+
+    <!-- Стили для кнопок мест в зале -->
+    <Style Selector="Button.seat-vip">
+        <Setter Property="Background" Value="#FF9800"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="CornerRadius" Value="4"/>
+        <Setter Property="Cursor" Value="Hand"/>
+    </Style>
+    
+    <Style Selector="Button.seat-vip:pointerover">
+        <Setter Property="Background" Value="#F57C00"/>
+    </Style>
+
+    <Style Selector="Button.seat-standard">
+        <Setter Property="Background" Value="#4CAF50"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="CornerRadius" Value="4"/>
+        <Setter Property="Cursor" Value="Hand"/>
+    </Style>
+    
+    <Style Selector="Button.seat-standard:pointerover">
+        <Setter Property="Background" Value="#45a049"/>
+    </Style>
+
+    <!-- ИСПРАВЛЕННЫЕ СТИЛИ - замените NotAllowed на No -->
+    <Style Selector="Button.seat-disabled">
+        <Setter Property="Background" Value="#F44336"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="CornerRadius" Value="4"/>
+        <Setter Property="Cursor" Value="No"/>
+    </Style>
+
+    <Style Selector="Button.seat-unavailable">
+        <Setter Property="Background" Value="#9E9E9E"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="CornerRadius" Value="4"/>
+        <Setter Property="Cursor" Value="No"/>
+    </Style>
+
+    <!-- Стили для статусов билетов -->
+    <Style Selector="Border.status-active">
+        <Setter Property="Background" Value="#00A651"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="Padding" Value="8,4"/>
+    </Style>
+    
+    <Style Selector="Border.status-pending">
+        <Setter Property="Background" Value="#FF9800"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="Padding" Value="8,4"/>
+    </Style>
+    
+    <Style Selector="Border.status-used">
+        <Setter Property="Background" Value="#6C757D"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="Padding" Value="8,4"/>
     </Style>
 
 </Styles>

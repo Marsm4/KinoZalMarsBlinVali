@@ -4,7 +4,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="1920" d:DesignHeight="1080"
         x:Class="KinoZalMarsBlinVali.MainWindow"
-        Title="Кинотеатр - Система управления"
+        Title="KinoTeatr"
         Width="1920" Height="1080"
         WindowStartupLocation="CenterScreen">
     <Grid>

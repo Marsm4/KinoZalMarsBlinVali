@@ -15,29 +15,28 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <!-- Заголовок и кнопка назад -->
         <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="15" Margin="0,0,0,20">
             <Button Content="← Назад" Click="Back_Click"
-                    Background="#6c757d" Foreground="White" 
-                    Padding="15,8" FontWeight="Bold"/>
+                    Classes="secondary"
+                    Padding="15,8"/>
             <TextBlock x:Name="TitleText" Text="Бронирование билета" 
-                       FontSize="24" FontWeight="Bold" Foreground="#0066CC"
+                       Classes="title-large"
                        VerticalAlignment="Center"/>
         </StackPanel>
 
         <!-- Информация о сеансе -->
-        <Border Grid.Row="1" Background="#E8F5E8" CornerRadius="8" Padding="15" Margin="0,0,0,20">
+        <Border Grid.Row="1" Classes="success-card" Margin="0,0,0,20">
             <StackPanel Orientation="Horizontal" Spacing="30">
-                <Border Width="80" Height="120" Background="#CCCCCC" CornerRadius="5">
+                <Border Classes="card" Width="80" Height="120" Padding="0">
                     <Image Source="{Binding PosterPath, Converter={StaticResource ImagePathConverter}}" 
                            Width="80" Height="120" 
                            Stretch="UniformToFill"/>
                 </Border>
                 <StackPanel>
-                    <TextBlock x:Name="MovieTitle" FontSize="18" FontWeight="Bold"/>
+                    <TextBlock x:Name="MovieTitle" Classes="title-medium"/>
                     <TextBlock x:Name="SessionInfo" FontSize="14" Foreground="#666"/>
                     <TextBlock x:Name="HallInfo" FontSize="14" Foreground="#666"/>
                 </StackPanel>
@@ -47,12 +46,11 @@
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="300"/>
+                <ColumnDefinition Width="350"/>
             </Grid.ColumnDefinitions>
 
             <!-- Карта зала -->
-            <Border Grid.Column="0" Background="White" CornerRadius="8" 
-                    BorderBrush="#e0e0e0" BorderThickness="1" Padding="20" Margin="0,0,20,0">
+            <Border Grid.Column="0" Classes="card" Margin="0,0,20,0">
                 <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
                     <StackPanel Orientation="Vertical" Spacing="10">
                         <!-- Экран -->
@@ -79,31 +77,35 @@
                                 <Border Width="20" Height="20" Background="#9E9E9E" CornerRadius="3"/>
                                 <TextBlock Text="Недоступно" FontSize="10"/>
                             </StackPanel>
+                            <StackPanel Orientation="Horizontal" Spacing="5">
+                                <Border Width="20" Height="20" Background="#2196F3" CornerRadius="3"/>
+                                <TextBlock Text="Выбрано" FontSize="10"/>
+                            </StackPanel>
                         </StackPanel>
                         
                         <!-- Места -->
-                        <ItemsControl x:Name="SeatsItemsControl">
+                        <ItemsControl x:Name="SeatsItemsControl" HorizontalAlignment="Center">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
-                                    <StackPanel Orientation="Vertical" Spacing="3"/>
+                                    <StackPanel Orientation="Vertical" Spacing="3" HorizontalAlignment="Center"/>
                                 </ItemsPanelTemplate>
                             </ItemsControl.ItemsPanel>
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <StackPanel Orientation="Horizontal" Spacing="3">
+                                    <StackPanel Orientation="Horizontal" Spacing="3" HorizontalAlignment="Center">
                                         <TextBlock Text="{Binding RowNumber}" 
                                                    FontWeight="Bold" Width="30"
                                                    VerticalAlignment="Center"
                                                    HorizontalAlignment="Center"/>
-                                        <ItemsControl ItemsSource="{Binding Seats}">
+                                        <ItemsControl ItemsSource="{Binding Seats}" HorizontalAlignment="Center">
                                             <ItemsControl.ItemsPanel>
                                                 <ItemsPanelTemplate>
-                                                    <StackPanel Orientation="Horizontal" Spacing="3"/>
+                                                    <StackPanel Orientation="Horizontal" Spacing="3" HorizontalAlignment="Center"/>
                                                 </ItemsPanelTemplate>
                                             </ItemsControl.ItemsPanel>
                                             <ItemsControl.ItemTemplate>
                                                 <DataTemplate>
-                                                    <Button Content="{Binding SeatNumber}"
+                                                    <Button Content="{Binding Seat.SeatNumber}"
                                                             Width="35" Height="35" FontSize="10"
                                                             Click="SeatButton_Click"
                                                             Tag="{Binding}"
@@ -121,44 +123,48 @@
             </Border>
 
             <!-- Панель бронирования -->
-            <Border Grid.Column="1" Background="#F5F5F5" CornerRadius="8" Padding="20">
-                <StackPanel Spacing="15">
-                    <TextBlock Text="Выбранные места:" FontWeight="Bold" FontSize="16"/>
+            <Border Grid.Column="1" Classes="card">
+                <StackPanel Spacing="20">
+                    <TextBlock Text="Выбранные места:" Classes="title-small"/>
                     
                     <ItemsControl x:Name="SelectedSeatsItemsControl" MaxHeight="200">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Border Background="White" CornerRadius="5" Padding="10" Margin="0,0,0,5"
+                                <Border Background="#F8F9FA" CornerRadius="8" Padding="12" Margin="0,0,0,8"
                                         BorderBrush="#e0e0e0" BorderThickness="1">
                                     <StackPanel>
                                         <TextBlock Text="{Binding SeatInfoText}" FontWeight="SemiBold" FontSize="12"/>
-                                        <TextBlock Text="{Binding Price, StringFormat='Цена: {0}₽'}" FontSize="10" Foreground="#666"/>
+                                        <TextBlock Text="{Binding Price, StringFormat='Цена: {0}₽'}" FontSize="11" Foreground="#666"/>
                                     </StackPanel>
                                 </Border>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
 
-                    <TextBlock Text="Тип билета:" FontWeight="SemiBold" FontSize="14"/>
-                    <ComboBox x:Name="TicketTypeComboBox" 
-                              SelectedIndex="0"
-                              SelectionChanged="TicketType_SelectionChanged">
-                        <ComboBox.ItemTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding TypeName}"/>
-                            </DataTemplate>
-                        </ComboBox.ItemTemplate>
-                    </ComboBox>
-
                     <StackPanel>
-                        <TextBlock Text="Итого:" FontWeight="Bold" FontSize="16"/>
-                        <TextBlock x:Name="TotalPriceText" FontSize="20" FontWeight="Bold" 
-                                   Foreground="#00A651" Text="0₽"/>
+                        <TextBlock Text="Тип билета:" Classes="title-small"/>
+                        <ComboBox x:Name="TicketTypeComboBox" Classes="standard"
+                                  SelectedIndex="0"
+                                  SelectionChanged="TicketType_SelectionChanged">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding TypeName}"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
                     </StackPanel>
 
+                    <Border Background="#E8F5E8" CornerRadius="8" Padding="15">
+                        <StackPanel>
+                            <TextBlock Text="Итого:" FontWeight="Bold" FontSize="16"/>
+                            <TextBlock x:Name="TotalPriceText" FontSize="24" FontWeight="Bold" 
+                                       Foreground="#00A651" Text="0₽"/>
+                        </StackPanel>
+                    </Border>
+
                     <Button Content="🎫 Забронировать" Click="ConfirmBooking_Click"
-                            Background="#00A651" Foreground="White" 
-                            Padding="20,10" FontWeight="Bold" FontSize="14"/>
+                            Classes="success"
+                            Padding="20,12" FontSize="16" FontWeight="Bold"/>
                 </StackPanel>
             </Border>
         </Grid>

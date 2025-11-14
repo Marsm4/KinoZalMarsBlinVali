@@ -42,9 +42,12 @@ namespace KinoZalMarsBlinVali.Views
                 get => _isSelected;
                 set
                 {
-                    _isSelected = value;
-                    OnPropertyChanged();
-                    OnPropertyChanged(nameof(SeatBackground));
+                    if (_isSelected != value)
+                    {
+                        _isSelected = value;
+                        OnPropertyChanged();
+                        OnPropertyChanged(nameof(SeatBackground)); // ДОБАВЬТЕ ЭТУ СТРОКУ
+                    }
                 }
             }
 
@@ -53,14 +56,14 @@ namespace KinoZalMarsBlinVali.Views
                 get
                 {
                     if (!IsAvailable)
-                        return new SolidColorBrush(Colors.Red);
+                        return new SolidColorBrush(Colors.Gray); // Недоступно
                     if (IsSelected)
-                        return new SolidColorBrush(Colors.Blue);
+                        return new SolidColorBrush(Colors.Blue); // Выбрано
                     if (Seat.SeatType == "vip")
-                        return new SolidColorBrush(Colors.Orange);
+                        return new SolidColorBrush(Colors.Orange); // VIP
                     if (Seat.SeatType == "disabled")
-                        return new SolidColorBrush(Colors.Gray);
-                    return new SolidColorBrush(Colors.Green);
+                        return new SolidColorBrush(Colors.Red); // Отключено
+                    return new SolidColorBrush(Colors.Green); // Стандартное
                 }
             }
 

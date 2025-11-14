@@ -17,8 +17,8 @@ namespace KinoZalMarsBlinVali.Views
         public class SessionViewModel
         {
             public int SessionId { get; set; }
-            public string SessionInfo { get; set; }
-            public string HallInfo { get; set; }
+            public string SessionInfo { get; set; } = string.Empty;
+            public string HallInfo { get; set; } = string.Empty;
             public DateTime StartTime { get; set; }
         }
 
@@ -29,16 +29,18 @@ namespace KinoZalMarsBlinVali.Views
 
         public MovieDetailsPage(Movie movie, List<Session> sessions, DateTime selectedDate)
         {
+            InitializeComponent();
             _movie = movie;
             _sessions = sessions;
             _selectedDate = selectedDate;
-            InitializeComponent();
             LoadMovieDetails();
             LoadSessions();
         }
 
         private void LoadMovieDetails()
         {
+            if (_movie == null) return;
+
             TitleText.Text = _movie.Title;
             MovieTitleText.Text = _movie.Title;
             MovieGenreText.Text = _movie.Genre;
@@ -53,6 +55,8 @@ namespace KinoZalMarsBlinVali.Views
 
         private void LoadSessions()
         {
+            if (_sessions == null) return;
+
             var sessionViewModels = _sessions
                 .OrderBy(s => s.StartTime)
                 .Select(s => new SessionViewModel
