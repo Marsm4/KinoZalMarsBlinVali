@@ -1,0 +1,33 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="KinoZalMarsBlinVali.Views.QrCodeWindow"
+        Title="QR-код билета"
+        Width="400" Height="550"
+        MinWidth="350" MinHeight="450"
+        WindowStartupLocation="CenterOwner">
+    
+    <StackPanel Spacing="20" Margin="20">
+        <TextBlock x:Name="TitleText" 
+                   Text="QR-code"
+                   FontSize="18" 
+                   FontWeight="Bold" 
+                   HorizontalAlignment="Center"/>
+        
+        <Image x:Name="QrCodeImage" 
+               Width="200" 
+               Height="200" 
+               HorizontalAlignment="Center"
+               Stretch="Uniform"/>
+        
+        <TextBlock x:Name="TicketInfoText" 
+                   FontSize="12" 
+                   TextWrapping="Wrap"
+                   TextAlignment="Center"/>
+        
+        <Button Content="Cansel" 
+                HorizontalAlignment="Center" 
+                Padding="20,10"
+                Width="120"
+                Click="CloseButton_Click"/>
+    </StackPanel>
+</Window>

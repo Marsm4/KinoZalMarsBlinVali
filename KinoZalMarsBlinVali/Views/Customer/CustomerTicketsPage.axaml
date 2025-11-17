@@ -7,8 +7,9 @@
              x:Class="KinoZalMarsBlinVali.Views.CustomerTicketsPage">
     
     <UserControl.Resources>
-    <conv:StatusClassConverter x:Key="StatusClassConverter"/>
-</UserControl.Resources>
+        <conv:StatusClassConverter x:Key="StatusClassConverter"/>
+    </UserControl.Resources>
+    
     <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -76,16 +77,16 @@
                                     </StackPanel>
                                     
                                     <!-- Статус -->
-                       <Border Background="{Binding StatusColor}" 
-        HorizontalAlignment="Left" Margin="0,5,0,0"
-        CornerRadius="12" Padding="8,4">
-    <StackPanel Orientation="Horizontal" Spacing="5">
-        <TextBlock Text="{Binding StatusIcon}" FontSize="12" Foreground="White"/>
-        <TextBlock Text="{Binding StatusText}" 
-                   FontSize="11" FontWeight="Bold" 
-                   Foreground="White"/>
-    </StackPanel>
-</Border>
+                                    <Border Background="{Binding StatusColor}" 
+                                            HorizontalAlignment="Left" Margin="0,5,0,0"
+                                            CornerRadius="12" Padding="8,4">
+                                        <StackPanel Orientation="Horizontal" Spacing="5">
+                                            <TextBlock Text="{Binding StatusIcon}" FontSize="12" Foreground="White"/>
+                                            <TextBlock Text="{Binding StatusText}" 
+                                                       FontSize="11" FontWeight="Bold" 
+                                                       Foreground="White"/>
+                                        </StackPanel>
+                                    </Border>
                                 </StackPanel>
 
                                 <!-- Действия -->
@@ -96,11 +97,13 @@
                                             Tag="{Binding TicketId}"
                                             IsVisible="{Binding CanPay}"/>
                                     
+                                    <!-- Кнопка QR-кода с исправленным ToolTip -->
                                     <Button Content="📱 QR-код" Click="ShowQrCode_Click"
                                             Classes="primary"
                                             Padding="12,6" FontSize="11"
                                             Tag="{Binding TicketId}"
-                                            IsVisible="{Binding IsActive}"/>
+                                            IsVisible="{Binding IsActive}"
+                                            ToolTip.Tip="Показать QR-код билета"/>
                                     
                                     <Button Content="❌ Отменить" Click="CancelTicket_Click"
                                             Classes="danger"

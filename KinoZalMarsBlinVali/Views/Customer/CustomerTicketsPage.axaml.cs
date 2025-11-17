@@ -76,15 +76,29 @@ namespace KinoZalMarsBlinVali.Views
                 var ticket = _tickets.FirstOrDefault(t => t.TicketId == ticketId);
                 if (ticket != null)
                 {
-                    var dialog = new MessageWindow("QR-код",
-                        $"Билет #{ticket.TicketId}\n\n" +
-                        $"🎬 {ticket.Session.Movie.Title}\n" +
-                        $"📅 {ticket.Session.StartTime:dd.MM.yyyy HH:mm}\n" +
-                        $"🎭 Зал: {ticket.Session.Hall.HallName}\n" +
-                        $"💺 Ряд {ticket.Seat.RowNumber}, Место {ticket.Seat.SeatNumber}\n" +
-                        $"💰 {ticket.FinalPrice}₽\n\n" +
-                        $"QR-код будет сгенерирован позже");
-                    await dialog.ShowDialog((Window)this.VisualRoot);
+                    // Генерируем QR-код если его нет
+                    if (string.IsNullOrEmpty(ticket.QrCodeData))
+                    {
+                        try
+                        {
+                            ticket.QrCodeData = ticket.GenerateQrCodeData();
+                            await AppDataContext.DbContext.SaveChangesAsync();
+                        }
+                        catch (Exception ex)
+                        {
+                            ShowError($"Ошибка генерации QR-кода: {ex.Message}");
+                            return;
+                        }
+                    }
+
+                    // Показываем окно с QR-кодом
+                    var qrWindow = new QrCodeWindow(
+                        "QR-код билета",
+                        ticket.GetQrCodeDisplayData(),
+                        ticket.QrCodeData
+                    );
+
+                    await qrWindow.ShowDialog((Window)this.VisualRoot);
                 }
             }
         }
