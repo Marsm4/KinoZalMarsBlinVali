@@ -1,0 +1,39 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="1920" d:DesignHeight="1080"
+             x:Class="KinoZalMarsBlinVali.Views.QuizPage">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Заголовок -->
+        <TextBlock Grid.Row="0" x:Name="QuizTitleText" 
+                   Classes="title-large"
+                   Margin="0,0,0,10"/>
+
+        <!-- Прогресс -->
+        <TextBlock Grid.Row="1" x:Name="ProgressText"
+                   FontSize="14" Foreground="#666"
+                   Margin="0,0,0,20"/>
+
+        <!-- Вопрос и ответы -->
+        <StackPanel Grid.Row="2" x:Name="QuestionContainer" Spacing="15"/>
+
+        <!-- Кнопки навигации -->
+        <StackPanel Grid.Row="3" Orientation="Horizontal" Spacing="15" 
+                    HorizontalAlignment="Right" Margin="0,20,0,0">
+            <Button x:Name="PrevButton" Content="⬅️ Назад" 
+                    Click="PrevButton_Click"
+                    Classes="secondary"/>
+            <Button x:Name="NextButton" Content="Далее ➡️" 
+                    Click="NextButton_Click"
+                    Classes="primary"/>
+        </StackPanel>
+    </Grid>
+</UserControl>

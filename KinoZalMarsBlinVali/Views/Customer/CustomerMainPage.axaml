@@ -23,6 +23,10 @@
                 <Button Content="🎫 Мои билеты" Click="NavigateToMyTickets_Click"
                         Classes="primary nav-button"
                         Padding="15,8"/>
+
+                <Button Content="🧩 Викторины" Click="NavigateToQuizzes_Click"
+                        Classes="primary nav-button"
+                        Padding="15,8"/>
                         
                 <Button Content="👤 Профиль" Click="NavigateToProfile_Click"
                         Classes="primary nav-button"

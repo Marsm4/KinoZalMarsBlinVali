@@ -27,5 +27,7 @@ public partial class Movie
 
     public DateTime? CreatedAt { get; set; }
 
+    public virtual ICollection<Quiz> Quizzes { get; set; } = new List<Quiz>();
+
     public virtual ICollection<Session> Sessions { get; set; } = new List<Session>();
 }

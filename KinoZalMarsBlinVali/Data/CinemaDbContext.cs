@@ -34,6 +34,14 @@ public partial class CinemaDbContext : DbContext
 
     public virtual DbSet<Movie> Movies { get; set; }
 
+    public virtual DbSet<Quiz> Quizzes { get; set; }
+
+    public virtual DbSet<QuizAnswer> QuizAnswers { get; set; }
+
+    public virtual DbSet<QuizAttempt> QuizAttempts { get; set; }
+
+    public virtual DbSet<QuizQuestion> QuizQuestions { get; set; }
+
     public virtual DbSet<Session> Sessions { get; set; }
 
     public virtual DbSet<Ticket> Tickets { get; set; }
@@ -96,6 +104,9 @@ public partial class CinemaDbContext : DbContext
             entity.Property(e => e.LastName)
                 .HasMaxLength(100)
                 .HasColumnName("last_name");
+            entity.Property(e => e.LastQuizAttempt)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("last_quiz_attempt");
             entity.Property(e => e.Password)
                 .HasMaxLength(255)
                 .HasColumnName("password");
@@ -105,6 +116,12 @@ public partial class CinemaDbContext : DbContext
             entity.Property(e => e.ProfilePhotoPath)
                 .HasMaxLength(500)
                 .HasColumnName("profile_photo_path");
+            entity.Property(e => e.QuizzesCompleted)
+                .HasDefaultValue(0)
+                .HasColumnName("quizzes_completed");
+            entity.Property(e => e.TotalQuizPoints)
+                .HasDefaultValue(0)
+                .HasColumnName("total_quiz_points");
         });
 
         modelBuilder.Entity<Employee>(entity =>
@@ -322,6 +339,110 @@ public partial class CinemaDbContext : DbContext
             entity.Property(e => e.Title)
                 .HasMaxLength(255)
                 .HasColumnName("title");
+        });
+
+        modelBuilder.Entity<Quiz>(entity =>
+        {
+            entity.HasKey(e => e.QuizId).HasName("quizzes_pkey");
+
+            entity.ToTable("quizzes");
+
+            entity.Property(e => e.QuizId).HasColumnName("quiz_id");
+            entity.Property(e => e.BonusPoints)
+                .HasDefaultValue(100)
+                .HasColumnName("bonus_points");
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("created_at");
+            entity.Property(e => e.IsActive)
+                .HasDefaultValue(true)
+                .HasColumnName("is_active");
+            entity.Property(e => e.MovieId).HasColumnName("movie_id");
+            entity.Property(e => e.PassingScore)
+                .HasDefaultValue(80)
+                .HasColumnName("passing_score");
+            entity.Property(e => e.QuizDescription).HasColumnName("quiz_description");
+            entity.Property(e => e.QuizTitle)
+                .HasMaxLength(255)
+                .HasColumnName("quiz_title");
+
+            entity.HasOne(d => d.Movie).WithMany(p => p.Quizzes)
+                .HasForeignKey(d => d.MovieId)
+                .OnDelete(DeleteBehavior.SetNull)
+                .HasConstraintName("quizzes_movie_id_fkey");
+        });
+
+        modelBuilder.Entity<QuizAnswer>(entity =>
+        {
+            entity.HasKey(e => e.AnswerId).HasName("quiz_answers_pkey");
+
+            entity.ToTable("quiz_answers");
+
+            entity.Property(e => e.AnswerId).HasColumnName("answer_id");
+            entity.Property(e => e.AnswerOrder)
+                .HasDefaultValue(0)
+                .HasColumnName("answer_order");
+            entity.Property(e => e.AnswerText).HasColumnName("answer_text");
+            entity.Property(e => e.IsCorrect)
+                .HasDefaultValue(false)
+                .HasColumnName("is_correct");
+            entity.Property(e => e.QuestionId).HasColumnName("question_id");
+
+            entity.HasOne(d => d.Question).WithMany(p => p.QuizAnswers)
+                .HasForeignKey(d => d.QuestionId)
+                .HasConstraintName("quiz_answers_question_id_fkey");
+        });
+
+        modelBuilder.Entity<QuizAttempt>(entity =>
+        {
+            entity.HasKey(e => e.AttemptId).HasName("quiz_attempts_pkey");
+
+            entity.ToTable("quiz_attempts");
+
+            entity.Property(e => e.AttemptId).HasColumnName("attempt_id");
+            entity.Property(e => e.CompletedAt)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("completed_at");
+            entity.Property(e => e.CustomerId).HasColumnName("customer_id");
+            entity.Property(e => e.EarnedPoints)
+                .HasDefaultValue(0)
+                .HasColumnName("earned_points");
+            entity.Property(e => e.QuizId).HasColumnName("quiz_id");
+            entity.Property(e => e.ScorePercent)
+                .HasPrecision(5, 2)
+                .HasDefaultValueSql("0.00")
+                .HasColumnName("score_percent");
+            entity.Property(e => e.StartedAt)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("started_at");
+
+            entity.HasOne(d => d.Customer).WithMany(p => p.QuizAttempts)
+                .HasForeignKey(d => d.CustomerId)
+                .HasConstraintName("quiz_attempts_customer_id_fkey");
+
+            entity.HasOne(d => d.Quiz).WithMany(p => p.QuizAttempts)
+                .HasForeignKey(d => d.QuizId)
+                .HasConstraintName("quiz_attempts_quiz_id_fkey");
+        });
+
+        modelBuilder.Entity<QuizQuestion>(entity =>
+        {
+            entity.HasKey(e => e.QuestionId).HasName("quiz_questions_pkey");
+
+            entity.ToTable("quiz_questions");
+
+            entity.Property(e => e.QuestionId).HasColumnName("question_id");
+            entity.Property(e => e.QuestionOrder)
+                .HasDefaultValue(0)
+                .HasColumnName("question_order");
+            entity.Property(e => e.QuestionText).HasColumnName("question_text");
+            entity.Property(e => e.QuizId).HasColumnName("quiz_id");
+
+            entity.HasOne(d => d.Quiz).WithMany(p => p.QuizQuestions)
+                .HasForeignKey(d => d.QuizId)
+                .HasConstraintName("quiz_questions_quiz_id_fkey");
         });
 
         modelBuilder.Entity<Session>(entity =>

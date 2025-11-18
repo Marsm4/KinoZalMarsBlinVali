@@ -12,7 +12,6 @@ namespace KinoZalMarsBlinVali.Views
         public CustomerMainPage()
         {
             InitializeComponent();
-
             NavigateToSessions_Click(null, null);
         }
 
@@ -28,6 +27,12 @@ namespace KinoZalMarsBlinVali.Views
             UpdateActiveButton(sender as Button);
         }
 
+        private void NavigateToQuizzes_Click(object? sender, RoutedEventArgs e)
+        {
+            MainContentControl.Content = new CustomerQuizzesPage();
+            UpdateActiveButton(sender as Button);
+        }
+
         public void NavigateToProfile_Click(object? sender, RoutedEventArgs e)
         {
             MainContentControl.Content = new CustomerProfilePage();
@@ -38,11 +43,9 @@ namespace KinoZalMarsBlinVali.Views
         {
             try
             {
-               
                 var border = this.GetVisualChildren().FirstOrDefault() as Border;
                 if (border?.Child != null)
                 {
-                   
                     foreach (var child in border.Child.GetVisualChildren())
                     {
                         if (child is Button button && button.Classes.Contains("nav-button"))
@@ -51,7 +54,6 @@ namespace KinoZalMarsBlinVali.Views
                         }
                     }
 
-                    
                     if (activeButton != null)
                     {
                         activeButton.Background = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Color.FromRgb(0, 86, 179));
@@ -60,14 +62,16 @@ namespace KinoZalMarsBlinVali.Views
             }
             catch
             {
-    
+                // Игнорируем ошибки
             }
         }
+
         public void NavigateToAddBalance()
         {
             MainContentControl.Content = new AddBalancePage();
             ResetActiveButtons();
         }
+
         private void ResetActiveButtons()
         {
             try

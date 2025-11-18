@@ -27,5 +27,13 @@ public partial class Customer
 
     public decimal? Balance1 { get; set; }
 
+    public int? TotalQuizPoints { get; set; }
+
+    public int? QuizzesCompleted { get; set; }
+
+    public DateTime? LastQuizAttempt { get; set; }
+
+    public virtual ICollection<QuizAttempt> QuizAttempts { get; set; } = new List<QuizAttempt>();
+
     public virtual ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
 }
