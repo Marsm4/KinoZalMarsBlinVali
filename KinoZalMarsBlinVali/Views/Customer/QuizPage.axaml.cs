@@ -89,9 +89,9 @@ namespace KinoZalMarsBlinVali.Views
                 // Явно загружаем данные без сложных LINQ преобразований
                 var userAttempts = AppDataContext.DbContext.QuizAttempts
                     .Where(a => a.CustomerId == _currentCustomerId && a.QuizId == _quiz.QuizId)
-                    .ToList(); // Materialize the query first
+                    .ToList();
 
-                // Проверяем начисление баллов
+                // Проверяем начисление баллов (используем GetValueOrDefault для nullable)
                 if (userAttempts.Any(a => a.PointsAwarded))
                 {
                     ShowErrorAndReturn("Вы уже получили баллы за эту викторину");
@@ -105,8 +105,8 @@ namespace KinoZalMarsBlinVali.Views
                     return false;
                 }
 
-                // Проверяем успешное прохождение
-                if (userAttempts.Any(a => a.ScorePercent >= _quiz.PassingScore))
+                // Проверяем успешное прохождение (используем GetValueOrDefault для nullable)
+                if (userAttempts.Any(a => (a.ScorePercent ?? 0) >= (_quiz.PassingScore ?? 80)))
                 {
                     ShowErrorAndReturn("Вы уже успешно прошли эту викторину");
                     return false;
@@ -306,7 +306,7 @@ namespace KinoZalMarsBlinVali.Views
                     var selectedAnswerId = _userAnswers[question.QuestionId];
                     var selectedAnswer = _answers.FirstOrDefault(a => a.AnswerId == selectedAnswerId);
 
-                    if (selectedAnswer?.IsCorrect == true)
+                    if (selectedAnswer?.IsCorrect == true) // Теперь IsCorrect не nullable
                     {
                         correctAnswers++;
                     }
@@ -314,8 +314,8 @@ namespace KinoZalMarsBlinVali.Views
             }
 
             double scorePercent = (double)correctAnswers / _questions.Count * 100;
-            bool passed = scorePercent >= _quiz.PassingScore;
-            int earnedPoints = passed ? _quiz.BonusPoints ?? 0 : 0;
+            bool passed = scorePercent >= (_quiz.PassingScore ?? 80); // Используем GetValueOrDefault
+            int earnedPoints = passed ? (_quiz.BonusPoints ?? 0) : 0;
             bool pointsAwarded = passed && earnedPoints > 0;
 
             // Сохраняем попытку
@@ -323,13 +323,13 @@ namespace KinoZalMarsBlinVali.Views
             {
                 CustomerId = _currentCustomerId,
                 QuizId = _quiz.QuizId,
-                StartedAt = System.DateTime.Now,
-                CompletedAt = System.DateTime.Now,
+                StartedAt = DateTime.Now,
+                CompletedAt = DateTime.Now,
                 TotalQuestions = _questions.Count,
                 CorrectAnswers = correctAnswers,
                 ScorePercent = (decimal)scorePercent,
                 EarnedPoints = earnedPoints,
-                PointsAwarded = pointsAwarded // Указываем, были ли начислены баллы
+                PointsAwarded = pointsAwarded
             };
 
             AppDataContext.DbContext.QuizAttempts.Add(attempt);
@@ -345,7 +345,7 @@ namespace KinoZalMarsBlinVali.Views
                     customer.BonusPoints = (customer.BonusPoints ?? 0) + earnedPoints;
                     customer.TotalQuizPoints = (customer.TotalQuizPoints ?? 0) + earnedPoints;
                     customer.QuizzesCompleted = (customer.QuizzesCompleted ?? 0) + 1;
-                    customer.LastQuizAttempt = System.DateTime.Now;
+                    customer.LastQuizAttempt = DateTime.Now;
                 }
             }
 
@@ -353,7 +353,12 @@ namespace KinoZalMarsBlinVali.Views
 
             // Показываем результаты
             var resultWindow = new QuizResultWindow(scorePercent, correctAnswers, _questions.Count, earnedPoints, passed);
-            await resultWindow.ShowDialog((Window)this.VisualRoot);
+
+            var visualRoot = this.VisualRoot as Window;
+            if (visualRoot != null)
+            {
+                await resultWindow.ShowDialog(visualRoot);
+            }
 
             // Возвращаемся к списку викторин
             ReturnToQuizzesPage();

@@ -28,7 +28,7 @@ namespace KinoZalMarsBlinVali.Views
                 QuizzesContainer.Children.Clear();
 
                 var quizzes = AppDataContext.DbContext.Quizzes
-                    .Where(q => q.IsActive == true)
+                    .Where(q => q.IsActive) // Упрощенная проверка для bool
                     .ToList();
 
                 // Отладочная информация
@@ -181,7 +181,7 @@ namespace KinoZalMarsBlinVali.Views
                 }
 
                 // Проверяем, есть ли успешная попытка (более 80%)
-                var hasSuccessfulAttempt = userAttempts.Any(a => a.ScorePercent >= quiz.PassingScore);
+                var hasSuccessfulAttempt = userAttempts.Any(a => (a.ScorePercent ?? 0) >= (quiz.PassingScore ?? 80));
                 if (hasSuccessfulAttempt)
                 {
                     return ("✅ Вы уже успешно прошли викторину", "#00A651", false);
