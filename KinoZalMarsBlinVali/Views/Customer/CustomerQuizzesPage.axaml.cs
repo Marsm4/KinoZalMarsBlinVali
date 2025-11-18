@@ -28,10 +28,9 @@ namespace KinoZalMarsBlinVali.Views
                 QuizzesContainer.Children.Clear();
 
                 var quizzes = AppDataContext.DbContext.Quizzes
-                    .Where(q => q.IsActive) // Упрощенная проверка для bool
+                    .Where(q => q.IsActive)
                     .ToList();
 
-                // Отладочная информация
                 Console.WriteLine($"=== ДЕБАГ ИНФОРМАЦИЯ ===");
                 Console.WriteLine($"Найдено викторин: {quizzes.Count}");
                 foreach (var quiz in quizzes)
@@ -205,9 +204,17 @@ namespace KinoZalMarsBlinVali.Views
                 return;
             }
 
-            if (this.VisualRoot is MainWindow mainWindow)
+            // Находим главное окно и переходим на страницу викторины
+            var mainWindow = this.FindAncestorOfType<MainWindow>();
+            if (mainWindow != null)
             {
                 mainWindow.NavigateTo(new QuizPage(quiz));
+            }
+            else
+            {
+                // Альтернативный способ найти главное окно
+                var visualRoot = this.GetVisualRoot() as MainWindow;
+                visualRoot?.NavigateTo(new QuizPage(quiz));
             }
         }
     }

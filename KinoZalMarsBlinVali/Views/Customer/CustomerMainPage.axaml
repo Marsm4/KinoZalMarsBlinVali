@@ -10,7 +10,6 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- Навигационная панель -->
         <Border Grid.Row="0" Background="#0066CC" Padding="15" Classes="card">
             <StackPanel Orientation="Horizontal" Spacing="20">
                 <TextBlock Text="🎬 Кинотеатр" FontSize="20" FontWeight="Bold" 
@@ -39,7 +38,6 @@
             </StackPanel>
         </Border>
 
-        <!-- Контент -->
         <ContentControl Grid.Row="1" x:Name="MainContentControl"/>
     </Grid>
 </UserControl>

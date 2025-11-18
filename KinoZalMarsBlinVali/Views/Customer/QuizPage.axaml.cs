@@ -67,7 +67,6 @@ namespace KinoZalMarsBlinVali.Views
         {
             if (!_quizCompleted)
             {
-                // Показываем подтверждение отмены викторины
                 ShowCancelConfirmation();
             }
             else
@@ -88,23 +87,20 @@ namespace KinoZalMarsBlinVali.Views
                 var confirmDialog = new MessageWindow("Подтверждение",
                     "Вы уверены, что хотите отменить викторину? Прогресс будет потерян.");
 
-                var visualRoot = this.VisualRoot as Window;
+                var visualRoot = this.GetVisualRoot() as Window;
                 if (visualRoot != null)
                 {
-                    // Показываем диалог и ждем результат
                     var result = await confirmDialog.ShowDialog<bool>(visualRoot);
-                    if (result) // Если пользователь подтвердил отмену
+                    if (!result) 
                     {
                         await SaveFailedAttempt();
                         ReturnToQuizzesPage();
                     }
-                    // Если отмена не подтверждена, остаемся на странице викторины
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Ошибка подтверждения отмены: {ex.Message}");
-                // При ошибке тоже остаемся на странице викторины
             }
         }
 
@@ -141,7 +137,7 @@ namespace KinoZalMarsBlinVali.Views
         {
             try
             {
-                var visualRoot = this.VisualRoot as Window;
+                var visualRoot = this.GetVisualRoot() as Window;
                 if (visualRoot != null)
                 {
                     var dialog = new MessageWindow("Ошибка", message);
@@ -196,7 +192,7 @@ namespace KinoZalMarsBlinVali.Views
         {
             try
             {
-                var visualRoot = this.VisualRoot as Window;
+                var visualRoot = this.GetVisualRoot() as Window;
                 if (visualRoot != null)
                 {
                     var dialog = new MessageWindow("Ошибка", message);
@@ -217,10 +213,17 @@ namespace KinoZalMarsBlinVali.Views
 
         private void ReturnToQuizzesPage()
         {
-            if (this.VisualRoot is MainWindow mainWindow)
+            // Получаем главное окно и возвращаемся на страницу викторин
+            var mainWindow = this.FindAncestorOfType<MainWindow>();
+            if (mainWindow != null)
             {
-                // Просто возвращаемся на страницу викторин
-                mainWindow.NavigateTo(new CustomerQuizzesPage());
+                mainWindow.NavigateTo(new CustomerMainPage());
+            }
+            else
+            {
+                // Альтернативный способ найти главное окно
+                var visualRoot = this.GetVisualRoot() as MainWindow;
+                visualRoot?.NavigateTo(new CustomerMainPage());
             }
         }
 
@@ -375,7 +378,7 @@ namespace KinoZalMarsBlinVali.Views
                     $"Вы ответили не на все вопросы. Осталось {unansweredCount} без ответа.\n\n" +
                     "Вы уверены, что хотите завершить викторину?");
 
-                var visualRoot = this.VisualRoot as Window;
+                var visualRoot = this.GetVisualRoot() as Window;
                 if (visualRoot != null)
                 {
                     var result = await confirmDialog.ShowDialog<bool>(visualRoot);
@@ -449,7 +452,7 @@ namespace KinoZalMarsBlinVali.Views
 
             var resultWindow = new QuizResultWindow(scorePercent, correctAnswers, _questions.Count, earnedPoints, passed);
 
-            var visualRoot = this.VisualRoot as Window;
+            var visualRoot = this.GetVisualRoot() as Window;
             if (visualRoot != null)
             {
                 await resultWindow.ShowDialog(visualRoot);
