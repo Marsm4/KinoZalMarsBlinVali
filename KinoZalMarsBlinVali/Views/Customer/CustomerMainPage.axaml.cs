@@ -3,6 +3,7 @@ using Avalonia.Interactivity;
 using Avalonia.VisualTree;
 using KinoZalMarsBlinVali.Data;
 using KinoZalMarsBlinVali.Views;
+using System;
 using System.Linq;
 
 namespace KinoZalMarsBlinVali.Views
@@ -27,12 +28,19 @@ namespace KinoZalMarsBlinVali.Views
             UpdateActiveButton(sender as Button);
         }
 
-        private void NavigateToQuizzes_Click(object? sender, RoutedEventArgs e)
+        public void NavigateToQuizzes_Click(object? sender, RoutedEventArgs e)
         {
-            MainContentControl.Content = new CustomerQuizzesPage();
-            UpdateActiveButton(sender as Button);
+            try
+            {
+                MainContentControl.Content = new CustomerQuizzesPage();
+                UpdateActiveButton(sender as Button);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ошибка навигации к викторинам: {ex.Message}");
+                // Можно показать сообщение об ошибке
+            }
         }
-
         public void NavigateToProfile_Click(object? sender, RoutedEventArgs e)
         {
             MainContentControl.Content = new CustomerProfilePage();

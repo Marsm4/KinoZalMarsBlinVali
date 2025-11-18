@@ -16,7 +16,7 @@
                    TextWrapping="Wrap" VerticalAlignment="Center"
                    HorizontalAlignment="Center"/>
         
-        <Button Grid.Row="1" Content="OK" Click="OK_Click"
+        <Button Grid.Row="1" Content="OK" Click="OKButton_Click"
                 HorizontalAlignment="Center" Padding="20,5"
                 Background="#0066CC" Foreground="White"/>
     </Grid>

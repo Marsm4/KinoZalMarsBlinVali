@@ -46,6 +46,11 @@
                             BorderThickness="0" FontWeight="SemiBold" FontSize="14"
                             Padding="15,8"/>
                     
+                    <Button Content="🧩 Викторины" Click="Quizzes_Click"
+                            Background="Transparent" Foreground="White"
+                            BorderThickness="0" FontWeight="SemiBold" FontSize="14"
+                            Padding="15,8"/>
+                    
                     <Button Content="📊 Отчеты" Click="Reports_Click"
                             Background="Transparent" Foreground="White"
                             BorderThickness="0" FontWeight="SemiBold" FontSize="14"

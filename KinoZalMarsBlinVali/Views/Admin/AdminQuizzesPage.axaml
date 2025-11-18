@@ -1,0 +1,34 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="1920" d:DesignHeight="1080"
+             x:Class="KinoZalMarsBlinVali.Views.AdminQuizzesPage">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Заголовок и кнопка создания -->
+        <Grid Grid.Row="0" Margin="0,0,0,20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            
+            <TextBlock Grid.Column="0" Text="🧩 Управление викторинами" 
+                      FontSize="24" FontWeight="Bold"
+                      VerticalAlignment="Center"/>
+            
+            <Button Grid.Column="1" Content="➕ Создать викторину" Click="CreateQuiz_Click"
+                    Background="#28A745" Foreground="White"
+                    Padding="20,10" FontWeight="Bold" FontSize="14"/>
+        </Grid>
+
+        <!-- Список викторин -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <StackPanel x:Name="QuizzesContainer" Spacing="15"/>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

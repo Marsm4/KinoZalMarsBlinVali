@@ -13,7 +13,6 @@ namespace KinoZalMarsBlinVali.Views
         {
             InitializeComponent();
 
-            // Получаем информацию о попытках
             var customerId = AppDataContext.CurrentUser?.EmployeeId ?? 0;
             var attemptsCount = AppDataContext.DbContext.QuizAttempts
                 .Count(a => a.CustomerId == customerId);
@@ -40,11 +39,10 @@ namespace KinoZalMarsBlinVali.Views
             }
             else
             {
-                BonusText.Text = $"Для получения баллов нужно набрать более 80%";
+                BonusText.Text = $"Для получения баллов нужно набрать более {80}%";
                 BonusText.Foreground = new SolidColorBrush(Color.Parse("#6C757D"));
             }
 
-            // Добавляем информацию о попытках
             AttemptsText.Text = $"Осталось попыток: {remainingAttempts}/3";
         }
 

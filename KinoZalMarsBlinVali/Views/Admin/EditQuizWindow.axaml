@@ -1,0 +1,71 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Edit Quiz"
+        Width="600" Height="500"
+        x:Class="KinoZalMarsBlinVali.Views.EditQuizWindow">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <TextBlock Grid.Row="0" Text="Edit Quiz" 
+                  FontSize="20" FontWeight="Bold" Margin="0,0,0,20"/>
+
+        <!-- Form -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <StackPanel Spacing="15">
+                <!-- Quiz Title -->
+                <StackPanel>
+                    <TextBlock Text="Quiz Title *" FontWeight="SemiBold"/>
+                    <TextBox x:Name="TitleTextBox" 
+                           Text="Enter quiz title"
+                            FontSize="14" Padding="10"/>
+                </StackPanel>
+
+                <!-- Description -->
+                <StackPanel>
+                    <TextBlock Text="Description" FontWeight="SemiBold"/>
+                    <TextBox x:Name="DescriptionTextBox" 
+                          Text="Enter quiz description"
+                            AcceptsReturn="True" TextWrapping="Wrap"
+                            Height="60" FontSize="14" Padding="10"/>
+                </StackPanel>
+
+                <!-- Settings -->
+                <Grid ColumnDefinitions="*,*" ColumnSpacing="15">
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="Bonus Points *" FontWeight="SemiBold"/>
+                        <TextBox x:Name="BonusPointsTextBox" 
+                                Text="100"
+                                FontSize="14" Padding="10"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="1">
+                        <TextBlock Text="Passing Score (%) *" FontWeight="SemiBold"/>
+                        <TextBox x:Name="PassingScoreTextBox" 
+                                Text="80"
+                                FontSize="14" Padding="10"/>
+                    </StackPanel>
+                </Grid>
+
+                <!-- Status -->
+                <CheckBox x:Name="IsActiveCheckBox" Content="Active Quiz" IsChecked="True"
+                         FontWeight="SemiBold"/>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Buttons -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" 
+                   HorizontalAlignment="Right" Spacing="10" Margin="0,20,0,0">
+            <Button Content="Cancel" Click="Cancel_Click"
+                    Background="#6C757D" Foreground="White"
+                    Padding="20,10" FontWeight="SemiBold"/>
+            <Button Content="Save" Click="Save_Click"
+                    Background="#28A745" Foreground="White"
+                    Padding="20,10" FontWeight="SemiBold"/>
+        </StackPanel>
+    </Grid>
+</Window>

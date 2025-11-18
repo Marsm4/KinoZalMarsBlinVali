@@ -41,6 +41,11 @@ namespace KinoZalMarsBlinVali.Views
             MainContentControl.Content = new AdminEmployeesPage();
         }
 
+        private void Quizzes_Click(object? sender, RoutedEventArgs e)
+        {
+            MainContentControl.Content = new AdminQuizzesPage();
+        }
+
         private void Reports_Click(object? sender, RoutedEventArgs e)
         {
             MainContentControl.Content = new CashierReportsPage();

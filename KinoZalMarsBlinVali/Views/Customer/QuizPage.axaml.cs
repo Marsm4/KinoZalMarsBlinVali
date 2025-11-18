@@ -12,13 +12,12 @@ namespace KinoZalMarsBlinVali.Views
 {
     public partial class QuizPage : UserControl
     {
-
         private Quiz _quiz;
         private List<QuizQuestion> _questions;
         private List<QuizAnswer> _answers;
-        private int _currentQuestionIndex = 0;
         private Dictionary<int, int> _userAnswers = new Dictionary<int, int>();
         private int _currentCustomerId;
+        private bool _quizCompleted = false;
 
         public QuizPage(Quiz quiz)
         {
@@ -31,6 +30,7 @@ namespace KinoZalMarsBlinVali.Views
             // Используем Loaded событие для гарантии инициализации
             this.Loaded += OnQuizPageLoaded;
         }
+
         private async void OnQuizPageLoaded(object? sender, RoutedEventArgs e)
         {
             this.Loaded -= OnQuizPageLoaded;
@@ -53,8 +53,8 @@ namespace KinoZalMarsBlinVali.Views
                     return;
                 }
 
-                // Показываем первый вопрос
-                DisplayCurrentQuestion();
+                // Показываем все вопросы сразу
+                DisplayAllQuestions();
             }
             catch (Exception ex)
             {
@@ -63,9 +63,82 @@ namespace KinoZalMarsBlinVali.Views
             }
         }
 
+        private void BackToQuizzes_Click(object? sender, RoutedEventArgs e)
+        {
+            if (!_quizCompleted)
+            {
+                // Показываем подтверждение отмены викторины
+                ShowCancelConfirmation();
+            }
+            else
+            {
+                ReturnToQuizzesPage();
+            }
+        }
+
+        private void CancelQuiz_Click(object? sender, RoutedEventArgs e)
+        {
+            ShowCancelConfirmation();
+        }
+
+        private async void ShowCancelConfirmation()
+        {
+            try
+            {
+                var confirmDialog = new MessageWindow("Подтверждение",
+                    "Вы уверены, что хотите отменить викторину? Прогресс будет потерян.");
+
+                var visualRoot = this.VisualRoot as Window;
+                if (visualRoot != null)
+                {
+                    // Показываем диалог и ждем результат
+                    var result = await confirmDialog.ShowDialog<bool>(visualRoot);
+                    if (result) // Если пользователь подтвердил отмену
+                    {
+                        await SaveFailedAttempt();
+                        ReturnToQuizzesPage();
+                    }
+                    // Если отмена не подтверждена, остаемся на странице викторины
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ошибка подтверждения отмены: {ex.Message}");
+                // При ошибке тоже остаемся на странице викторины
+            }
+        }
+
+        private async Task SaveFailedAttempt()
+        {
+            try
+            {
+                // Сохраняем неудачную попытку
+                var attempt = new QuizAttempt
+                {
+                    CustomerId = _currentCustomerId,
+                    QuizId = _quiz.QuizId,
+                    StartedAt = DateTime.Now,
+                    CompletedAt = DateTime.Now,
+                    TotalQuestions = _questions?.Count ?? 0,
+                    CorrectAnswers = 0,
+                    ScorePercent = 0,
+                    EarnedPoints = 0,
+                    PointsAwarded = false
+                };
+
+                AppDataContext.DbContext.QuizAttempts.Add(attempt);
+                await AppDataContext.DbContext.SaveChangesAsync();
+
+                Console.WriteLine("Сохранена неудачная попытка викторины");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ошибка сохранения неудачной попытки: {ex.Message}");
+            }
+        }
+
         private async Task ShowErrorAndReturnAsync(string message)
         {
-            // Асинхронная версия для использования в async методах
             try
             {
                 var visualRoot = this.VisualRoot as Window;
@@ -82,30 +155,27 @@ namespace KinoZalMarsBlinVali.Views
 
             ReturnToQuizzesPage();
         }
+
         private bool CanAttemptQuiz()
         {
             try
             {
-                // Явно загружаем данные без сложных LINQ преобразований
                 var userAttempts = AppDataContext.DbContext.QuizAttempts
                     .Where(a => a.CustomerId == _currentCustomerId && a.QuizId == _quiz.QuizId)
                     .ToList();
 
-                // Проверяем начисление баллов (используем GetValueOrDefault для nullable)
                 if (userAttempts.Any(a => a.PointsAwarded))
                 {
                     ShowErrorAndReturn("Вы уже получили баллы за эту викторину");
                     return false;
                 }
 
-                // Проверяем количество попыток
                 if (userAttempts.Count >= 3)
                 {
                     ShowErrorAndReturn("Превышено максимальное количество попыток (3)");
                     return false;
                 }
 
-                // Проверяем успешное прохождение (используем GetValueOrDefault для nullable)
                 if (userAttempts.Any(a => (a.ScorePercent ?? 0) >= (_quiz.PassingScore ?? 80)))
                 {
                     ShowErrorAndReturn("Вы уже успешно прошли эту викторину");
@@ -121,6 +191,7 @@ namespace KinoZalMarsBlinVali.Views
                 return false;
             }
         }
+
         private async void ShowErrorAndReturn(string message)
         {
             try
@@ -133,7 +204,6 @@ namespace KinoZalMarsBlinVali.Views
                 }
                 else
                 {
-                    // Если VisualRoot недоступен, просто возвращаемся
                     Console.WriteLine($"VisualRoot is null. Message: {message}");
                 }
             }
@@ -149,9 +219,11 @@ namespace KinoZalMarsBlinVali.Views
         {
             if (this.VisualRoot is MainWindow mainWindow)
             {
+                // Просто возвращаемся на страницу викторин
                 mainWindow.NavigateTo(new CustomerQuizzesPage());
             }
         }
+
         private void LoadQuizData()
         {
             try
@@ -188,30 +260,53 @@ namespace KinoZalMarsBlinVali.Views
                 ShowErrorAndReturn("Ошибка загрузки викторины");
             }
         }
-        private void DisplayCurrentQuestion()
-        {
-            QuestionContainer.Children.Clear();
 
-            if (_currentQuestionIndex >= _questions.Count)
+        private void DisplayAllQuestions()
+        {
+            QuestionsContainer.Children.Clear();
+
+            if (_questions == null || !_questions.Any())
             {
-                CompleteQuiz();
+                ShowErrorAndReturn("Вопросы не загружены");
                 return;
             }
 
-            var currentQuestion = _questions[_currentQuestionIndex];
+            foreach (var question in _questions)
+            {
+                var questionCard = CreateQuestionCard(question);
+                QuestionsContainer.Children.Add(questionCard);
+            }
+
+            UpdateProgress();
+        }
+
+        private Border CreateQuestionCard(QuizQuestion question)
+        {
+            var card = new Border
+            {
+                Padding = new Avalonia.Thickness(15),
+                Margin = new Avalonia.Thickness(0, 0, 0, 10),
+                Background = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Color.Parse("#F8F9FA")),
+                BorderBrush = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Color.Parse("#DEE2E6")),
+                BorderThickness = new Avalonia.Thickness(1),
+                CornerRadius = new Avalonia.CornerRadius(6)
+            };
+
+            var stackPanel = new StackPanel { Spacing = 10 };
 
             // Текст вопроса
             var questionText = new TextBlock
             {
-                Text = currentQuestion.QuestionText,
+                Text = $"{question.QuestionOrder}. {question.QuestionText}",
                 FontSize = 16,
-                FontWeight = Avalonia.Media.FontWeight.Bold,
+                FontWeight = Avalonia.Media.FontWeight.SemiBold,
                 TextWrapping = Avalonia.Media.TextWrapping.Wrap
             };
-            QuestionContainer.Children.Add(questionText);
+            stackPanel.Children.Add(questionText);
 
-            // Варианты ответов
-            var questionAnswers = _answers.Where(a => a.QuestionId == currentQuestion.QuestionId).ToList();
+            // Ответы
+            var questionAnswers = _answers.Where(a => a.QuestionId == question.QuestionId).ToList();
+            var answersStackPanel = new StackPanel { Spacing = 5, Margin = new Avalonia.Thickness(10, 0, 0, 0) };
 
             foreach (var answer in questionAnswers)
             {
@@ -219,84 +314,87 @@ namespace KinoZalMarsBlinVali.Views
                 {
                     Content = answer.AnswerText,
                     Tag = answer.AnswerId,
-                    GroupName = $"question_{currentQuestion.QuestionId}",
-                    Margin = new Avalonia.Thickness(0, 5, 0, 5)
+                    GroupName = $"question_{question.QuestionId}",
+                    Margin = new Avalonia.Thickness(0, 5, 0, 0)
                 };
 
-                // Восстанавливаем выбранный ответ, если он был
-                if (_userAnswers.ContainsKey(currentQuestion.QuestionId) &&
-                    _userAnswers[currentQuestion.QuestionId] == answer.AnswerId)
+                if (_userAnswers.ContainsKey(question.QuestionId) &&
+                    _userAnswers[question.QuestionId] == answer.AnswerId)
                 {
                     radioButton.IsChecked = true;
                 }
 
                 radioButton.Checked += (s, e) =>
                 {
-                    _userAnswers[currentQuestion.QuestionId] = answer.AnswerId;
+                    _userAnswers[question.QuestionId] = answer.AnswerId;
+                    UpdateProgress();
                 };
 
-                QuestionContainer.Children.Add(radioButton);
+                answersStackPanel.Children.Add(radioButton);
             }
 
-            UpdateNavigationButtons();
+            stackPanel.Children.Add(answersStackPanel);
+            card.Child = stackPanel;
+
+            return card;
         }
 
         private void UpdateProgress()
         {
-            ProgressText.Text = $"Вопрос {_currentQuestionIndex + 1} из {_questions.Count}";
+            if (_questions == null) return;
+
+            int answeredCount = _userAnswers.Count;
+            int totalCount = _questions.Count;
+
+            ProgressText.Text = $"Отвечено: {answeredCount} из {totalCount} вопросов";
+
+            // Обновляем состояние кнопки завершения
+            CompleteButton.IsEnabled = answeredCount == totalCount;
+            CompleteButton.Content = answeredCount == totalCount ?
+                "✅ Завершить викторину" :
+                $"✅ Завершить ({answeredCount}/{totalCount})";
         }
 
-        private void UpdateNavigationButtons()
+        private void CompleteButton_Click(object? sender, RoutedEventArgs e)
         {
-            PrevButton.IsEnabled = _currentQuestionIndex > 0;
-            NextButton.Content = _currentQuestionIndex == _questions.Count - 1 ? "Завершить" : "Далее ➡️";
-
-            // Убедимся, что классы установлены правильно
-            if (!PrevButton.Classes.Contains("secondary"))
+            if (_userAnswers.Count < _questions.Count)
             {
-                PrevButton.Classes.Add("secondary");
-            }
-
-            if (!NextButton.Classes.Contains("primary"))
-            {
-                NextButton.Classes.Add("primary");
-            }
-        }
-
-        private void PrevButton_Click(object? sender, RoutedEventArgs e)
-        {
-            if (_currentQuestionIndex > 0)
-            {
-                _currentQuestionIndex--;
-                DisplayCurrentQuestion();
-                UpdateProgress();
-            }
-        }
-
-        private void NextButton_Click(object? sender, RoutedEventArgs e)
-        {
-            // Проверяем, что вопросы загружены
-            if (_questions == null || !_questions.Any())
-            {
-                ShowErrorAndReturn("Вопросы не загружены");
+                ShowCompletionWarning();
                 return;
             }
 
-            if (_currentQuestionIndex < _questions.Count - 1)
+            CompleteQuiz();
+        }
+
+        private async void ShowCompletionWarning()
+        {
+            try
             {
-                _currentQuestionIndex++;
-                DisplayCurrentQuestion();
-                UpdateProgress();
+                var unansweredCount = _questions.Count - _userAnswers.Count;
+                var confirmDialog = new MessageWindow("Предупреждение",
+                    $"Вы ответили не на все вопросы. Осталось {unansweredCount} без ответа.\n\n" +
+                    "Вы уверены, что хотите завершить викторину?");
+
+                var visualRoot = this.VisualRoot as Window;
+                if (visualRoot != null)
+                {
+                    var result = await confirmDialog.ShowDialog<bool>(visualRoot);
+                    if (result)
+                    {
+                        CompleteQuiz();
+                    }
+                }
             }
-            else
+            catch (Exception ex)
             {
-                CompleteQuiz();
+                Console.WriteLine($"Ошибка показа предупреждения: {ex.Message}");
             }
         }
 
         private async void CompleteQuiz()
         {
-            // Подсчет результатов
+            _quizCompleted = true;
+
             int correctAnswers = 0;
 
             foreach (var question in _questions)
@@ -306,7 +404,7 @@ namespace KinoZalMarsBlinVali.Views
                     var selectedAnswerId = _userAnswers[question.QuestionId];
                     var selectedAnswer = _answers.FirstOrDefault(a => a.AnswerId == selectedAnswerId);
 
-                    if (selectedAnswer?.IsCorrect == true) // Теперь IsCorrect не nullable
+                    if (selectedAnswer?.IsCorrect == true)
                     {
                         correctAnswers++;
                     }
@@ -314,11 +412,10 @@ namespace KinoZalMarsBlinVali.Views
             }
 
             double scorePercent = (double)correctAnswers / _questions.Count * 100;
-            bool passed = scorePercent >= (_quiz.PassingScore ?? 80); // Используем GetValueOrDefault
+            bool passed = scorePercent >= (_quiz.PassingScore ?? 80);
             int earnedPoints = passed ? (_quiz.BonusPoints ?? 0) : 0;
             bool pointsAwarded = passed && earnedPoints > 0;
 
-            // Сохраняем попытку
             var attempt = new QuizAttempt
             {
                 CustomerId = _currentCustomerId,
@@ -334,7 +431,6 @@ namespace KinoZalMarsBlinVali.Views
 
             AppDataContext.DbContext.QuizAttempts.Add(attempt);
 
-            // Начисляем бонусные баллы только если прошли успешно
             if (pointsAwarded)
             {
                 var customer = AppDataContext.DbContext.Customers
@@ -351,7 +447,6 @@ namespace KinoZalMarsBlinVali.Views
 
             await AppDataContext.DbContext.SaveChangesAsync();
 
-            // Показываем результаты
             var resultWindow = new QuizResultWindow(scorePercent, correctAnswers, _questions.Count, earnedPoints, passed);
 
             var visualRoot = this.VisualRoot as Window;
@@ -360,7 +455,6 @@ namespace KinoZalMarsBlinVali.Views
                 await resultWindow.ShowDialog(visualRoot);
             }
 
-            // Возвращаемся к списку викторин
             ReturnToQuizzesPage();
         }
     }

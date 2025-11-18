@@ -8,32 +8,48 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/> <!-- Изменено на * чтобы занимало все доступное пространство -->
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
+        <!-- Кнопка назад в навигацию -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="10" Margin="0,0,0,10">
+            <Button Content="← Назад к викторинам" Click="BackToQuizzes_Click"
+                    Background="Transparent" Foreground="#0066CC"
+                    BorderThickness="0" FontWeight="SemiBold"
+                    Padding="0,5"/>
+        </StackPanel>
+
         <!-- Заголовок -->
-        <TextBlock Grid.Row="0" x:Name="QuizTitleText" 
-                   Classes="title-large"
+        <TextBlock Grid.Row="1" x:Name="QuizTitleText" 
+                   FontSize="20" FontWeight="Bold"
                    Margin="0,0,0,10"/>
 
         <!-- Прогресс -->
-        <TextBlock Grid.Row="1" x:Name="ProgressText"
+        <TextBlock Grid.Row="2" x:Name="ProgressText"
                    FontSize="14" Foreground="#666"
                    Margin="0,0,0,20"/>
 
-        <!-- Вопрос и ответы -->
-        <StackPanel Grid.Row="2" x:Name="QuestionContainer" Spacing="15"/>
+        <!-- Все вопросы списком -->
+        <ScrollViewer Grid.Row="3" 
+                      VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Disabled"
+                      VerticalAlignment="Stretch">
+            <StackPanel x:Name="QuestionsContainer" Spacing="25"/>
+        </ScrollViewer>
 
         <!-- Кнопки навигации -->
-        <StackPanel Grid.Row="3" Orientation="Horizontal" Spacing="15" 
+        <StackPanel Grid.Row="4" Orientation="Horizontal" Spacing="15" 
                     HorizontalAlignment="Right" Margin="0,20,0,0">
-            <Button x:Name="PrevButton" Content="⬅️ Назад" 
-                    Click="PrevButton_Click"
-                    Classes="secondary"/>
-            <Button x:Name="NextButton" Content="Далее ➡️" 
-                    Click="NextButton_Click"
-                    Classes="primary"/>
+            <Button x:Name="CompleteButton" Content="✅ Завершить викторину" 
+                    Click="CompleteButton_Click"
+                    Background="#28A745" Foreground="White"
+                    Padding="15,8" FontWeight="Bold"/>
+            <Button x:Name="CancelButton" Content="❌ Отменить" 
+                    Click="CancelQuiz_Click"
+                    Background="#DC3545" Foreground="White"
+                    Padding="15,8" Margin="20,0,0,0"/>
         </StackPanel>
     </Grid>
 </UserControl>
