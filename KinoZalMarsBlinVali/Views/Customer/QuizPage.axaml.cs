@@ -3,44 +3,191 @@ using Avalonia.Interactivity;
 using Avalonia.VisualTree;
 using KinoZalMarsBlinVali.Data;
 using KinoZalMarsBlinVali.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace KinoZalMarsBlinVali.Views
 {
     public partial class QuizPage : UserControl
     {
+
         private Quiz _quiz;
         private List<QuizQuestion> _questions;
         private List<QuizAnswer> _answers;
         private int _currentQuestionIndex = 0;
         private Dictionary<int, int> _userAnswers = new Dictionary<int, int>();
+        private int _currentCustomerId;
 
         public QuizPage(Quiz quiz)
         {
             InitializeComponent();
             _quiz = quiz;
-            LoadQuizData();
-            DisplayCurrentQuestion();
+            _currentCustomerId = AppDataContext.CurrentUser?.EmployeeId ?? 0;
+
+            Console.WriteLine($"Создание QuizPage для викторины: {_quiz.QuizTitle} (ID: {_quiz.QuizId})");
+
+            // Используем Loaded событие для гарантии инициализации
+            this.Loaded += OnQuizPageLoaded;
+        }
+        private async void OnQuizPageLoaded(object? sender, RoutedEventArgs e)
+        {
+            this.Loaded -= OnQuizPageLoaded;
+
+            try
+            {
+                // Проверяем возможность прохождения
+                if (!CanAttemptQuiz())
+                {
+                    return;
+                }
+
+                // Загружаем данные
+                LoadQuizData();
+
+                // Проверяем что вопросы загружены
+                if (_questions == null || !_questions.Any())
+                {
+                    await ShowErrorAndReturnAsync("В этой викторине пока нет вопросов");
+                    return;
+                }
+
+                // Показываем первый вопрос
+                DisplayCurrentQuestion();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ошибка инициализации QuizPage: {ex.Message}");
+                await ShowErrorAndReturnAsync("Ошибка загрузки викторины");
+            }
         }
 
+        private async Task ShowErrorAndReturnAsync(string message)
+        {
+            // Асинхронная версия для использования в async методах
+            try
+            {
+                var visualRoot = this.VisualRoot as Window;
+                if (visualRoot != null)
+                {
+                    var dialog = new MessageWindow("Ошибка", message);
+                    await dialog.ShowDialog(visualRoot);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ошибка показа диалога: {ex.Message}");
+            }
+
+            ReturnToQuizzesPage();
+        }
+        private bool CanAttemptQuiz()
+        {
+            try
+            {
+                // Явно загружаем данные без сложных LINQ преобразований
+                var userAttempts = AppDataContext.DbContext.QuizAttempts
+                    .Where(a => a.CustomerId == _currentCustomerId && a.QuizId == _quiz.QuizId)
+                    .ToList(); // Materialize the query first
+
+                // Проверяем начисление баллов
+                if (userAttempts.Any(a => a.PointsAwarded))
+                {
+                    ShowErrorAndReturn("Вы уже получили баллы за эту викторину");
+                    return false;
+                }
+
+                // Проверяем количество попыток
+                if (userAttempts.Count >= 3)
+                {
+                    ShowErrorAndReturn("Превышено максимальное количество попыток (3)");
+                    return false;
+                }
+
+                // Проверяем успешное прохождение
+                if (userAttempts.Any(a => a.ScorePercent >= _quiz.PassingScore))
+                {
+                    ShowErrorAndReturn("Вы уже успешно прошли эту викторину");
+                    return false;
+                }
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ошибка в CanAttemptQuiz: {ex.Message}");
+                ShowErrorAndReturn("Ошибка проверки возможности прохождения викторины");
+                return false;
+            }
+        }
+        private async void ShowErrorAndReturn(string message)
+        {
+            try
+            {
+                var visualRoot = this.VisualRoot as Window;
+                if (visualRoot != null)
+                {
+                    var dialog = new MessageWindow("Ошибка", message);
+                    await dialog.ShowDialog(visualRoot);
+                }
+                else
+                {
+                    // Если VisualRoot недоступен, просто возвращаемся
+                    Console.WriteLine($"VisualRoot is null. Message: {message}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ошибка показа диалога: {ex.Message}");
+            }
+
+            ReturnToQuizzesPage();
+        }
+
+        private void ReturnToQuizzesPage()
+        {
+            if (this.VisualRoot is MainWindow mainWindow)
+            {
+                mainWindow.NavigateTo(new CustomerQuizzesPage());
+            }
+        }
         private void LoadQuizData()
         {
-            _questions = AppDataContext.DbContext.QuizQuestions
-                .Where(q => q.QuizId == _quiz.QuizId)
-                .OrderBy(q => q.QuestionOrder)
-                .ToList();
+            try
+            {
+                Console.WriteLine($"Загрузка данных викторины ID: {_quiz.QuizId}");
 
-            var questionIds = _questions.Select(q => q.QuestionId).ToList();
-            _answers = AppDataContext.DbContext.QuizAnswers
-                .Where(a => questionIds.Contains(a.QuestionId))
-                .OrderBy(a => a.AnswerOrder)
-                .ToList();
+                _questions = AppDataContext.DbContext.QuizQuestions
+                    .Where(q => q.QuizId == _quiz.QuizId)
+                    .OrderBy(q => q.QuestionOrder)
+                    .ToList();
 
-            QuizTitleText.Text = _quiz.QuizTitle;
-            UpdateProgress();
+                Console.WriteLine($"Загружено вопросов: {_questions?.Count ?? 0}");
+
+                if (_questions == null || !_questions.Any())
+                {
+                    ShowErrorAndReturn("В этой викторине нет вопросов");
+                    return;
+                }
+
+                var questionIds = _questions.Select(q => q.QuestionId).ToList();
+                _answers = AppDataContext.DbContext.QuizAnswers
+                    .Where(a => questionIds.Contains(a.QuestionId))
+                    .OrderBy(a => a.AnswerOrder)
+                    .ToList();
+
+                Console.WriteLine($"Загружено ответов: {_answers?.Count ?? 0}");
+
+                QuizTitleText.Text = _quiz.QuizTitle;
+                UpdateProgress();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ошибка загрузки данных викторины: {ex.Message}");
+                ShowErrorAndReturn("Ошибка загрузки викторины");
+            }
         }
-
         private void DisplayCurrentQuestion()
         {
             QuestionContainer.Children.Clear();
@@ -128,6 +275,13 @@ namespace KinoZalMarsBlinVali.Views
 
         private void NextButton_Click(object? sender, RoutedEventArgs e)
         {
+            // Проверяем, что вопросы загружены
+            if (_questions == null || !_questions.Any())
+            {
+                ShowErrorAndReturn("Вопросы не загружены");
+                return;
+            }
+
             if (_currentQuestionIndex < _questions.Count - 1)
             {
                 _currentQuestionIndex++;
@@ -162,24 +316,29 @@ namespace KinoZalMarsBlinVali.Views
             double scorePercent = (double)correctAnswers / _questions.Count * 100;
             bool passed = scorePercent >= _quiz.PassingScore;
             int earnedPoints = passed ? _quiz.BonusPoints ?? 0 : 0;
+            bool pointsAwarded = passed && earnedPoints > 0;
 
             // Сохраняем попытку
             var attempt = new QuizAttempt
             {
-                CustomerId = AppDataContext.CurrentUser.EmployeeId,
+                CustomerId = _currentCustomerId,
                 QuizId = _quiz.QuizId,
+                StartedAt = System.DateTime.Now,
                 CompletedAt = System.DateTime.Now,
+                TotalQuestions = _questions.Count,
+                CorrectAnswers = correctAnswers,
                 ScorePercent = (decimal)scorePercent,
-                EarnedPoints = earnedPoints
+                EarnedPoints = earnedPoints,
+                PointsAwarded = pointsAwarded // Указываем, были ли начислены баллы
             };
 
             AppDataContext.DbContext.QuizAttempts.Add(attempt);
 
-            // Начисляем бонусные баллы
-            if (passed && earnedPoints > 0)
+            // Начисляем бонусные баллы только если прошли успешно
+            if (pointsAwarded)
             {
                 var customer = AppDataContext.DbContext.Customers
-                    .FirstOrDefault(c => c.CustomerId == AppDataContext.CurrentUser.EmployeeId);
+                    .FirstOrDefault(c => c.CustomerId == _currentCustomerId);
 
                 if (customer != null)
                 {
@@ -197,10 +356,7 @@ namespace KinoZalMarsBlinVali.Views
             await resultWindow.ShowDialog((Window)this.VisualRoot);
 
             // Возвращаемся к списку викторин
-            if (this.VisualRoot is MainWindow mainWindow)
-            {
-                mainWindow.NavigateTo(new CustomerQuizzesPage());
-            }
+            ReturnToQuizzesPage();
         }
     }
 }

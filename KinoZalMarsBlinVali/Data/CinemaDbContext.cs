@@ -404,10 +404,16 @@ public partial class CinemaDbContext : DbContext
             entity.Property(e => e.CompletedAt)
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("completed_at");
+            entity.Property(e => e.CorrectAnswers)
+                .HasDefaultValue(0)
+                .HasColumnName("correct_answers");
             entity.Property(e => e.CustomerId).HasColumnName("customer_id");
             entity.Property(e => e.EarnedPoints)
                 .HasDefaultValue(0)
                 .HasColumnName("earned_points");
+            entity.Property(e => e.PointsAwarded)
+                .HasDefaultValue(false)
+                .HasColumnName("points_awarded");
             entity.Property(e => e.QuizId).HasColumnName("quiz_id");
             entity.Property(e => e.ScorePercent)
                 .HasPrecision(5, 2)
@@ -417,6 +423,9 @@ public partial class CinemaDbContext : DbContext
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("started_at");
+            entity.Property(e => e.TotalQuestions)
+                .HasDefaultValue(0)
+                .HasColumnName("total_questions");
 
             entity.HasOne(d => d.Customer).WithMany(p => p.QuizAttempts)
                 .HasForeignKey(d => d.CustomerId)

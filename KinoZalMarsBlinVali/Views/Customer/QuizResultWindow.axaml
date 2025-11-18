@@ -1,7 +1,7 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Результаты викторины"
-        Width="400" Height="300"
+        Width="400" Height="350"
         x:Class="KinoZalMarsBlinVali.Views.QuizResultWindow">
     <Grid Margin="20">
         <StackPanel Spacing="15" HorizontalAlignment="Center" VerticalAlignment="Center">
@@ -9,6 +9,8 @@
                       HorizontalAlignment="Center"/>
             <TextBlock x:Name="ScoreText" FontSize="16" HorizontalAlignment="Center"/>
             <TextBlock x:Name="BonusText" FontSize="14" HorizontalAlignment="Center"/>
+            <TextBlock x:Name="AttemptsText" FontSize="12" HorizontalAlignment="Center"
+                      Foreground="#666" Margin="0,5,0,0"/>
             <Button Content="OK" Click="OKButton_Click" 
                     Classes="primary" 
                     HorizontalAlignment="Center"
