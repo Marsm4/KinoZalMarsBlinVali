@@ -5,6 +5,7 @@ using KinoZalMarsBlinVali.Models;
 using KinoZalMarsBlinVali.Views;
 using System;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace KinoZalMarsBlinVali.Views
 {
@@ -33,7 +34,13 @@ namespace KinoZalMarsBlinVali.Views
 
             if (!IsValidEmail(email))
             {
-                ShowError("Пожалуйста, введите корректный email");
+                ShowError("Пожалуйста, введите корректный email с доменом mail.ru или gmail.com");
+                return;
+            }
+
+            if (!IsValidPhone(phone))
+            {
+                ShowError("Телефон должен быть в формате: +7XXXXXXXXXX или 8XXXXXXXXXX (11 цифр)");
                 return;
             }
 
@@ -45,7 +52,6 @@ namespace KinoZalMarsBlinVali.Views
 
             try
             {
-         
                 var existingCustomer = AppDataContext.DbContext.Customers
                     .FirstOrDefault(c => c.Email == email);
 
@@ -55,14 +61,13 @@ namespace KinoZalMarsBlinVali.Views
                     return;
                 }
 
-            
                 var newCustomer = new Customer
                 {
                     FirstName = firstName.Trim(),
                     LastName = lastName.Trim(),
                     Email = email.Trim().ToLower(),
-                    Phone = phone.Trim(),
-                    Password = password, 
+                    Phone = FormatPhone(phone.Trim()),
+                    Password = password,
                     BonusPoints = 0,
                     CreatedAt = DateTime.Now
                 };
@@ -97,13 +102,53 @@ namespace KinoZalMarsBlinVali.Views
         {
             try
             {
+                // Базовая проверка формата email
                 var addr = new System.Net.Mail.MailAddress(email);
-                return addr.Address == email;
+                if (addr.Address != email)
+                    return false;
+
+                // Проверка домена
+                string domain = email.Split('@')[1].ToLower();
+                return domain == "mail.ru" || domain == "gmail.com";
             }
             catch
             {
                 return false;
             }
+        }
+
+        private bool IsValidPhone(string phone)
+        {
+            // Удаляем все пробелы, скобки и дефисы
+            string cleanPhone = Regex.Replace(phone, @"[\s\-\(\)]", "");
+
+            // Проверяем форматы: +7XXXXXXXXXX или 8XXXXXXXXXX
+            if (cleanPhone.StartsWith("+7") && cleanPhone.Length == 12)
+            {
+                // Проверяем, что после +7 идут только цифры
+                return cleanPhone.Substring(2).All(char.IsDigit);
+            }
+            else if (cleanPhone.StartsWith("8") && cleanPhone.Length == 11)
+            {
+                // Проверяем, что после 8 идут только цифры
+                return cleanPhone.Substring(1).All(char.IsDigit);
+            }
+
+            return false;
+        }
+
+        private string FormatPhone(string phone)
+        {
+            // Удаляем все пробелы, скобки и дефисы
+            string cleanPhone = Regex.Replace(phone, @"[\s\-\(\)]", "");
+
+            // Приводим к единому формату +7XXXXXXXXXX
+            if (cleanPhone.StartsWith("8") && cleanPhone.Length == 11)
+            {
+                return "+7" + cleanPhone.Substring(1);
+            }
+
+            return cleanPhone;
         }
 
         private void ShowError(string message)

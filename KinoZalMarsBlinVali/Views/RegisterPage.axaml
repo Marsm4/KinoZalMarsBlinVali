@@ -38,13 +38,13 @@
                 <TextBlock Grid.Row="5" Text="Email" FontWeight="SemiBold" FontSize="14"/>
                 <TextBox Grid.Row="6" x:Name="tbEmail" Margin="0,5,0,10" 
                          FontSize="14" Height="35"
-                         Watermark="Введите email"/>
+                         Watermark="Введите email (mail.ru или gmail.com)"/>
                 
                 <!-- Телефон -->
                 <TextBlock Grid.Row="7" Text="Телефон" FontWeight="SemiBold" FontSize="14"/>
                 <TextBox Grid.Row="8" x:Name="tbPhone" Margin="0,5,0,10" 
                          FontSize="14" Height="35"
-                         Watermark="Введите телефон"/>
+                         Watermark="+7XXXXXXXXXX или 8XXXXXXXXXX"/>
                 
                 <!-- Пароль -->
                 <TextBlock Grid.Row="9" Text="Пароль" FontWeight="SemiBold" FontSize="14"/>
